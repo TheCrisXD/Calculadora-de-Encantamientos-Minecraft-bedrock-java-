@@ -1,0 +1,2465 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Minecraft Enchant & Anvil DP Optimizer — Guía Pixel-Art Paso a Paso</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700;800&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+            pixel: ['Silkscreen', 'monospace']
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    :root {
+      --mc-obsidian: #111319;
+      --mc-deepslate: #1a1d26;
+      --mc-gui-light: #dadada;
+      --mc-gui-mid: #c6c6c6;
+      --mc-gui-dark: #b2b2b2;
+      --mc-gui-slot: #8b8b8b;
+      --mc-gui-recessed: #46484d;
+      --mc-gui-text: #2b2b2f;
+      --mc-emerald: #17dd62;
+      --mc-gold: #fcee4b;
+      --mc-lapis: #5b6ee1;
+      --mc-xp: #80ff20;
+    }
+
+    body {
+      background-color: var(--mc-obsidian);
+      background-image:
+        radial-gradient(circle at 50% 0%, rgba(44, 50, 68, 0.35) 0%, transparent 65%),
+        linear-gradient(135deg, rgba(255, 255, 255, 0.025) 25%, transparent 25%),
+        linear-gradient(225deg, rgba(255, 255, 255, 0.025) 25%, transparent 25%),
+        linear-gradient(45deg, rgba(0, 0, 0, 0.35) 25%, transparent 25%),
+        linear-gradient(315deg, rgba(0, 0, 0, 0.35) 25%, #111319 25%);
+      background-position: 0 0, 16px 0, 16px 0, 0 0, 0 0;
+      background-size: 100% 100%, 32px 32px, 32px 32px, 32px 32px, 32px 32px;
+      color: var(--mc-gui-text);
+    }
+
+    /* ===================================================================== */
+    /* GUI CLÁSICA DE PIEDRA GRIS CON DEGRADADOS METÁLICOS Y BISELES 3PX     */
+    /* ===================================================================== */
+    .mc-panel {
+      background: linear-gradient(165deg, #d8d8d8 0%, #c6c6c6 52%, #b5b5b5 100%);
+      color: #26262a;
+      border-top: 3px solid #ffffff;
+      border-left: 3px solid #ffffff;
+      border-right: 3px solid #555555;
+      border-bottom: 3px solid #555555;
+      box-shadow:
+        0 0 0 2px #18191f,
+        6px 6px 0px rgba(0, 0, 0, 0.72);
+      border-radius: 2px;
+    }
+
+    .mc-card {
+      background: linear-gradient(180deg, #d3d3d3 0%, #bfbfbf 100%);
+      color: #26262a;
+      border-top: 2px solid #f4f4f4;
+      border-left: 2px solid #f4f4f4;
+      border-right: 2px solid #636363;
+      border-bottom: 2px solid #636363;
+      box-shadow:
+        0 0 0 1px #23242a,
+        3px 3px 0px rgba(0, 0, 0, 0.42);
+      border-radius: 2px;
+    }
+
+    .mc-card-selected {
+      background: linear-gradient(180deg, #cde3d3 0%, #b3d4bc 100%) !important;
+      border-top: 2px solid #e8fff0 !important;
+      border-left: 2px solid #e8fff0 !important;
+      border-right: 2px solid #2e6f40 !important;
+      border-bottom: 2px solid #2e6f40 !important;
+      box-shadow: 0 0 0 2px #15803d, 3px 3px 0px rgba(0, 0, 0, 0.5) !important;
+    }
+
+    /* Panel hundido oscuro estilo inventario/ranura de piedra */
+    .mc-recessed-dark {
+      background: linear-gradient(180deg, #32343a 0%, #24262b 100%);
+      color: #e6ebf5;
+      border-top: 3px solid #16171b;
+      border-left: 3px solid #16171b;
+      border-right: 3px solid #686b75;
+      border-bottom: 3px solid #686b75;
+      border-radius: 2px;
+    }
+
+    select.mc-recessed-dark {
+      background-color: #24262b;
+      color: #f8fafc;
+      color-scheme: dark;
+    }
+
+    select.mc-recessed-dark option {
+      background-color: #1e2026;
+      color: #f8fafc;
+    }
+
+    .mc-vanilla-header-tab {
+      background: linear-gradient(180deg, #dfdfdf 0%, #c8c8c8 100%);
+      color: #26262a;
+      border-top: 4px solid #ffffff;
+      border-left: 4px solid #ffffff;
+      border-right: 4px solid #555555;
+      border-bottom: none;
+      box-shadow: -2px -2px 0 #000000, 2px -2px 0 #000000;
+      border-radius: 2px 2px 0 0;
+    }
+
+    .mc-vanilla-slot {
+      background: linear-gradient(145deg, #7e7e7e 0%, #929292 100%);
+      border-top: 3px solid #373737;
+      border-left: 3px solid #373737;
+      border-right: 3px solid #ffffff;
+      border-bottom: 3px solid #ffffff;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.35);
+    }
+
+    .mc-vanilla-slot-enchanted {
+      background: radial-gradient(circle at 45% 40%, #8e6bbf 0%, #6f5299 55%, #7e7e7e 100%);
+      border-top: 3px solid #373737;
+      border-left: 3px solid #373737;
+      border-right: 3px solid #ffffff;
+      border-bottom: 3px solid #ffffff;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: inset 0 0 8px rgba(192, 132, 252, 0.45);
+    }
+
+    .mc-btn {
+      background: linear-gradient(180deg, #a8a8a8 0%, #8e8e8e 100%);
+      color: #1f1f23;
+      border-top: 2px solid #e6e6e6;
+      border-left: 2px solid #e6e6e6;
+      border-right: 2px solid #454545;
+      border-bottom: 2px solid #454545;
+      box-shadow: 0 0 0 1px #141418, 2px 2px 0px rgba(0, 0, 0, 0.55);
+      border-radius: 2px;
+      transition: transform 0.06s ease, filter 0.1s ease;
+    }
+    .mc-btn:hover:not(:disabled) {
+      filter: brightness(1.07);
+    }
+    .mc-btn:active:not(:disabled) {
+      transform: translate(1px, 1px);
+      border-top: 2px solid #454545;
+      border-left: 2px solid #454545;
+      border-right: 2px solid #e6e6e6;
+      border-bottom: 2px solid #e6e6e6;
+    }
+
+    .mc-slot {
+      background: linear-gradient(145deg, #7c7c7c 0%, #919191 100%);
+      border-top: 3px solid #373737;
+      border-left: 3px solid #373737;
+      border-right: 3px solid #ffffff;
+      border-bottom: 3px solid #ffffff;
+      border-radius: 2px;
+    }
+
+    /* Caja de consejo estilo pergamino-piedra cálido biselado */
+    .mc-tip-box {
+      background: linear-gradient(175deg, #e5dec9 0%, #d4ccb4 100%);
+      color: #2c281e;
+      border-top: 3px solid #fffbe8;
+      border-left: 5px solid #c98a18;
+      border-right: 3px solid #6b634f;
+      border-bottom: 3px solid #6b634f;
+      box-shadow: 0 0 0 1px #1d1b15, 4px 4px 0px rgba(0, 0, 0, 0.55);
+      border-radius: 2px;
+    }
+
+    .mc-xp-text {
+      color: #80ff20;
+      text-shadow: 2px 2px 0px #1b3805;
+    }
+
+    .mc-xp-dark {
+      color: #2f6b09;
+      text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.65);
+    }
+
+    .mc-tab-active {
+      background: linear-gradient(180deg, #22c55e 0%, #15803d 100%) !important;
+      color: #ffffff !important;
+      text-shadow: 1px 1px 0px #0b3b1c;
+      border-top: 2px solid #86efac !important;
+      border-left: 2px solid #86efac !important;
+      border-right: 2px solid #0d4a22 !important;
+      border-bottom: 2px solid #0d4a22 !important;
+    }
+
+    /* Scrollbar estilo piedra */
+    ::-webkit-scrollbar { width: 10px; height: 10px; }
+    ::-webkit-scrollbar-track { background: #14161d; border-left: 2px solid #2b2f3c; }
+    ::-webkit-scrollbar-thumb { background: #8c8c8c; border: 2px solid #373737; }
+    ::-webkit-scrollbar-thumb:hover { background: #a6a6a6; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased selection:bg-emerald-600/30 selection:text-emerald-950">
+
+  <!-- ======================================================================= -->
+  <!-- CABECERA SUPERIOR ESTILO GUI PIEDRA MINECRAFT                           -->
+  <!-- ======================================================================= -->
+  <header class="bg-gradient-to-b from-[#d4d4d4] via-[#c4c4c4] to-[#b2b2b2] border-b-4 border-[#555555] sticky top-0 z-30 shadow-[0_4px_0_#111319]">
+    <div class="max-w-[860px] mx-auto px-4 py-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <!-- Icono Isométrico 32x32 Yunque SVG -->
+        <div id="header-anvil-icon" class="w-12 h-12 mc-slot flex items-center justify-center shrink-0"></div>
+        <div>
+          <div class="flex items-center gap-2 flex-wrap">
+            <h1 class="font-pixel text-base sm:text-lg text-[#1f1f24] tracking-tight drop-shadow-[1px_1px_0_#ffffff]">MC Enchant & Anvil Guide</h1>
+            <span class="px-2 py-0.5 text-[10px] font-pixel bg-[#1f2937] text-[#4ade80] border border-[#15803d]">1.21+</span>
+          </div>
+          <p class="text-xs text-[#3b3b42] font-medium mt-0.5">Ruta paso a paso sin desperdiciar XP ni bloquear tu equipo en el yunque</p>
+        </div>
+      </div>
+
+      <!-- Selector de Edición -->
+      <div class="flex items-center gap-1.5 bg-[#8b8b8b] p-1 border-t-2 border-l-2 border-[#373737] border-r-2 border-b-2 border-white self-start sm:self-auto">
+        <span class="text-[11px] font-bold text-[#1f1f23] px-2">Edición:</span>
+        <button id="btn-ed-java" onclick="setEdition('java')" class="mc-btn mc-tab-active px-3 py-1 text-xs font-pixel">Java</button>
+        <button id="btn-ed-bedrock" onclick="setEdition('bedrock')" class="mc-btn px-3 py-1 text-xs font-pixel">Bedrock</button>
+      </div>
+    </div>
+
+    <!-- Barra de Navegación Lineal -->
+    <nav class="max-w-[860px] mx-auto px-4 pb-3 flex gap-2 overflow-x-auto">
+      <button onclick="switchTab('calc')" id="tab-btn-calc" class="mc-btn mc-tab-active px-3.5 py-2 text-xs font-pixel whitespace-nowrap flex items-center gap-2">
+        <span>⚒️ 1. Camino Más Corto</span>
+      </button>
+      <button onclick="switchTab('villagers')" id="tab-btn-villagers" class="mc-btn px-3.5 py-2 text-xs font-pixel whitespace-nowrap flex items-center gap-2">
+        <span>🧑‍🌾 2. Aldeanos y Mesas</span>
+      </button>
+      <button onclick="switchTab('theory')" id="tab-btn-theory" class="mc-btn px-3.5 py-2 text-xs font-pixel whitespace-nowrap flex items-center gap-2">
+        <span>🪙 3. Truco Oro y Orden</span>
+      </button>
+      <button onclick="switchTab('rust')" id="tab-btn-rust" class="mc-btn px-3.5 py-2 text-xs font-pixel whitespace-nowrap flex items-center gap-2">
+        <span>🦀 4. Código Rust</span>
+      </button>
+    </nav>
+  </header>
+
+  <!-- ======================================================================= -->
+  <!-- CONTENEDOR PRINCIPAL LINEAL (1 SOLA COLUMNA CENTRADA DE MÁX. 860PX)      -->
+  <!-- ======================================================================= -->
+  <main class="flex-1 max-w-[860px] w-full mx-auto px-4 py-6 space-y-6">
+
+    <!-- ===================================================================== -->
+    <!-- PESTAÑA 1: RECORRIDO LINEAL COMPLETO (ETAPAS 1 -> 2 -> 3 -> 3.5 -> 4) -->
+    <!-- ===================================================================== -->
+    <div id="tab-calc" class="space-y-6">
+
+      <!-- =================================================================== -->
+      <!-- ETAPA 1: ELIGE TU OBJETO                                            -->
+      <!-- =================================================================== -->
+      <section class="mc-panel p-5 space-y-4">
+        <div class="flex items-center justify-between gap-2 border-b-2 border-[#8c8c8c] pb-3">
+          <div class="flex items-center gap-2.5">
+            <span class="px-2.5 py-1 bg-[#15803d] text-white font-pixel text-xs border-t border-l border-[#86efac] border-r border-b border-[#0d4a22] shadow-[2px_2px_0_#1e1e24]">ETAPA 1</span>
+            <h2 class="font-pixel text-sm sm:text-base text-[#1f1f24] drop-shadow-[1px_1px_0_#efefef]">Elige el objeto que quieres mejorar</h2>
+          </div>
+          <span id="item-category-badge" class="text-[11px] font-mono font-bold px-2.5 py-1 bg-[#343740] text-[#80ff20] border border-[#1a1b20]">Herramienta</span>
+        </div>
+
+        <div class="flex items-center gap-3.5">
+          <!-- Icono Isométrico SVG pixel-art de alta resolución del ítem seleccionado -->
+          <div id="selected-item-icon" class="w-20 h-20 mc-slot flex items-center justify-center shrink-0"></div>
+          <div class="flex-1 min-w-0 space-y-2.5">
+            <div>
+              <label for="item-select" class="block text-xs font-bold text-[#2b2b30] mb-1">Objeto objetivo:</label>
+              <select id="item-select" onchange="onItemChange()" class="w-full mc-recessed-dark px-3.5 py-2 text-sm font-bold text-white outline-none cursor-pointer">
+                <!-- Poblado dinámicamente -->
+              </select>
+            </div>
+            <!-- Selector dinámico de material (se habilita solo si el ítem admite múltiples materiales) -->
+            <div id="material-select-wrap" class="hidden">
+              <label for="material-select" class="block text-xs font-bold text-[#2b2b30] mb-1">Material del equipamiento:</label>
+              <select id="material-select" onchange="onMaterialChange()" class="w-full mc-recessed-dark px-3.5 py-2 text-xs font-bold text-[#fcee4b] outline-none cursor-pointer">
+                <!-- Poblado dinámicamente -->
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- CONSEJO CONTEXTUAL 1: CÓMO CONSEGUIR EL OBJETO ANTES DE SEGUIR -->
+        <div id="item-origin-box" class="mc-tip-box p-4 space-y-2">
+          <!-- Poblado dinámicamente -->
+        </div>
+      </section>
+
+      <!-- =================================================================== -->
+      <!-- CONSEJO INTERMEDIO 0: QUÉ CONSEGUIR PRIMERO ANTES DE ELEGIR         -->
+      <!-- =================================================================== -->
+      <div class="mc-tip-box p-4 space-y-1.5">
+        <div class="flex items-center gap-2">
+          <span class="text-base">📋</span>
+          <h3 class="font-pixel text-xs sm:text-sm text-[#78350f]">Antes de elegir encantamientos: ¿Qué debes preparar primero?</h3>
+        </div>
+        <p class="text-xs text-[#2d291f] leading-relaxed">
+          1) Ten listo tu objeto base sin reparar previamente en yunque. 2) Prepara al menos <strong>1 aldeano con Atril (Bibliotecario)</strong>, esmeraldas y libros normales, o tu <strong>Mesa de Encantamientos rodeada de 15 librerías</strong> con lapislázuli. Ahora marca abajo exactamente los encantamientos que quieres ponerle:
+        </p>
+      </div>
+
+      <!-- =================================================================== -->
+      <!-- ETAPA 2: SELECCIONA ENCANTAMIENTOS Y NIVELES VÁLIDOS                -->
+      <!-- =================================================================== -->
+      <section class="mc-panel p-5 space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-2 border-[#8c8c8c] pb-3">
+          <div class="flex items-center gap-2.5">
+            <span class="px-2.5 py-1 bg-[#6d28d9] text-white font-pixel text-xs border-t border-l border-[#c4b5fd] border-r border-b border-[#3b0764] shadow-[2px_2px_0_#1e1e24]">ETAPA 2</span>
+            <div>
+              <h2 class="font-pixel text-sm sm:text-base text-[#1f1f24] drop-shadow-[1px_1px_0_#efefef]">Elige los encantamientos que deseas</h2>
+              <p class="text-xs text-[#3b3b42] mt-0.5">Solo aparecen opciones válidas para este objeto. Los incompatibles se bloquean solos.</p>
+            </div>
+          </div>
+          <div class="flex gap-2 shrink-0">
+            <button onclick="selectGodRoll()" class="mc-btn px-3 py-1.5 !bg-gradient-to-b !from-[#8b5cf6] !to-[#6d28d9] !text-white font-pixel text-[11px]">
+              ★ Recomendado Máx.
+            </button>
+            <button onclick="clearEnchants()" class="mc-btn px-3 py-1.5 font-pixel text-[11px]">
+              Limpiar
+            </button>
+          </div>
+        </div>
+
+        <div id="enchants-list" class="space-y-2.5">
+          <!-- Lista lineal de encantamientos válidos generada por JS -->
+        </div>
+      </section>
+
+      <!-- =================================================================== -->
+      <!-- CONSEJO INTERMEDIO 1: ANTES DE IR A BUSCAR LIBROS / ALDEANOS        -->
+      <!-- =================================================================== -->
+      <div id="interlude-before-reroll" class="mc-tip-box p-4 space-y-2">
+        <!-- Poblado dinámicamente según los encantamientos elegidos -->
+      </div>
+
+      <!-- =================================================================== -->
+      <!-- SUGERENCIA DE RUTA MÁS CORTA Y SELECTOR DE ALTERNATIVAS             -->
+      <!-- =================================================================== -->
+      <section id="route-recommendation-section" class="mc-panel p-5 space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b-2 border-[#8c8c8c] pb-3">
+          <div class="flex items-center gap-2.5">
+            <span class="px-2.5 py-1 bg-[#15803d] text-white font-pixel text-xs border-t border-l border-[#86efac] border-r border-b border-[#0d4a22] shadow-[2px_2px_0_#1e1e24]">RUTA SUGERIDA</span>
+            <div>
+              <h2 class="font-pixel text-sm sm:text-base text-[#1f1f24] drop-shadow-[1px_1px_0_#efefef]">Camino más corto recomendado para tu selección</h2>
+              <p class="text-xs text-[#3b3b42] mt-0.5">Analizamos el coste de XP, los re-rolls y los conflictos de mesa antes de darte a elegir.</p>
+            </div>
+          </div>
+          <span id="route-mode-badge" class="text-[11px] font-pixel px-2.5 py-1 bg-[#14532d] text-[#86efac] border border-[#15803d]">★ ÓPTIMA AUTOMÁTICA</span>
+        </div>
+
+        <!-- Banner principal de recomendación y el porqué -->
+        <div id="recommended-route-banner" class="mc-tip-box p-4 space-y-2">
+          <!-- Poblado dinámicamente -->
+        </div>
+
+        <!-- Selector opcional de ruta (solo después de mostrar la recomendación y el porqué) -->
+        <div class="space-y-2 pt-1">
+          <div class="flex items-center justify-between">
+            <p class="text-xs font-bold text-[#26262b]">¿Quieres cambiar la ruta sugerida? Elige otra opción aquí abajo:</p>
+            <button type="button" id="btn-reset-recommended" onclick="resetToRecommendedRoute()" class="hidden mc-btn px-2.5 py-1 text-[10px] font-pixel !bg-gradient-to-b !from-[#22c55e] !to-[#15803d] !text-white">
+              Volver a la sugerida
+            </button>
+          </div>
+
+          <label id="wrap-clean-base" class="mc-card p-3 flex items-start gap-3 cursor-pointer hover:brightness-105">
+            <input type="radio" name="base-strategy" id="rad-clean-base" value="clean" checked onchange="onUserSelectStrategy()" class="mt-1 w-4 h-4 accent-[#15803d] cursor-pointer" />
+            <div class="text-xs flex-1">
+              <div class="flex items-center justify-between gap-2 flex-wrap">
+                <span class="font-bold text-[#18181c]">Ruta A · Objeto limpio (100% controlado con libros en yunque)</span>
+                <span id="tag-rec-clean" class="hidden px-2 py-0.5 bg-[#15803d] text-white font-pixel text-[10px]">★ SUGERIDA</span>
+              </div>
+              <span class="text-[#3b3b42] block mt-0.5">Cero riesgo de encantamientos no deseados o incompatibles; ideal cuando buscas una combinación exacta de muchos encantamientos.</span>
+            </div>
+          </label>
+
+          <label id="wrap-villager-base" class="mc-card p-3 flex items-start gap-3 cursor-pointer hover:brightness-105">
+            <input type="radio" name="base-strategy" id="rad-villager-base" value="villager" onchange="onUserSelectStrategy()" class="mt-1 w-4 h-4 accent-[#15803d] cursor-pointer" />
+            <div class="text-xs flex-1">
+              <div class="flex items-center justify-between gap-2 flex-wrap">
+                <span class="font-bold text-[#14532d]">Ruta B · Pieza base pre-encantada de Aldeano (Ahorra libros y XP)</span>
+                <span id="tag-rec-villager" class="hidden px-2 py-0.5 bg-[#15803d] text-white font-pixel text-[10px]">★ SUGERIDA</span>
+              </div>
+              <span id="desc-villager-base" class="text-[#3b3b42] block mt-0.5">Ahorra 1 libro y 1 uso de yunque trayendo Irrompibilidad III o Caída de Pluma IV de fábrica.</span>
+            </div>
+          </label>
+
+          <label id="wrap-gold-trick" class="mc-card p-3 flex items-start gap-3 cursor-pointer hover:brightness-105">
+            <input type="radio" name="base-strategy" id="rad-gold-trick" value="gold" onchange="onUserSelectStrategy()" class="mt-1 w-4 h-4 accent-[#b45309] cursor-pointer" />
+            <div class="text-xs flex-1">
+              <div class="flex items-center justify-between gap-2 flex-wrap">
+                <span class="font-bold text-[#78350f]">Ruta C · Mesa de Encantamientos Nv. 30 + Truco de Oro</span>
+                <span id="tag-rec-gold" class="hidden px-2 py-0.5 bg-[#15803d] text-white font-pixel text-[10px]">★ SUGERIDA</span>
+              </div>
+              <span id="desc-gold-trick" class="text-[#3b3b42] block mt-0.5">Usas herramientas de oro para refrescar la mesa hasta que tu objeto salga con 2 encantamientos gratis antes del yunque.</span>
+            </div>
+          </label>
+        </div>
+      </section>
+
+      <!-- =================================================================== -->
+      <!-- ETAPA 3: ¿CUÁNTOS INTENTOS (RE-ROLLS) NECESITARÁS?                  -->
+      <!-- =================================================================== -->
+      <section class="mc-panel p-5 space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b-2 border-[#8c8c8c] pb-3">
+          <div class="flex items-center gap-2.5">
+            <span class="px-2.5 py-1 bg-[#b45309] text-white font-pixel text-xs border-t border-l border-[#fcd34d] border-r border-b border-[#451a03] shadow-[2px_2px_0_#1e1e24]">ETAPA 3</span>
+            <div>
+              <h2 class="font-pixel text-sm sm:text-base text-[#1f1f24] drop-shadow-[1px_1px_0_#efefef]">¿Cuántos intentos (Re-rolls) te tomará conseguirlos?</h2>
+              <p class="text-xs text-[#3b3b42] mt-0.5">Probabilidad real de obtener cada encantamiento antes de ir al yunque.</p>
+            </div>
+          </div>
+          <span class="text-[11px] font-pixel px-2.5 py-1 bg-[#292b33] text-[#fcee4b] border border-[#15161a]" id="reroll-ed-badge">JAVA EDITION</span>
+        </div>
+
+        <!-- Resumen rápido de re-rolls -->
+        <div id="reroll-summary-banner" class="mc-card p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <!-- Poblado dinámicamente -->
+        </div>
+
+        <!-- Tarjetas individuales por cada encantamiento elegido -->
+        <div id="reroll-cards-container" class="space-y-2.5">
+          <!-- Poblado dinámicamente -->
+        </div>
+      </section>
+
+      <!-- =================================================================== -->
+      <!-- ETAPA 3.5: GUI ESTILO MINECRAFT CON RETRATO ISOMÉTRICO DE ALDEANO   -->
+      <!-- =================================================================== -->
+      <section class="mc-panel p-5 space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b-2 border-[#8c8c8c] pb-3">
+          <div class="flex items-center gap-2.5">
+            <span class="px-2.5 py-1 bg-[#15803d] text-white font-pixel text-xs border-t border-l border-[#86efac] border-r border-b border-[#0d4a22] shadow-[2px_2px_0_#1e1e24]">INTERFAZ DE OBTENCIÓN</span>
+            <div>
+              <h2 class="font-pixel text-sm sm:text-base text-[#1f1f24] drop-shadow-[1px_1px_0_#efefef]">Qué entregar y qué recibir en el juego</h2>
+              <p class="text-xs text-[#3b3b42] mt-0.5">Vista previa estilo interfaz de Minecraft con retrato isométrico del aldeano o estación.</p>
+            </div>
+          </div>
+        </div>
+
+        <div id="minecraft-live-gui-showcase" class="space-y-6 pt-2">
+          <!-- Generado dinámicamente por JS -->
+        </div>
+      </section>
+
+      <!-- =================================================================== -->
+      <!-- CONSEJO INTERMEDIO 2: EXPLICACIÓN SENCILLA ANTES DE USAR EL YUNQUE  -->
+      <!-- =================================================================== -->
+      <div class="mc-tip-box p-4 space-y-2">
+        <div class="flex items-center gap-2">
+          <span class="text-base">💡</span>
+          <h3 class="font-pixel text-xs sm:text-sm text-[#78350f]">Consejo clave antes de tocar el Yunque (Por qué importa el orden)</h3>
+        </div>
+        <p class="text-xs text-[#2d291f] leading-relaxed">
+          En Minecraft, cada vez que un objeto o libro pasa por el yunque suma una <strong>penalización oculta que se duplica</strong> (<code class="bg-[#262830] text-[#80ff20] px-1.5 py-0.5">0 → 1 → 3 → 7 → 15 → 31 niveles extra</code>). Si metes los libros uno por uno directamente en tu objeto, el juego te bloqueará con el cartel rojo de <strong>"¡Demasiado caro!" (más de 39 niveles)</strong>.
+        </p>
+        <p class="text-xs text-[#14532d] font-bold leading-relaxed">
+          ✔ La solución: Junta los libros en parejas de 2 en 2 primero (como un torneo eliminatorio) y coloca siempre el objeto más caro en la ranura IZQUIERDA. Abajo tienes el orden exacto calculado para ti.
+        </p>
+      </div>
+
+      <!-- =================================================================== -->
+      <!-- ETAPA 4: ORDEN EXACTO EN EL YUNQUE (GUI CLÁSICA + COMPARATIVA)      -->
+      <!-- =================================================================== -->
+      <section class="mc-panel p-5 space-y-5">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b-2 border-[#8c8c8c] pb-3">
+          <div class="flex items-center gap-2.5">
+            <span class="px-2.5 py-1 bg-[#0369a1] text-white font-pixel text-xs border-t border-l border-[#7dd3fc] border-r border-b border-[#0c4a6e] shadow-[2px_2px_0_#1e1e24]">ETAPA 4</span>
+            <div>
+              <h2 class="font-pixel text-sm sm:text-base text-[#1f1f24] drop-shadow-[1px_1px_0_#efefef]">Orden exacto para juntar todo en el Yunque</h2>
+              <p class="text-xs text-[#3b3b42] mt-0.5">Sigue estos pasos en estricto orden para gastar el mínimo de niveles de experiencia.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Barra de métricas de XP -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div class="mc-recessed-dark p-3">
+            <span class="text-[11px] font-bold text-slate-300 block">COSTE TOTAL</span>
+            <div id="kpi-total-levels" class="text-xl sm:text-2xl font-pixel mc-xp-text mt-1">0 Niv.</div>
+            <span id="kpi-total-xp" class="text-[11px] font-mono text-slate-400">0 pts XP</span>
+          </div>
+          <div class="mc-recessed-dark p-3">
+            <span class="text-[11px] font-bold text-slate-300 block">PASO MÁS CARO</span>
+            <div id="kpi-max-step" class="text-xl sm:text-2xl font-pixel text-white mt-1">0 Niv.</div>
+            <span id="kpi-anvil-status" class="text-[11px] font-bold text-[#4ade80]">Límite: 39 Niv.</span>
+          </div>
+          <div class="mc-recessed-dark p-3">
+            <span class="text-[11px] font-bold text-slate-300 block">USOS DE YUNQUE</span>
+            <div id="kpi-steps-count" class="text-xl sm:text-2xl font-pixel text-[#fcee4b] mt-1">0 pasos</div>
+            <span id="kpi-pwp-final" class="text-[11px] font-mono text-slate-400">Recargo final: +0</span>
+          </div>
+          <div class="mc-recessed-dark p-3">
+            <span class="text-[11px] font-bold text-slate-300 block">AHORRO DE XP</span>
+            <div id="kpi-savings" class="text-xl sm:text-2xl font-pixel text-cyan-300 mt-1">0 Niv.</div>
+            <span id="kpi-savings-sub" class="text-[11px] text-slate-400">vs meter 1 a 1</span>
+          </div>
+        </div>
+
+        <!-- Alerta de Viabilidad -->
+        <div id="anvil-alert-box" class="hidden p-4 border-2"></div>
+
+        <!-- Lista Lineal de Pasos Visuales estilo Interfaz Real de Yunque -->
+        <div id="steps-container" class="space-y-4">
+          <!-- Pasos generados dinámicamente -->
+        </div>
+
+        <!-- COMPARATIVA CON NÚMEROS CONCRETOS: QUÉ PASARÍA EN OTRO ORDEN -->
+        <div id="order-comparison-panel" class="space-y-3 pt-2">
+          <!-- Generado dinámicamente con números exactos de la selección actual -->
+        </div>
+      </section>
+
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- PESTAÑA 2: GUÍA DE ALDEANOS Y MESAS DE TRABAJO                        -->
+    <!-- ===================================================================== -->
+    <div id="tab-villagers" class="hidden space-y-6">
+      <section class="mc-panel p-5 space-y-4">
+        <div class="border-b-2 border-[#8c8c8c] pb-3">
+          <h2 class="font-pixel text-base text-[#1f1f24] drop-shadow-[1px_1px_0_#efefef]">🧑‍🌾 Guía completa de Aldeanos y Mesas de Trabajo</h2>
+          <p class="text-xs text-[#3b3b42] mt-1">
+            Todos los aldeanos de equipamiento (Armero, Herreros, Flechero, Pescador) generan sus encantamientos simulando una mesa de nivel 5 a 19, por lo que tienen un límite máximo. Usa el filtro para consultar cada profesión.
+          </p>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-2.5">
+          <input type="text" id="villager-search" oninput="renderVillagerTable()" placeholder="Buscar objeto, encantamiento o mesa..." class="flex-1 mc-recessed-dark px-3.5 py-2 text-xs text-white outline-none" />
+          <select id="villager-filter-prof" onchange="renderVillagerTable()" class="mc-recessed-dark px-3.5 py-2 text-xs text-white outline-none cursor-pointer">
+            <option value="ALL">Todas las profesiones</option>
+            <option value="Bibliotecario">Bibliotecario (Atril)</option>
+            <option value="Armero">Armero (Alto Horno)</option>
+            <option value="Herrero de Armas">Herrero de Armas (Afiladora)</option>
+            <option value="Herrero de Herramientas">Herrero de Herramientas (Mesa Herrería)</option>
+            <option value="Flechero">Flechero (Mesa de Flechas)</option>
+            <option value="Pescador">Pescador (Barril)</option>
+          </select>
+        </div>
+
+        <div id="villager-cards-list" class="space-y-3">
+          <!-- Tarjetas generadas dinámicamente -->
+        </div>
+      </section>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- PESTAÑA 3: POR QUÉ IMPORTA EL ORDEN Y TRUCO DEL ORO                   -->
+    <!-- ===================================================================== -->
+    <div id="tab-theory" class="hidden space-y-6">
+      <section class="mc-panel p-5 space-y-4">
+        <h2 class="font-pixel text-base text-[#1f1f24] drop-shadow-[1px_1px_0_#efefef] border-b-2 border-[#8c8c8c] pb-2">📐 ¿Por qué el orden cambia el coste de experiencia?</h2>
+        <div class="space-y-3 text-xs text-[#2b2b30] leading-relaxed">
+          <p>
+            Cada vez que un objeto o libro pasa por el yunque, acumula un contador interno de usos. El recargo adicional sigue la fórmula <code class="bg-[#262830] text-[#80ff20] px-1.5 py-0.5">2^usos - 1</code>:
+          </p>
+          <div class="grid grid-cols-3 sm:grid-cols-6 gap-2 text-center font-pixel text-xs">
+            <div class="mc-recessed-dark p-2"><span class="text-slate-400 block text-[10px]">0 usos</span><span class="text-white">+0 Niv.</span></div>
+            <div class="mc-recessed-dark p-2"><span class="text-slate-400 block text-[10px]">1 uso</span><span class="text-white">+1 Niv.</span></div>
+            <div class="mc-recessed-dark p-2"><span class="text-slate-400 block text-[10px]">2 usos</span><span class="text-[#fcee4b]">+3 Niv.</span></div>
+            <div class="mc-recessed-dark p-2"><span class="text-slate-400 block text-[10px]">3 usos</span><span class="text-[#fcee4b]">+7 Niv.</span></div>
+            <div class="mc-recessed-dark p-2"><span class="text-slate-400 block text-[10px]">4 usos</span><span class="text-orange-400">+15 Niv.</span></div>
+            <div class="mc-recessed-dark p-2"><span class="text-slate-400 block text-[10px]">5 usos</span><span class="text-rose-400">+31 Niv.</span></div>
+          </div>
+          <p>
+            Además, el yunque <strong>solo cobra el valor de los encantamientos que están en la ranura DERECHA</strong>. Por eso, al juntar dos objetos ya encantados, siempre debes poner el más valioso a la <strong>IZQUIERDA</strong> y el más barato a la <strong>DERECHA</strong>.
+          </p>
+        </div>
+      </section>
+
+      <section class="mc-panel p-5 space-y-4">
+        <h2 class="font-pixel text-base text-[#78350f] drop-shadow-[1px_1px_0_#efefef] border-b-2 border-[#8c8c8c] pb-2">🪙 Protocolo del Truco del Oro en Mesa Nivel 30</h2>
+        <div class="space-y-2.5 text-xs text-[#2b2b30] leading-relaxed">
+          <p>
+            El <strong>Oro tiene encantabilidad 22–25</strong> (más del doble que el Diamante, que tiene 10). Esto hace que en la Mesa de Encantamientos de nivel 30 aparezcan encantamientos de nivel alto con mucha mayor facilidad.
+          </p>
+          <ol class="list-decimal list-inside space-y-2 bg-[#b5b5b5] p-3.5 border-t-2 border-l-2 border-[#6e6e6e] border-r-2 border-b-2 border-[#ececec]">
+            <li>Coloca tu pieza de diamante en la mesa (con 15 librerías) y mira la vista previa de Nivel 30 sin gastar nada.</li>
+            <li>Si no te gusta lo que ofrece, quita el diamante, pon una <strong>pala o espada de oro</strong> y encántala gastando solo <strong>1 nivel de XP y 1 lapislázuli</strong>.</li>
+            <li>Esa acción refresca la semilla aleatoria de tu jugador. Pasa el objeto de oro por la <strong>Afiladora</strong> para recuperar XP y vuelve a revisar tu pieza de diamante hasta que salga con 2 o 3 encantamientos gratis.</li>
+          </ol>
+        </div>
+      </section>
+    </div>
+
+    <!-- ===================================================================== -->
+    <!-- PESTAÑA 4: CÓDIGO FUENTE NATIVO EN RUST                               -->
+    <!-- ===================================================================== -->
+    <div id="tab-rust" class="hidden space-y-6">
+      <section class="mc-panel p-5 space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b-2 border-[#8c8c8c] pb-3">
+          <div>
+            <h2 class="font-pixel text-base text-[#1f1f24] drop-shadow-[1px_1px_0_#efefef]">🦀 Motor Nativo en Rust (Programación Dinámica)</h2>
+            <p class="text-xs text-[#3b3b42] mt-0.5">Código fuente en Rust (<code class="bg-[#262830] text-[#80ff20] px-1">anvil_dp_optimizer.rs</code>) que implementa el mismo algoritmo exacto de esta web.</p>
+          </div>
+          <button onclick="copyRustCode()" id="btn-copy-rust" class="mc-btn mc-tab-active px-3.5 py-2 text-xs font-pixel self-start sm:self-auto">
+            Copiar Código
+          </button>
+        </div>
+        <pre id="rust-code-block" class="mc-recessed-dark p-4 text-xs font-mono text-emerald-300 overflow-x-auto leading-relaxed"></pre>
+      </section>
+    </div>
+
+  </main>
+
+  <footer class="border-t-4 border-[#555555] bg-[#b8b8b8] py-4 px-4 mt-8">
+    <div class="max-w-[860px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-[#2d2d34] font-medium">
+      <span>Minecraft Enchant & Anvil DP Optimizer · Java & Bedrock 1.21+</span>
+      <span class="font-mono text-[#1f1f24]">Archivo autocontenido listo para GitHub Pages</span>
+    </div>
+  </footer>
+
+  <!-- ======================================================================= -->
+  <!-- MOTOR JAVASCRIPT COMPLETO CON PIXEL ART ISOMÉTRICO 32x32 MULTI-ESCALA   -->
+  <!-- ======================================================================= -->
+  <script>
+    // =========================================================================
+    // DICCIONARIO DE ICONOS 16x16 ORTOGONALES ESTILO MINECRAFT VANILLA
+    // =========================================================================
+    const PIXEL_ICONS = {
+      anvil_mini: `<svg viewBox="0 0 16 16" class="w-8 h-8" shape-rendering="crispEdges">
+        <rect x="2" y="3" width="12" height="3" fill="#4b5563"/><rect x="3" y="2" width="10" height="1" fill="#9ca3af"/>
+        <rect x="5" y="6" width="6" height="2" fill="#374151"/><rect x="6" y="8" width="4" height="3" fill="#1f2937"/>
+        <rect x="3" y="11" width="10" height="3" fill="#374151"/><rect x="4" y="11" width="8" height="1" fill="#6b7280"/>
+      </svg>`,
+      emerald: `<svg viewBox="0 0 16 16" class="w-8 h-8" shape-rendering="crispEdges">
+        <rect x="6" y="2" width="4" height="1" fill="#065f46"/><rect x="5" y="3" width="6" height="1" fill="#10b981"/>
+        <rect x="4" y="4" width="8" height="8" fill="#059669"/><rect x="5" y="4" width="3" height="4" fill="#6ee7b7"/>
+        <rect x="6" y="5" width="4" height="6" fill="#10b981"/><rect x="5" y="12" width="6" height="1" fill="#047857"/>
+        <rect x="6" y="13" width="4" height="1" fill="#064e3b"/>
+      </svg>`,
+      lapis: `<svg viewBox="0 0 16 16" class="w-8 h-8" shape-rendering="crispEdges">
+        <rect x="5" y="3" width="6" height="2" fill="#1d4ed8"/><rect x="3" y="5" width="10" height="6" fill="#2563eb"/>
+        <rect x="4" y="4" width="4" height="3" fill="#60a5fa"/><rect x="7" y="7" width="4" height="3" fill="#1e40af"/>
+        <rect x="5" y="11" width="6" height="2" fill="#1e3a8a"/>
+      </svg>`,
+      book_normal: `<svg viewBox="0 0 16 16" class="w-8 h-8" shape-rendering="crispEdges">
+        <rect x="3" y="2" width="9" height="12" fill="#78350f"/><rect x="4" y="3" width="8" height="10" fill="#92400e"/>
+        <rect x="11" y="3" width="2" height="10" fill="#fef3c7"/><rect x="4" y="2" width="1" height="12" fill="#451a03"/>
+        <rect x="6" y="5" width="4" height="2" fill="#fbbf24"/>
+      </svg>`,
+      book_enchanted: `<svg viewBox="0 0 16 16" class="w-8 h-8" shape-rendering="crispEdges">
+        <rect x="3" y="2" width="9" height="12" fill="#581c87"/><rect x="4" y="3" width="8" height="10" fill="#7e22ce"/>
+        <rect x="11" y="3" width="2" height="10" fill="#f3e8ff"/><rect x="4" y="2" width="1" height="12" fill="#3b0764"/>
+        <rect x="6" y="5" width="4" height="2" fill="#e879f9"/><rect x="7" y="8" width="3" height="2" fill="#c084fc"/>
+      </svg>`,
+      gold_shovel: `<svg viewBox="0 0 16 16" class="w-8 h-8" shape-rendering="crispEdges">
+        <rect x="10" y="2" width="4" height="4" fill="#facc15"/><rect x="11" y="2" width="2" height="2" fill="#fef08a"/>
+        <rect x="9" y="5" width="2" height="2" fill="#ca8a04"/><rect x="7" y="7" width="2" height="2" fill="#78350f"/>
+        <rect x="5" y="9" width="2" height="2" fill="#78350f"/><rect x="3" y="11" width="2" height="2" fill="#78350f"/>
+        <rect x="2" y="12" width="2" height="2" fill="#451a03"/>
+      </svg>`,
+      sword: `<svg viewBox="0 0 16 16" class="w-9 h-9" shape-rendering="crispEdges">
+        <rect x="12" y="2" width="2" height="2" fill="#67e8f9"/><rect x="10" y="4" width="3" height="3" fill="#22d3ee"/>
+        <rect x="8" y="6" width="3" height="3" fill="#06b6d4"/><rect x="6" y="8" width="3" height="3" fill="#0891b2"/>
+        <rect x="4" y="8" width="2" height="2" fill="#0e7490"/><rect x="7" y="11" width="2" height="2" fill="#0e7490"/>
+        <rect x="5" y="10" width="2" height="2" fill="#78350f"/><rect x="3" y="12" width="2" height="2" fill="#451a03"/>
+      </svg>`,
+      pickaxe: `<svg viewBox="0 0 16 16" class="w-9 h-9" shape-rendering="crispEdges">
+        <rect x="4" y="2" width="8" height="2" fill="#22d3ee"/><rect x="3" y="3" width="2" height="2" fill="#06b6d4"/>
+        <rect x="11" y="3" width="2" height="3" fill="#06b6d4"/><rect x="12" y="5" width="2" height="4" fill="#0891b2"/>
+        <rect x="8" y="4" width="2" height="2" fill="#67e8f9"/><rect x="7" y="6" width="2" height="2" fill="#78350f"/>
+        <rect x="5" y="8" width="2" height="2" fill="#78350f"/><rect x="3" y="10" width="2" height="2" fill="#78350f"/>
+        <rect x="2" y="12" width="2" height="2" fill="#451a03"/>
+      </svg>`,
+      axe: `<svg viewBox="0 0 16 16" class="w-9 h-9" shape-rendering="crispEdges">
+        <rect x="8" y="2" width="5" height="5" fill="#22d3ee"/><rect x="7" y="3" width="2" height="4" fill="#06b6d4"/>
+        <rect x="11" y="3" width="2" height="3" fill="#67e8f9"/><rect x="8" y="6" width="2" height="2" fill="#78350f"/>
+        <rect x="6" y="8" width="2" height="2" fill="#78350f"/><rect x="4" y="10" width="2" height="2" fill="#78350f"/>
+        <rect x="2" y="12" width="2" height="2" fill="#451a03"/>
+      </svg>`,
+      shovel: `<svg viewBox="0 0 16 16" class="w-9 h-9" shape-rendering="crispEdges">
+        <rect x="10" y="2" width="4" height="4" fill="#22d3ee"/><rect x="11" y="2" width="2" height="2" fill="#67e8f9"/>
+        <rect x="9" y="5" width="2" height="2" fill="#0891b2"/><rect x="7" y="7" width="2" height="2" fill="#78350f"/>
+        <rect x="5" y="9" width="2" height="2" fill="#78350f"/><rect x="3" y="11" width="2" height="2" fill="#78350f"/>
+        <rect x="2" y="12" width="2" height="2" fill="#451a03"/>
+      </svg>`,
+      hoe: `<svg viewBox="0 0 16 16" class="w-9 h-9" shape-rendering="crispEdges">
+        <rect x="5" y="2" width="7" height="2" fill="#22d3ee"/><rect x="10" y="3" width="2" height="3" fill="#06b6d4"/>
+        <rect x="8" y="4" width="2" height="2" fill="#78350f"/><rect x="6" y="6" width="2" height="2" fill="#78350f"/>
+        <rect x="4" y="8" width="2" height="2" fill="#78350f"/><rect x="2" y="10" width="2" height="3" fill="#451a03"/>
+      </svg>`,
+      helmet: `<svg viewBox="0 0 16 16" class="w-9 h-9" shape-rendering="crispEdges">
+        <rect x="4" y="3" width="8" height="2" fill="#67e8f9"/><rect x="3" y="5" width="10" height="6" fill="#22d3ee"/>
+        <rect x="5" y="7" width="6" height="4" fill="#1e293b"/><rect x="7" y="6" width="2" height="3" fill="#06b6d4"/>
+      </svg>`,
+      chestplate: `<svg viewBox="0 0 16 16" class="w-9 h-9" shape-rendering="crispEdges">
+        <rect x="2" y="3" width="4" height="4" fill="#22d3ee"/><rect x="10" y="3" width="4" height="4" fill="#22d3ee"/>
+        <rect x="4" y="4" width="8" height="9" fill="#06b6d4"/><rect x="6" y="4" width="4" height="2" fill="#1e293b"/>
+        <rect x="5" y="6" width="3" height="5" fill="#67e8f9"/>
+      </svg>`,
+      leggings: `<svg viewBox="0 0 16 16" class="w-9 h-9" shape-rendering="crispEdges">
+        <rect x="4" y="2" width="8" height="3" fill="#67e8f9"/><rect x="4" y="5" width="3" height="8" fill="#22d3ee"/>
+        <rect x="9" y="5" width="3" height="8" fill="#06b6d4"/><rect x="7" y="5" width="2" height="2" fill="#0891b2"/>
+      </svg>`,
+      boots: `<svg viewBox="0 0 16 16" class="w-9 h-9" shape-rendering="crispEdges">
+        <rect x="3" y="6" width="3" height="6" fill="#22d3ee"/><rect x="2" y="10" width="5" height="3" fill="#06b6d4"/>
+        <rect x="10" y="6" width="3" height="6" fill="#22d3ee"/><rect x="9" y="10" width="5" height="3" fill="#06b6d4"/>
+      </svg>`,
+      elytra: `<svg viewBox="0 0 16 16" class="w-9 h-9" shape-rendering="crispEdges">
+        <rect x="4" y="2" width="3" height="10" fill="#94a3b8"/><rect x="9" y="2" width="3" height="10" fill="#94a3b8"/>
+        <rect x="3" y="5" width="3" height="8" fill="#64748b"/><rect x="10" y="5" width="3" height="8" fill="#64748b"/>
+        <rect x="6" y="3" width="4" height="3" fill="#cbd5e1"/>
+      </svg>`,
+      bow: `<svg viewBox="0 0 16 16" class="w-9 h-9" shape-rendering="crispEdges">
+        <rect x="4" y="2" width="2" height="2" fill="#78350f"/><rect x="6" y="3" width="2" height="2" fill="#92400e"/>
+        <rect x="8" y="5" width="2" height="6" fill="#78350f"/><rect x="6" y="11" width="2" height="2" fill="#92400e"/>
+        <rect x="4" y="12" width="2" height="2" fill="#78350f"/><rect x="4" y="4" width="1" height="8" fill="#e2e8f0"/>
+      </svg>`,
+      crossbow: `<svg viewBox="0 0 16 16" class="w-9 h-9" shape-rendering="crispEdges">
+        <rect x="3" y="3" width="10" height="2" fill="#64748b"/><rect x="2" y="4" width="2" height="3" fill="#475569"/>
+        <rect x="12" y="4" width="2" height="3" fill="#475569"/><rect x="7" y="3" width="2" height="10" fill="#78350f"/>
+        <rect x="4" y="6" width="8" height="1" fill="#e2e8f0"/>
+      </svg>`,
+      trident: `<svg viewBox="0 0 16 16" class="w-9 h-9" shape-rendering="crispEdges">
+        <rect x="9" y="2" width="1" height="4" fill="#5eead4"/><rect x="11" y="2" width="1" height="4" fill="#5eead4"/>
+        <rect x="13" y="3" width="1" height="4" fill="#5eead4"/><rect x="9" y="5" width="5" height="2" fill="#14b8a6"/>
+        <rect x="8" y="7" width="2" height="2" fill="#0d9488"/><rect x="6" y="9" width="2" height="2" fill="#0f766e"/>
+        <rect x="4" y="11" width="2" height="2" fill="#0f766e"/><rect x="2" y="13" width="2" height="2" fill="#115e59"/>
+      </svg>`,
+      mace: `<svg viewBox="0 0 16 16" class="w-9 h-9" shape-rendering="crispEdges">
+        <rect x="8" y="2" width="6" height="6" fill="#475569"/><rect x="9" y="3" width="4" height="4" fill="#94a3b8"/>
+        <rect x="10" y="3" width="2" height="2" fill="#cbd5e1"/><rect x="6" y="8" width="2" height="2" fill="#eab308"/>
+        <rect x="4" y="10" width="2" height="2" fill="#ca8a04"/><rect x="2" y="12" width="2" height="2" fill="#854d0e"/>
+      </svg>`,
+      rod: `<svg viewBox="0 0 16 16" class="w-9 h-9" shape-rendering="crispEdges">
+        <rect x="11" y="2" width="2" height="2" fill="#78350f"/><rect x="9" y="4" width="2" height="2" fill="#78350f"/>
+        <rect x="7" y="6" width="2" height="2" fill="#78350f"/><rect x="5" y="8" width="2" height="2" fill="#78350f"/>
+        <rect x="3" y="10" width="2" height="3" fill="#451a03"/><rect x="12" y="4" width="1" height="7" fill="#e2e8f0"/>
+        <rect x="11" y="11" width="2" height="2" fill="#ef4444"/>
+      </svg>`,
+      shield: `<svg viewBox="0 0 16 16" class="w-9 h-9" shape-rendering="crispEdges">
+        <rect x="4" y="2" width="8" height="11" fill="#92400e"/><rect x="3" y="2" width="1" height="10" fill="#94a3b8"/>
+        <rect x="12" y="2" width="1" height="10" fill="#94a3b8"/><rect x="5" y="13" width="6" height="1" fill="#94a3b8"/>
+        <rect x="6" y="4" width="4" height="7" fill="#b45309"/>
+      </svg>`,
+      shears: `<svg viewBox="0 0 16 16" class="w-9 h-9" shape-rendering="crispEdges">
+        <rect x="4" y="3" width="2" height="5" fill="#cbd5e1"/><rect x="10" y="3" width="2" height="5" fill="#cbd5e1"/>
+        <rect x="6" y="7" width="4" height="2" fill="#64748b"/><rect x="4" y="9" width="3" height="4" fill="#dc2626"/>
+        <rect x="9" y="9" width="3" height="4" fill="#dc2626"/>
+      </svg>`,
+      flint_steel: `<svg viewBox="0 0 16 16" class="w-9 h-9" shape-rendering="crispEdges">
+        <rect x="7" y="3" width="5" height="2" fill="#cbd5e1"/><rect x="10" y="5" width="2" height="5" fill="#94a3b8"/>
+        <rect x="7" y="9" width="4" height="2" fill="#cbd5e1"/><rect x="4" y="7" width="4" height="5" fill="#334155"/>
+      </svg>`,
+      brush: `<svg viewBox="0 0 16 16" class="w-9 h-9" shape-rendering="crispEdges">
+        <rect x="10" y="2" width="4" height="4" fill="#d97706"/><rect x="9" y="5" width="2" height="2" fill="#38bdf8"/>
+        <rect x="7" y="7" width="2" height="2" fill="#78350f"/><rect x="5" y="9" width="2" height="2" fill="#78350f"/>
+        <rect x="3" y="11" width="2" height="2" fill="#451a03"/>
+      </svg>`,
+      pumpkin: `<svg viewBox="0 0 16 16" class="w-9 h-9" shape-rendering="crispEdges">
+        <rect x="7" y="2" width="2" height="2" fill="#15803d"/><rect x="3" y="4" width="10" height="9" fill="#ea580c"/>
+        <rect x="4" y="4" width="8" height="9" fill="#f97316"/><rect x="5" y="6" width="2" height="2" fill="#1e1b18"/>
+        <rect x="9" y="6" width="2" height="2" fill="#1e1b18"/><rect x="5" y="10" width="6" height="2" fill="#1e1b18"/>
+      </svg>`
+    };
+
+    // =========================================================================
+    // RETRATOS 32x32 ORTOGONALES SIN LÍNEAS DIAGONALES (ALDEANOS / ESTACIONES)
+    // =========================================================================
+    const LIVE_ACTORS = {
+      librarian: `<svg viewBox="0 0 32 32" class="w-8 h-8" shape-rendering="crispEdges">
+        <rect x="8" y="3" width="16" height="3" fill="#dc2626"/><rect x="6" y="6" width="20" height="2" fill="#b91c1c"/>
+        <rect x="10" y="5" width="12" height="2" fill="#facc15"/><rect x="9" y="8" width="14" height="13" fill="#a16244"/>
+        <rect x="10" y="11" width="12" height="2" fill="#451a03"/><rect x="10" y="13" width="3" height="2" fill="#ffffff"/>
+        <rect x="11" y="13" width="2" height="2" fill="#15803d"/><rect x="19" y="13" width="3" height="2" fill="#ffffff"/>
+        <rect x="19" y="13" width="2" height="2" fill="#15803d"/><rect x="14" y="14" width="4" height="6" fill="#854d32"/>
+        <rect x="7" y="21" width="18" height="9" fill="#991b1b"/><rect x="12" y="21" width="8" height="9" fill="#f8fafc"/>
+      </svg>`,
+      armorer: `<svg viewBox="0 0 32 32" class="w-8 h-8" shape-rendering="crispEdges">
+        <rect x="9" y="4" width="14" height="17" fill="#a16244"/><rect x="9" y="4" width="14" height="3" fill="#475569"/>
+        <rect x="10" y="11" width="12" height="2" fill="#451a03"/><rect x="10" y="13" width="3" height="2" fill="#ffffff"/>
+        <rect x="11" y="13" width="2" height="2" fill="#1e293b"/><rect x="19" y="13" width="3" height="2" fill="#ffffff"/>
+        <rect x="19" y="13" width="2" height="2" fill="#1e293b"/><rect x="14" y="14" width="4" height="6" fill="#854d32"/>
+        <rect x="7" y="21" width="18" height="9" fill="#334155"/><rect x="11" y="21" width="10" height="9" fill="#1e293b"/>
+      </svg>`,
+      weaponsmith: `<svg viewBox="0 0 32 32" class="w-8 h-8" shape-rendering="crispEdges">
+        <rect x="9" y="4" width="14" height="17" fill="#a16244"/><rect x="18" y="11" width="5" height="5" fill="#18181b"/>
+        <rect x="10" y="11" width="7" height="2" fill="#451a03"/><rect x="10" y="13" width="3" height="2" fill="#ffffff"/>
+        <rect x="11" y="13" width="2" height="2" fill="#1e293b"/><rect x="14" y="14" width="4" height="6" fill="#854d32"/>
+        <rect x="7" y="21" width="18" height="9" fill="#78350f"/><rect x="11" y="22" width="10" height="8" fill="#27272a"/>
+      </svg>`,
+      toolsmith: `<svg viewBox="0 0 32 32" class="w-8 h-8" shape-rendering="crispEdges">
+        <rect x="9" y="4" width="14" height="17" fill="#a16244"/><rect x="10" y="11" width="12" height="2" fill="#451a03"/>
+        <rect x="10" y="13" width="3" height="2" fill="#ffffff"/><rect x="11" y="13" width="2" height="2" fill="#1e293b"/>
+        <rect x="19" y="13" width="3" height="2" fill="#ffffff"/><rect x="19" y="13" width="2" height="2" fill="#1e293b"/>
+        <rect x="14" y="14" width="4" height="6" fill="#854d32"/><rect x="7" y="21" width="18" height="9" fill="#57534e"/>
+        <rect x="11" y="21" width="10" height="9" fill="#92400e"/>
+      </svg>`,
+      fletcher: `<svg viewBox="0 0 32 32" class="w-8 h-8" shape-rendering="crispEdges">
+        <rect x="8" y="4" width="16" height="3" fill="#3f6212"/><rect x="9" y="7" width="14" height="14" fill="#a16244"/>
+        <rect x="10" y="11" width="12" height="2" fill="#451a03"/><rect x="10" y="13" width="3" height="2" fill="#ffffff"/>
+        <rect x="11" y="13" width="2" height="2" fill="#1e293b"/><rect x="19" y="13" width="3" height="2" fill="#ffffff"/>
+        <rect x="19" y="13" width="2" height="2" fill="#1e293b"/><rect x="14" y="14" width="4" height="6" fill="#854d32"/>
+        <rect x="7" y="21" width="18" height="9" fill="#713f12"/><rect x="13" y="21" width="6" height="9" fill="#a16207"/>
+      </svg>`,
+      fisherman: `<svg viewBox="0 0 32 32" class="w-8 h-8" shape-rendering="crispEdges">
+        <rect x="6" y="5" width="20" height="2" fill="#d97706"/><rect x="9" y="3" width="14" height="2" fill="#f59e0b"/>
+        <rect x="9" y="7" width="14" height="14" fill="#a16244"/><rect x="10" y="11" width="12" height="2" fill="#451a03"/>
+        <rect x="10" y="13" width="3" height="2" fill="#ffffff"/><rect x="11" y="13" width="2" height="2" fill="#1e293b"/>
+        <rect x="19" y="13" width="3" height="2" fill="#ffffff"/><rect x="19" y="13" width="2" height="2" fill="#1e293b"/>
+        <rect x="14" y="14" width="4" height="6" fill="#854d32"/><rect x="7" y="21" width="18" height="9" fill="#0369a1"/>
+      </svg>`,
+      enchant_table: `<svg viewBox="0 0 32 32" class="w-8 h-8" shape-rendering="crispEdges">
+        <rect x="11" y="4" width="10" height="6" fill="#991b1b"/><rect x="12" y="5" width="8" height="4" fill="#fef3c7"/>
+        <rect x="6" y="13" width="20" height="4" fill="#dc2626"/><rect x="8" y="13" width="4" height="2" fill="#38bdf8"/>
+        <rect x="20" y="13" width="4" height="2" fill="#38bdf8"/><rect x="5" y="17" width="22" height="11" fill="#1e1b4b"/>
+        <rect x="7" y="19" width="18" height="7" fill="#312e81"/>
+      </svg>`,
+      end_ship: `<svg viewBox="0 0 32 32" class="w-8 h-8" shape-rendering="crispEdges">
+        <rect x="15" y="3" width="2" height="15" fill="#fde047"/><rect x="9" y="5" width="6" height="8" fill="#a855f7"/>
+        <rect x="6" y="18" width="20" height="6" fill="#7e22ce"/><rect x="8" y="24" width="16" height="4" fill="#581c87"/>
+      </svg>`,
+      drowned: `<svg viewBox="0 0 32 32" class="w-8 h-8" shape-rendering="crispEdges">
+        <rect x="9" y="4" width="14" height="15" fill="#2dd4bf"/><rect x="10" y="10" width="3" height="2" fill="#cffafe"/>
+        <rect x="19" y="10" width="3" height="2" fill="#cffafe"/><rect x="12" y="14" width="8" height="2" fill="#0f766e"/>
+        <rect x="7" y="19" width="18" height="10" fill="#115e59"/><rect x="10" y="20" width="12" height="6" fill="#78350f"/>
+      </svg>`,
+      anvil_32: `<svg viewBox="0 0 32 32" class="w-8 h-8" shape-rendering="crispEdges">
+        <rect x="4" y="6" width="24" height="6" fill="#4b5563"/><rect x="6" y="4" width="20" height="2" fill="#9ca3af"/>
+        <rect x="10" y="12" width="12" height="4" fill="#374151"/><rect x="12" y="16" width="8" height="6" fill="#1f2937"/>
+        <rect x="6" y="22" width="20" height="6" fill="#374151"/><rect x="8" y="22" width="16" height="2" fill="#6b7280"/>
+      </svg>`
+    };
+
+    // =========================================================================
+    // BASE DE DATOS DE MATERIALES, ÍTEMS, ENCANTAMIENTOS Y ALDEANOS
+    // =========================================================================
+    const MATERIALS = {
+      netherite: { name: 'Netherita', enchArmor: 15, enchTool: 15, villagerNote: 'Se obtiene mejorando la pieza de Diamante en la Mesa de Herrería con 1 Lingote de Netherita + Plantilla.' },
+      diamond:   { name: 'Diamante',  enchArmor: 10, enchTool: 10, villagerNote: 'Disponible en aldeanos de Nivel Experto/Maestro y crafteable con diamantes.' },
+      iron:      { name: 'Hierro',    enchArmor: 9,  enchTool: 14, villagerNote: 'Vendido por aldeanos desde niveles bajos (Novato/Aprendiz/Oficial).' },
+      gold:      { name: 'Oro',       enchArmor: 25, enchTool: 22, villagerNote: 'Máxima encantabilidad (22–25): ideal para sacar encantamientos altos en Mesa Nv. 30.' },
+      chainmail: { name: 'Cota de Malla', enchArmor: 12, enchTool: 12, villagerNote: 'No se craftea; se compra directamente al Armero (Novato/Aprendiz).' },
+      leather:   { name: 'Cuero',     enchArmor: 15, enchTool: 15, villagerNote: 'Vendido teñido por el Peletero (Leatherworker) o crafteado con cuero.' },
+      turtle:    { name: 'Caparazón de Tortuga', enchArmor: 9, enchTool: 9, villagerNote: 'Se craftea con 5 escamas de tortuga; no lo venden los aldeanos.' },
+      stone:     { name: 'Piedra',    enchArmor: 5,  enchTool: 5,  villagerNote: 'Vendido por el Herrero de Herramientas en nivel Novato.' },
+      wood:      { name: 'Madera',    enchArmor: 15, enchTool: 15, villagerNote: 'Crafteable al inicio del juego; alta encantabilidad (15).' }
+    };
+
+    const ENCHANTMENTS = {
+      protection:       { name: 'Protección', maxLvl: 4, bookMult: 1, group: 'prot', plainDesc: 'Reduce todo tipo de daño recibido (golpes, caídas, fuego y explosiones).' },
+      fire_protection:  { name: 'Protección contra el Fuego', maxLvl: 4, bookMult: 1, group: 'prot', plainDesc: 'Reduce mucho el daño de lava, fuego y blazes.' },
+      blast_protection: { name: 'Protección contra Explosiones', maxLvl: 4, bookMult: 2, group: 'prot', plainDesc: 'Reduce el daño y el empuje de Creepers, TNT y cristales del End.' },
+      proj_protection:  { name: 'Protección contra Proyectiles', maxLvl: 4, bookMult: 1, group: 'prot', plainDesc: 'Reduce el daño de flechas, tridentes y bolas de fuego.' },
+      feather_falling:  { name: 'Caída de Pluma', maxLvl: 4, bookMult: 1, group: null, plainDesc: 'Reduce drásticamente el daño al caer desde lugares altos y al usar Perlas de Ender.' },
+      respiration:      { name: 'Respiración', maxLvl: 3, bookMult: 2, group: null, plainDesc: 'Permite aguantar mucho más tiempo sin aire bajo el agua.' },
+      aqua_affinity:    { name: 'Afinidad Acuática', maxLvl: 1, bookMult: 2, group: null, plainDesc: 'Permite picar bloques bajo el agua a velocidad normal.' },
+      thorns:           { name: 'Espinas', maxLvl: 3, bookMult: 4, group: null, plainDesc: 'Devuelve daño a los enemigos cuando te golpean (gasta durabilidad extra).' },
+      depth_strider:    { name: 'Agilidad Acuática', maxLvl: 3, bookMult: 2, group: 'boot_walk', plainDesc: 'Permite nadar y caminar rápido bajo el agua.' },
+      frost_walker:     { name: 'Paso Helado', maxLvl: 2, bookMult: 2, group: 'boot_walk', plainDesc: 'Congela el agua bajo tus pies al caminar.' },
+      soul_speed:       { name: 'Velocidad de Almas', maxLvl: 3, bookMult: 4, group: null, plainDesc: 'Aumenta la velocidad al caminar sobre arena y tierra de almas.' },
+      swift_sneak:      { name: 'Sigilo Veloz', maxLvl: 3, bookMult: 4, group: null, plainDesc: 'Permite caminar rápido mientras vas agachado.' },
+      sharpness:        { name: 'Filo', maxLvl: 5, bookMult: 1, group: 'dmg', plainDesc: 'Aumenta el daño contra todos los enemigos y jefes.' },
+      smite:            { name: 'Castigo', maxLvl: 5, bookMult: 1, group: 'dmg', plainDesc: 'Daño masivo extra contra no-muertos (Zombis, Esqueletos, Wither).' },
+      bane_arthropods:  { name: 'Perdición de los Artrópodos', maxLvl: 5, bookMult: 1, group: 'dmg', plainDesc: 'Daño extra y lentitud contra arañas, lepisma y endermites.' },
+      knockback:        { name: 'Empuje', maxLvl: 2, bookMult: 1, group: null, plainDesc: 'Lanza hacia atrás a los enemigos al golpearlos.' },
+      fire_aspect:      { name: 'Aspecto Ígneo', maxLvl: 2, bookMult: 2, group: null, plainDesc: 'Quema a los enemigos al golpearlos y cocina la carne de animales.' },
+      looting:          { name: 'Botín', maxLvl: 3, bookMult: 2, group: null, plainDesc: 'Aumenta la cantidad de objetos y cabezas que sueltan los enemigos.' },
+      sweeping_edge:    { name: 'Filo Arrasador', maxLvl: 3, bookMult: 2, group: null, plainDesc: 'Aumenta el daño en área del ataque barrido (solo Java).' },
+      efficiency:       { name: 'Eficiencia', maxLvl: 5, bookMult: 1, group: null, plainDesc: 'Aumenta muchísimo la velocidad al picar, talar o excavar.' },
+      silk_touch:       { name: 'Toque de Seda', maxLvl: 1, bookMult: 4, group: 'mine_drop', plainDesc: 'Recoge el bloque intacto (menas, cristal, hielo, césped).' },
+      fortune:          { name: 'Fortuna', maxLvl: 3, bookMult: 2, group: 'mine_drop', plainDesc: 'Multiplica los diamantes, carbón, cultivos y minerales obtenidos.' },
+      unbreaking:       { name: 'Irrompibilidad', maxLvl: 3, bookMult: 1, group: null, plainDesc: 'Triplica la vida útil del objeto evitando que se rompa rápido.' },
+      mending:          { name: 'Reparación', maxLvl: 1, bookMult: 2, group: null, plainDesc: 'Repara automáticamente el objeto usando los orbes de experiencia que recoges.' },
+      power:            { name: 'Poder', maxLvl: 5, bookMult: 1, group: null, plainDesc: 'Aumenta considerablemente el daño de las flechas.' },
+      punch:            { name: 'Retroceso', maxLvl: 2, bookMult: 2, group: null, plainDesc: 'Empuja hacia atrás a los enemigos impactados por tus flechas.' },
+      flame:            { name: 'Fuego', maxLvl: 1, bookMult: 2, group: null, plainDesc: 'Dispara flechas en llamas que incendian al objetivo.' },
+      infinity:         { name: 'Infinidad', maxLvl: 1, bookMult: 4, group: null, plainDesc: 'Permite disparar flechas normales infinitas teniendo solo 1 en el inventario.' },
+      multishot:        { name: 'Multidisparo', maxLvl: 1, bookMult: 2, group: 'xbow', plainDesc: 'Dispara 3 flechas o cohetes en abanico gastando solo 1.' },
+      piercing:         { name: 'Perforación', maxLvl: 4, bookMult: 1, group: 'xbow', plainDesc: 'Las flechas atraviesan escudos y varios enemigos en fila.' },
+      quick_charge:     { name: 'Carga Rápida', maxLvl: 3, bookMult: 1, group: null, plainDesc: 'Reduce el tiempo necesario para recargar la ballesta.' },
+      loyalty:          { name: 'Lealtad', maxLvl: 3, bookMult: 1, group: 'trident_mov', plainDesc: 'El tridente regresa automáticamente a tu mano tras lanzarlo.' },
+      riptide:          { name: 'Propulsión Acuática', maxLvl: 3, bookMult: 2, group: 'trident_mov', plainDesc: 'Te impulsa por el aire cuando estás en el agua o bajo la lluvia.' },
+      impaling:         { name: 'Empalamiento', maxLvl: 5, bookMult: 2, group: null, plainDesc: 'Inflige daño masivo extra a criaturas acuáticas.' },
+      channeling:       { name: 'Canalización', maxLvl: 1, bookMult: 4, group: null, plainDesc: 'Invoca un rayo sobre el objetivo durante tormentas eléctricas.' },
+      density:          { name: 'Densidad', maxLvl: 5, bookMult: 1, group: 'mace_dmg', plainDesc: 'Multiplica el daño de caída por cada bloque que caes con la maza.' },
+      breach:           { name: 'Fisura', maxLvl: 4, bookMult: 2, group: 'mace_dmg', plainDesc: 'Ignora gran parte de la protección de la armadura enemiga.' },
+      wind_burst:       { name: 'Ráfaga de Viento', maxLvl: 3, bookMult: 2, group: null, plainDesc: 'Te impulsa hacia arriba tras acertar un golpe aéreo para encadenar ataques.' },
+      luck_of_the_sea:  { name: 'Suerte Marina', maxLvl: 3, bookMult: 2, group: null, plainDesc: 'Aumenta la probabilidad de pescar tesoros (libros, monturas, etiquetas).' },
+      lure:             { name: 'Atracción', maxLvl: 3, bookMult: 2, group: null, plainDesc: 'Reduce el tiempo de espera para que piquen los peces.' },
+      vanishing_curse:  { name: 'Maldición de Desaparición', maxLvl: 1, bookMult: 4, group: null, plainDesc: 'El objeto desaparece al morir (solo útil en PvP para que no lo roben).' },
+      binding_curse:    { name: 'Maldición de Ligamiento', maxLvl: 1, bookMult: 4, group: null, plainDesc: 'Impide quitarse la pieza de armadura puesta hasta morir.' }
+    };
+
+    const ITEMS = [
+      {
+        id: 'pickaxe', name: 'Pico', category: 'Herramienta', icon: 'pickaxe',
+        isArmor: false, materials: ['netherite', 'diamond', 'iron', 'gold', 'stone', 'wood'],
+        villagerMaterials: ['netherite', 'diamond', 'iron', 'stone'],
+        hasEnchantTable: true, actorKey: 'toolsmith',
+        originTitle: 'Crafteo o Herrero de Herramientas (Mesa de Herrería)',
+        originDesc: 'Puedes craftearlo con 3 unidades del material + 2 palos, o comprárselo encantado al Herrero de Herramientas.',
+        villagerLabel: 'Herrero de Herramientas (Nivel Maestro): lo vende con Toque de Seda + Irrompibilidad III de fábrica.',
+        allowed: ['efficiency', 'unbreaking', 'fortune', 'silk_touch', 'mending', 'vanishing_curse'],
+        godRoll: { efficiency: 5, unbreaking: 3, fortune: 3, mending: 1 }
+      },
+      {
+        id: 'sword', name: 'Espada', category: 'Arma Cuerpo a Cuerpo', icon: 'sword',
+        isArmor: false, materials: ['netherite', 'diamond', 'iron', 'gold', 'stone', 'wood'],
+        villagerMaterials: ['netherite', 'diamond', 'iron'],
+        hasEnchantTable: true, actorKey: 'weaponsmith',
+        originTitle: 'Crafteo o Herrero de Armas (Afiladora)',
+        originDesc: 'Crafteable con 2 unidades del material + 1 palo, o comprada encantada al Herrero de Armas.',
+        villagerLabel: 'Herrero de Armas (Nivel Maestro): puede traer Irrompibilidad III + Empuje II de fábrica.',
+        allowed: ['sharpness', 'smite', 'bane_arthropods', 'unbreaking', 'looting', 'fire_aspect', 'sweeping_edge', 'knockback', 'mending', 'vanishing_curse'],
+        godRoll: { sharpness: 5, unbreaking: 3, looting: 3, fire_aspect: 2, sweeping_edge: 3, mending: 1 }
+      },
+      {
+        id: 'axe', name: 'Hacha', category: 'Herramienta / Arma', icon: 'axe',
+        isArmor: false, materials: ['netherite', 'diamond', 'iron', 'gold', 'stone', 'wood'],
+        villagerMaterials: ['netherite', 'diamond', 'iron', 'stone'],
+        hasEnchantTable: true, actorKey: 'weaponsmith',
+        originTitle: 'Crafteo, Herrero de Armas o Herrero de Herramientas',
+        originDesc: 'Se craftea con 3 unidades del material + 2 palos, o se compra encantada en nivel Experto.',
+        villagerLabel: 'Herrero de Armas / Herramientas (Experto): puede traer Toque de Seda + Irrompibilidad III.',
+        allowed: ['efficiency', 'sharpness', 'smite', 'bane_arthropods', 'unbreaking', 'fortune', 'silk_touch', 'mending', 'vanishing_curse'],
+        godRoll: { efficiency: 5, sharpness: 5, unbreaking: 3, fortune: 3, mending: 1 }
+      },
+      {
+        id: 'shovel', name: 'Pala', category: 'Herramienta', icon: 'shovel',
+        isArmor: false, materials: ['netherite', 'diamond', 'iron', 'gold', 'stone', 'wood'],
+        villagerMaterials: ['netherite', 'diamond', 'iron', 'stone'],
+        hasEnchantTable: true, actorKey: 'toolsmith',
+        originTitle: 'Crafteo o Herrero de Herramientas (Mesa de Herrería)',
+        originDesc: 'Crafteable con 1 unidad del material + 2 palos, o vendida por el Herrero de Herramientas.',
+        villagerLabel: 'Herrero de Herramientas (Experto): puede traer Toque de Seda + Irrompibilidad III.',
+        allowed: ['efficiency', 'unbreaking', 'fortune', 'silk_touch', 'mending', 'vanishing_curse'],
+        godRoll: { efficiency: 5, unbreaking: 3, silk_touch: 1, mending: 1 }
+      },
+      {
+        id: 'hoe', name: 'Azada', category: 'Herramienta', icon: 'hoe',
+        isArmor: false, materials: ['netherite', 'diamond', 'iron', 'gold', 'stone', 'wood'],
+        villagerMaterials: [],
+        hasEnchantTable: true, actorKey: 'enchant_table',
+        originTitle: 'Crafteo (o Trueque con Piglins en Netherita)',
+        originDesc: 'Se fabrica con 2 unidades del material + 2 palos. Ningún aldeano vende azadas encantadas.',
+        villagerLabel: '',
+        allowed: ['efficiency', 'unbreaking', 'fortune', 'silk_touch', 'mending', 'vanishing_curse'],
+        godRoll: { efficiency: 5, unbreaking: 3, fortune: 3, mending: 1 }
+      },
+      {
+        id: 'helmet', name: 'Casco', category: 'Armadura', icon: 'helmet',
+        isArmor: true, materials: ['netherite', 'diamond', 'iron', 'gold', 'chainmail', 'leather', 'turtle'],
+        villagerMaterials: ['netherite', 'diamond', 'iron', 'chainmail'],
+        hasEnchantTable: true, actorKey: 'armorer',
+        originTitle: 'Crafteo o Armero (Alto Horno)',
+        originDesc: 'Crafteable con 5 piezas del material (o escamas de tortuga) o vendido por el Armero.',
+        villagerLabel: 'Armero (Maestro): puede traer Afinidad Acuática + Irrompibilidad III de fábrica.',
+        allowed: ['protection', 'fire_protection', 'blast_protection', 'proj_protection', 'respiration', 'aqua_affinity', 'unbreaking', 'thorns', 'mending', 'binding_curse', 'vanishing_curse'],
+        godRoll: { protection: 4, unbreaking: 3, respiration: 3, aqua_affinity: 1, mending: 1 }
+      },
+      {
+        id: 'chestplate', name: 'Peto', category: 'Armadura', icon: 'chestplate',
+        isArmor: true, materials: ['netherite', 'diamond', 'iron', 'gold', 'chainmail', 'leather'],
+        villagerMaterials: ['netherite', 'diamond', 'iron', 'chainmail'],
+        hasEnchantTable: true, actorKey: 'armorer',
+        originTitle: 'Crafteo o Armero (Alto Horno)',
+        originDesc: 'Crafteable con 8 unidades del material o vendido encantado por el Armero.',
+        villagerLabel: 'Armero (Maestro): puede traer Irrompibilidad III de fábrica.',
+        allowed: ['protection', 'fire_protection', 'blast_protection', 'proj_protection', 'unbreaking', 'thorns', 'mending', 'binding_curse', 'vanishing_curse'],
+        godRoll: { protection: 4, unbreaking: 3, mending: 1 }
+      },
+      {
+        id: 'leggings', name: 'Pantalones', category: 'Armadura', icon: 'leggings',
+        isArmor: true, materials: ['netherite', 'diamond', 'iron', 'gold', 'chainmail', 'leather'],
+        villagerMaterials: ['netherite', 'diamond', 'iron', 'chainmail'],
+        hasEnchantTable: true, actorKey: 'armorer',
+        originTitle: 'Crafteo o Armero (Alto Horno)',
+        originDesc: 'Crafteable con 7 unidades del material o vendido encantado por el Armero.',
+        villagerLabel: 'Armero (Experto): puede traer Irrompibilidad III de fábrica (Protección IV nunca sale aquí).',
+        allowed: ['protection', 'fire_protection', 'blast_protection', 'proj_protection', 'swift_sneak', 'unbreaking', 'thorns', 'mending', 'binding_curse', 'vanishing_curse'],
+        godRoll: { protection: 4, unbreaking: 3, swift_sneak: 3, mending: 1 }
+      },
+      {
+        id: 'boots', name: 'Botas', category: 'Armadura', icon: 'boots',
+        isArmor: true, materials: ['netherite', 'diamond', 'iron', 'gold', 'chainmail', 'leather'],
+        villagerMaterials: ['netherite', 'diamond', 'iron', 'chainmail'],
+        hasEnchantTable: true, actorKey: 'armorer',
+        originTitle: 'Crafteo o Armero (Alto Horno)',
+        originDesc: 'Crafteable con 4 unidades del material o vendidas encantadas por el Armero.',
+        villagerLabel: 'Armero (Experto): puede traer Caída de Pluma IV + Irrompibilidad III juntos.',
+        allowed: ['protection', 'fire_protection', 'blast_protection', 'proj_protection', 'feather_falling', 'depth_strider', 'frost_walker', 'soul_speed', 'unbreaking', 'thorns', 'mending', 'binding_curse', 'vanishing_curse'],
+        godRoll: { protection: 4, feather_falling: 4, depth_strider: 3, unbreaking: 3, mending: 1 }
+      },
+      {
+        id: 'elytra', name: 'Élitros (Elytra)', category: 'Equipamiento Especial', icon: 'elytra',
+        isArmor: false, materials: [], villagerMaterials: [],
+        hasEnchantTable: false, actorKey: 'end_ship', enchantability: 0,
+        originTitle: 'Exclusivo de Barcos del End (NO Crafteable / NO Aldeanos)',
+        originDesc: 'Se encuentran únicamente en los marcos de los Barcos flotantes de las Ciudades del End. No se craftean ni entran en la Mesa de Encantamientos.',
+        villagerLabel: '',
+        allowed: ['unbreaking', 'mending', 'binding_curse', 'vanishing_curse'],
+        godRoll: { unbreaking: 3, mending: 1 }
+      },
+      {
+        id: 'bow', name: 'Arco', category: 'Arma a Distancia', icon: 'bow',
+        isArmor: false, materials: [], villagerMaterials: ['default'],
+        hasEnchantTable: true, actorKey: 'fletcher', enchantability: 1,
+        originTitle: 'Crafteo o Flechero (Mesa de Flechas)',
+        originDesc: 'Se fabrica con 3 palos + 3 hilos, o se compra al Flechero (Nivel Experto).',
+        villagerLabel: 'Flechero (Experto): solo llega hasta Poder III (Fuego e Infinidad tienen 0% aquí).',
+        allowed: ['power', 'unbreaking', 'punch', 'flame', 'infinity', 'mending', 'vanishing_curse'],
+        godRoll: { power: 5, unbreaking: 3, flame: 1, punch: 2, infinity: 1 }
+      },
+      {
+        id: 'crossbow', name: 'Ballesta', category: 'Arma a Distancia', icon: 'crossbow',
+        isArmor: false, materials: [], villagerMaterials: ['default'],
+        hasEnchantTable: true, actorKey: 'fletcher', enchantability: 1,
+        originTitle: 'Crafteo o Flechero (Mesa de Flechas)',
+        originDesc: 'Crafteable con palos, hilo, hierro y gancho, o comprada al Flechero.',
+        villagerLabel: 'Flechero (Maestro): puede dar Perforación III o Carga Rápida II (Multidisparo es 0%).',
+        allowed: ['quick_charge', 'multishot', 'piercing', 'unbreaking', 'mending', 'vanishing_curse'],
+        godRoll: { quick_charge: 3, multishot: 1, unbreaking: 3, mending: 1 }
+      },
+      {
+        id: 'trident', name: 'Tridente', category: 'Arma Especial', icon: 'trident',
+        isArmor: false, materials: [], villagerMaterials: [],
+        hasEnchantTable: true, actorKey: 'drowned', enchantability: 1,
+        originTitle: 'Exclusivo de Ahogados (Drowned) — NO Aldeanos',
+        originDesc: 'Solo lo sueltan los zombis Ahogados que aparecen portándolo en océanos y ríos.',
+        villagerLabel: '',
+        allowed: ['impaling', 'loyalty', 'riptide', 'channeling', 'unbreaking', 'mending', 'vanishing_curse'],
+        godRoll: { impaling: 5, loyalty: 3, channeling: 1, unbreaking: 3, mending: 1 }
+      },
+      {
+        id: 'mace', name: 'Maza (Mace)', category: 'Arma Especial', icon: 'mace',
+        isArmor: false, materials: [], villagerMaterials: [],
+        hasEnchantTable: true, actorKey: 'enchant_table', enchantability: 15,
+        originTitle: 'Crafteo con Núcleo Pesado + Vara de Breeze',
+        originDesc: 'Se craftea combinando un Heavy Core (Bóveda Ominosa) y una Breeze Rod de las Trial Chambers.',
+        villagerLabel: '',
+        allowed: ['density', 'breach', 'wind_burst', 'smite', 'bane_arthropods', 'fire_aspect', 'unbreaking', 'mending', 'vanishing_curse'],
+        godRoll: { density: 5, wind_burst: 3, unbreaking: 3, mending: 1 }
+      },
+      {
+        id: 'fishing_rod', name: 'Caña de Pescar', category: 'Herramienta', icon: 'rod',
+        isArmor: false, materials: [], villagerMaterials: ['default'],
+        hasEnchantTable: true, actorKey: 'fisherman', enchantability: 1,
+        originTitle: 'Crafteo o Pescador (Barril)',
+        originDesc: 'Crafteable con 3 palos + 2 hilos o vendida por el Pescador (Nivel Aprendiz).',
+        villagerLabel: 'Pescador (Aprendiz): solo llega a Suerte Marina I / Atracción I.',
+        allowed: ['luck_of_the_sea', 'lure', 'unbreaking', 'mending', 'vanishing_curse'],
+        godRoll: { luck_of_the_sea: 3, lure: 3, unbreaking: 3, mending: 1 }
+      },
+      {
+        id: 'shield', name: 'Escudo', category: 'Defensa', icon: 'shield',
+        isArmor: false, materials: [], villagerMaterials: [],
+        hasEnchantTable: false, actorKey: 'librarian', enchantability: 0,
+        originTitle: 'Crafteo o Armero (sin encantar)',
+        originDesc: 'Se fabrica con 6 tablones de madera + 1 lingote de hierro. Solo se encanta en Yunque.',
+        villagerLabel: '',
+        allowed: ['unbreaking', 'mending', 'vanishing_curse'],
+        godRoll: { unbreaking: 3, mending: 1 }
+      },
+      {
+        id: 'shears', name: 'Tijeras', category: 'Herramienta', icon: 'shears',
+        isArmor: false, materials: [], villagerMaterials: [],
+        hasEnchantTable: false, actorKey: 'librarian', enchantability: 0,
+        originTitle: 'Crafteo o Pastor (sin encantar)',
+        originDesc: 'Se fabrica con 2 lingotes de hierro. Solo admite libros en el Yunque.',
+        villagerLabel: '',
+        allowed: ['efficiency', 'unbreaking', 'mending', 'vanishing_curse'],
+        godRoll: { efficiency: 5, unbreaking: 3, mending: 1 }
+      },
+      {
+        id: 'flint_and_steel', name: 'Mechero', category: 'Herramienta', icon: 'flint_steel',
+        isArmor: false, materials: [], villagerMaterials: [],
+        hasEnchantTable: false, actorKey: 'librarian', enchantability: 0,
+        originTitle: 'Crafteo (1 Lingote de Hierro + 1 Pedernal)',
+        originDesc: 'Solo admite libros de Irrompibilidad, Reparación o Desaparición en el Yunque.',
+        villagerLabel: '',
+        allowed: ['unbreaking', 'mending', 'vanishing_curse'],
+        godRoll: { unbreaking: 3, mending: 1 }
+      },
+      {
+        id: 'brush', name: 'Pincel (Brush)', category: 'Arqueología', icon: 'brush',
+        isArmor: false, materials: [], villagerMaterials: [],
+        hasEnchantTable: false, actorKey: 'librarian', enchantability: 0,
+        originTitle: 'Crafteo (1 Pluma + 1 Lingote de Cobre + 1 Palo)',
+        originDesc: 'Usado para limpiar arena y grava sospechosa. Solo se encanta mediante libros en el Yunque.',
+        villagerLabel: '',
+        allowed: ['unbreaking', 'mending', 'vanishing_curse'],
+        godRoll: { unbreaking: 3, mending: 1 }
+      },
+      {
+        id: 'carved_pumpkin', name: 'Calabaza Tallada', category: 'Cabeza Especial', icon: 'pumpkin',
+        isArmor: false, materials: [], villagerMaterials: [],
+        hasEnchantTable: false, actorKey: 'librarian', enchantability: 0,
+        originTitle: 'Usar Tijeras sobre una Calabaza',
+        originDesc: 'Evita que los Endermen te ataquen al mirarlos. Solo acepta maldiciones en el Yunque.',
+        villagerLabel: '',
+        allowed: ['binding_curse', 'vanishing_curse'],
+        godRoll: { binding_curse: 1 }
+      }
+    ];
+
+    const VILLAGER_DB = [
+      { prof: 'Bibliotecario', station: 'Atril (Lectern)', lvl: 'Niveles 1–4', probJava: '66.7% / hueco', probBedrock: '66.7% / hueco', item: 'Libros Encantados (hasta 4 por aldeano)', cap: 'Todos los niveles máximos (Protección IV, Filo V, Eficiencia V, Reparación, Fortuna III)', impossible: 'Sigilo Veloz, Velocidad de Almas, Ráfaga de Viento (0%)' },
+      { prof: 'Armero', station: 'Alto Horno (Blast Furnace)', lvl: 'Experto y Maestro', probJava: '100% (4 piezas)', probBedrock: '50% por pieza', item: 'Casco, Peto, Pantalones y Botas de Diamante', cap: 'Irrompibilidad III, Caída de Pluma IV (Botas), Afinidad Acuática (Casco), Protección II', impossible: 'Protección III y IV (0%), Espinas I–III (0%), Agilidad Acuática (0%), Reparación (0%)' },
+      { prof: 'Herrero de Armas', station: 'Afiladora (Grindstone)', lvl: 'Experto y Maestro', probJava: '100%', probBedrock: '50% por pieza', item: 'Hacha (Nv.4) y Espada (Nv.5) de Diamante', cap: 'Irrompibilidad III, Filo III (~2.2%), Empuje II, Barrido II, Toque de Seda (Hacha)', impossible: 'Filo IV y V (0%), Botín II–III (0%), Aspecto Ígneo II (0%), Barrido III (0%)' },
+      { prof: 'Herrero de Herramientas', station: 'Mesa de Herrería', lvl: 'Experto y Maestro', probJava: '66% / 100%', probBedrock: '50% por pieza', item: 'Hacha, Pala (Nv.4) y Pico de Diamante (Nv.5)', cap: 'Toque de Seda (~3.8%), Irrompibilidad III (~4.2%), Eficiencia III (~8.5%), Fortuna II', impossible: 'Eficiencia IV y V (0%), Fortuna III (0%), Reparación (0%)' },
+      { prof: 'Flechero', station: 'Mesa de Flechas', lvl: 'Experto y Maestro', probJava: '100%', probBedrock: '50%', item: 'Arco (Nv.4), Ballesta y Flechas con Efecto (Nv.5)', cap: 'Poder III, Perforación III, Carga Rápida II, Flechas de Debilidad / Daño II', impossible: 'Poder IV y V (0%), Fuego (0%), Infinidad (0%), Multidisparo (0%)' },
+      { prof: 'Pescador', station: 'Barril (Barrel)', lvl: 'Aprendiz (Nv.2)', probJava: '100%', probBedrock: '50%', item: 'Caña de Pescar Encantada', cap: 'Suerte Marina I, Atracción I, Irrompibilidad II', impossible: 'Suerte Marina II–III (0%), Atracción II–III (0%), Reparación (0%)' }
+    ];
+
+    // =========================================================================
+    // RENDERIZADO CONDICIONAL DE INTERFACES DE OBTENCIÓN ESTILO MINECRAFT
+    // =========================================================================
+    function renderMinecraftGuiShowcase(item, displayName, hasVillagerForMat, strategy, baseSourceTag, booksToFind, preApplied, romanMap) {
+      const container = document.getElementById('minecraft-live-gui-showcase');
+      if (!container) return;
+
+      const cards = [];
+      const itemIcon = PIXEL_ICONS[item.icon] || PIXEL_ICONS.sword;
+      const activeKeys = Object.keys(selectedEnchants);
+
+      // Helper para construir la lista detallada de encantamientos pertinentes posibles
+      const buildPertinentEnchantText = (sourceType) => {
+        const preList = [...preApplied].map(k => `${ENCHANTMENTS[k].name} ${romanMap[selectedEnchants[k]]}`);
+        if (sourceType === 'villager') {
+          // Encantamientos útiles posibles según el techo 5–19 del aldeano y la selección del usuario
+          const villagerCaps = {
+            helmet: ['Irrompibilidad III', 'Afinidad Acuática', 'Protección II', 'Respiración II'],
+            chestplate: ['Irrompibilidad III', 'Protección II', 'Prot. Fuego III', 'Prot. Proyectiles IV'],
+            leggings: ['Irrompibilidad III', 'Protección II', 'Prot. Fuego III', 'Prot. Explosiones IV'],
+            boots: ['Caída de Pluma IV', 'Irrompibilidad III', 'Protección II'],
+            sword: ['Irrompibilidad III', 'Filo III', 'Empuje II', 'Barrido II', 'Aspecto Ígneo I'],
+            pickaxe: ['Toque de Seda', 'Irrompibilidad III', 'Eficiencia III', 'Fortuna II'],
+            axe: ['Toque de Seda', 'Irrompibilidad III', 'Eficiencia III', 'Filo III'],
+            shovel: ['Toque de Seda', 'Irrompibilidad III', 'Eficiencia III', 'Fortuna II'],
+            bow: ['Poder III', 'Irrompibilidad II', 'Retroceso I'],
+            crossbow: ['Perforación III', 'Carga Rápida II', 'Irrompibilidad II'],
+            fishing_rod: ['Suerte Marina I', 'Atracción I', 'Irrompibilidad II']
+          };
+          const selectedNames = activeKeys.map(k => ENCHANTMENTS[k].name);
+          const pool = villagerCaps[item.id] || ['Irrompibilidad III'];
+          // Filtrar los pertinentes a lo que el usuario busca (o mostrar los útiles compatibles)
+          const relevant = pool.filter(p => selectedNames.some(s => p.startsWith(s)) || p.includes('Irrompibilidad'));
+          const finalPool = relevant.length > 0 ? relevant : pool.slice(0, 3);
+          return preList.length > 0
+            ? `Busca que salga con: ${preList.join(' + ')} (posibles útiles: ${finalPool.join(', ')})`
+            : `Posibles útiles según tu selección: ${finalPool.join(', ')}`;
+        }
+        if (sourceType === 'gold') {
+          const tableEligible = activeKeys
+            .filter(k => !['mending', 'soul_speed', 'swift_sneak', 'wind_burst', 'frost_walker'].includes(k))
+            .map(k => `${ENCHANTMENTS[k].name} ${romanMap[selectedEnchants[k]]}`);
+          if (preList.length > 0) {
+            return `Objetivo en mesa: ${preList.join(' + ')}${tableEligible.length > preList.length ? ` (también pueden salir: ${tableEligible.slice(preList.length).join(', ')})` : ''}`;
+          }
+          return tableEligible.length > 0
+            ? `Posibles de tu selección en Nv. 30: ${tableEligible.join(', ')}`
+            : `Encantamientos base aleatorios de nivel 30`;
+        }
+        return '';
+      };
+
+      // 1. Interfaz del ítem base según origen o estrategia elegida
+      if (strategy === 'villager' && hasVillagerForMat) {
+        const actorSvg = LIVE_ACTORS[item.actorKey] || LIVE_ACTORS.armorer;
+        const profTitles = {
+          armorer: 'ARMERO · ALTO HORNO',
+          weaponsmith: 'HERRERO DE ARMAS · AFILADORA',
+          toolsmith: 'HERRERO DE HERRAMIENTAS · MESA DE HERRERÍA',
+          fletcher: 'FLECHERO · MESA DE FLECHAS',
+          fisherman: 'PESCADOR · BARRIL'
+        };
+        const pertinentDesc = buildPertinentEnchantText('villager');
+        cards.push(`
+          <div class="pt-2">
+            <div class="inline-flex items-center gap-2.5 mc-vanilla-header-tab px-3.5 py-1.5 ml-3 relative z-10">
+              <div class="bg-[#373737] p-1 border-2 border-[#555555]">${actorSvg}</div>
+              <span class="font-pixel text-xs text-[#222222]">${profTitles[item.actorKey] || 'ALDEANO DE EQUIPAMIENTO'}</span>
+            </div>
+            <div class="mc-panel p-4 space-y-3 -mt-[2px]">
+              <div class="flex flex-wrap items-center justify-between gap-2 border-b-2 border-[#8b8b8b] pb-2">
+                <span class="font-pixel text-xs text-[#222222]">TRADEO DE PIEZA BASE PRE-ENCANTADA</span>
+                <span class="text-[11px] font-mono font-bold px-2 py-0.5 bg-[#2b2b2b] text-[#80ff20]">Ahorra ${preApplied.size} libro(s)</span>
+              </div>
+              <div class="flex items-stretch justify-center sm:justify-start gap-3 flex-wrap">
+                <div class="flex flex-col items-center justify-center bg-[#b4b4b4] p-2.5 border border-[#7a7a7a]">
+                  <span class="text-[9px] font-pixel text-[#3f3f3f] mb-1">ENTREGAS</span>
+                  <div class="w-12 h-12 mc-vanilla-slot mb-1">${PIXEL_ICONS.emerald}</div>
+                  <span class="text-[11px] font-bold text-[#1f1f1f]">18–35 Esmeraldas</span>
+                </div>
+                <div class="font-pixel text-xl text-[#3f3f3f] self-center">➔</div>
+                <div class="flex flex-col items-center justify-center bg-[#a8a8a8] p-2.5 border border-[#6e6e6e] max-w-[340px]">
+                  <span class="text-[9px] font-pixel text-[#15803d] mb-1">RECIBES</span>
+                  <div class="w-12 h-12 mc-vanilla-slot-enchanted mb-1">${itemIcon}</div>
+                  <span class="text-[11px] font-bold text-[#4c1d95] text-center">${displayName} encantado</span>
+                  <span class="text-[10px] text-[#222226] bg-[#d4d4d8] border border-[#71717a] px-2 py-1 mt-1.5 text-center leading-snug">
+                    ${pertinentDesc}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        `);
+      } else if (strategy === 'gold' && item.hasEnchantTable) {
+        const pertinentDesc = buildPertinentEnchantText('gold');
+        cards.push(`
+          <div class="pt-2">
+            <div class="inline-flex items-center gap-2.5 mc-vanilla-header-tab px-3.5 py-1.5 ml-3 relative z-10">
+              <div class="bg-[#373737] p-1 border-2 border-[#555555]">${LIVE_ACTORS.enchant_table}</div>
+              <span class="font-pixel text-xs text-[#222222]">MESA DE ENCANTAMIENTOS · NIVEL 30 (TRUCO DE ORO)</span>
+            </div>
+            <div class="mc-panel p-4 space-y-3 -mt-[2px]">
+              <div class="flex flex-wrap items-center justify-between gap-2 border-b-2 border-[#8b8b8b] pb-2">
+                <span class="font-pixel text-xs text-[#222222]">ENCANTAMIENTO DIRECTO CON ROTACIÓN DE SEMILLA</span>
+                <span class="text-[11px] font-mono font-bold px-2 py-0.5 bg-[#2b2b2b] text-[#fcee4b]">Coste: 3 Niv. + 3 Lapis</span>
+              </div>
+              <div class="flex items-stretch justify-center sm:justify-start gap-3 flex-wrap">
+                <div class="flex flex-col items-center justify-center bg-[#b4b4b4] p-2.5 border border-[#7a7a7a]">
+                  <span class="text-[9px] font-pixel text-[#3f3f3f] mb-1">1º OBJETO LIMPIO</span>
+                  <div class="w-12 h-12 mc-vanilla-slot mb-1">${itemIcon}</div>
+                  <span class="text-[11px] font-bold text-[#1f1f1f]">${displayName}</span>
+                </div>
+                <div class="flex flex-col items-center justify-center bg-[#b4b4b4] p-2.5 border border-[#7a7a7a]">
+                  <span class="text-[9px] font-pixel text-[#1d4ed8] mb-1">2º LAPISLÁZULI</span>
+                  <div class="w-12 h-12 mc-vanilla-slot mb-1">${PIXEL_ICONS.lapis}</div>
+                  <span class="text-[11px] font-bold text-[#1f1f1f]">3 Lapislázuli</span>
+                </div>
+                <div class="flex flex-col items-center justify-center bg-[#b4b4b4] p-2.5 border border-[#7a7a7a]">
+                  <span class="text-[9px] font-pixel text-[#92400e] mb-1">SI SALE MAL</span>
+                  <div class="w-12 h-12 mc-vanilla-slot mb-1">${PIXEL_ICONS.gold_shovel}</div>
+                  <span class="text-[11px] font-bold text-[#78350f]">Pala Oro (1 Niv.)</span>
+                </div>
+                <div class="font-pixel text-xl text-[#3f3f3f] self-center">➔</div>
+                <div class="flex flex-col items-center justify-center bg-[#a8a8a8] p-2.5 border border-[#6e6e6e] max-w-[340px]">
+                  <span class="text-[9px] font-pixel text-[#15803d] mb-1">RECIBES</span>
+                  <div class="w-12 h-12 mc-vanilla-slot-enchanted mb-1">${itemIcon}</div>
+                  <span class="text-[11px] font-bold text-[#4c1d95] text-center">${displayName} encantado</span>
+                  <span class="text-[10px] text-[#222226] bg-[#d4d4d8] border border-[#71717a] px-2 py-1 mt-1.5 text-center leading-snug">
+                    ${pertinentDesc}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        `);
+      } else if (item.id === 'elytra' || item.id === 'trident') {
+        const isElytra = item.id === 'elytra';
+        cards.push(`
+          <div class="pt-2">
+            <div class="inline-flex items-center gap-2.5 mc-vanilla-header-tab px-3.5 py-1.5 ml-3 relative z-10">
+              <div class="bg-[#373737] p-1 border-2 border-[#555555]">${isElytra ? LIVE_ACTORS.end_ship : LIVE_ACTORS.drowned}</div>
+              <span class="font-pixel text-xs text-[#222222]">${isElytra ? 'EXPLORACIÓN · BARCO DEL END' : 'COMBATE · AHOGADOS (OCÉANO/RÍO)'}</span>
+            </div>
+            <div class="mc-panel p-4 flex items-center gap-3.5 -mt-[2px]">
+              <div class="w-12 h-12 mc-vanilla-slot shrink-0">${itemIcon}</div>
+              <div class="text-xs text-[#26262a]">
+                <strong class="block text-[#18181c]">Recibes: ${displayName} (sin encantar)</strong>
+                <span>${item.originDesc}</span>
+              </div>
+            </div>
+          </div>
+        `);
+      }
+
+      // 2. Interfaz del Bibliotecario SOLO si hay libros que buscar en bibliotecario
+      const librarianBooks = booksToFind.filter(k => !['soul_speed', 'swift_sneak', 'wind_burst'].includes(k));
+      if (librarianBooks.length > 0) {
+        const bookBadges = librarianBooks.map(k => `${ENCHANTMENTS[k].name} ${romanMap[selectedEnchants[k]]}`).join(', ');
+        cards.push(`
+          <div class="pt-2">
+            <div class="inline-flex items-center gap-2.5 mc-vanilla-header-tab px-3.5 py-1.5 ml-3 relative z-10">
+              <div class="bg-[#373737] p-1 border-2 border-[#555555]">${LIVE_ACTORS.librarian}</div>
+              <span class="font-pixel text-xs text-[#222222]">BIBLIOTECARIO · ATRIL (LECTERN)</span>
+            </div>
+            <div class="mc-panel p-4 space-y-3 -mt-[2px]">
+              <div class="flex flex-wrap items-center justify-between gap-2 border-b-2 border-[#8b8b8b] pb-2">
+                <span class="font-pixel text-xs text-[#222222]">INTERCAMBIO DE LIBROS (${librarianBooks.length} ${librarianBooks.length === 1 ? 'LIBRO' : 'LIBROS'})</span>
+                <span class="text-[11px] font-mono font-bold px-2 py-0.5 bg-[#2b2b2b] text-[#80ff20]">Bloquea el tradeo comprando 1 vez</span>
+              </div>
+              <div class="flex items-stretch justify-center sm:justify-start gap-3 flex-wrap">
+                <div class="flex flex-col items-center justify-center bg-[#b4b4b4] p-2.5 border border-[#7a7a7a]">
+                  <span class="text-[9px] font-pixel text-[#3f3f3f] mb-1">RANURA 1</span>
+                  <div class="w-12 h-12 mc-vanilla-slot mb-1">${PIXEL_ICONS.emerald}</div>
+                  <span class="text-[11px] font-bold text-[#1f1f1f]">5–64 Esmeraldas</span>
+                </div>
+                <div class="font-pixel text-lg text-[#3f3f3f] self-center">+</div>
+                <div class="flex flex-col items-center justify-center bg-[#b4b4b4] p-2.5 border border-[#7a7a7a]">
+                  <span class="text-[9px] font-pixel text-[#3f3f3f] mb-1">RANURA 2</span>
+                  <div class="w-12 h-12 mc-vanilla-slot mb-1">${PIXEL_ICONS.book_normal}</div>
+                  <span class="text-[11px] font-bold text-[#1f1f1f]">1 Libro normal</span>
+                </div>
+                <div class="font-pixel text-xl text-[#3f3f3f] self-center">➔</div>
+                <div class="flex flex-col items-center justify-center bg-[#a8a8a8] p-2.5 border border-[#6e6e6e] max-w-[320px]">
+                  <span class="text-[9px] font-pixel text-[#15803d] mb-1">RECIBES</span>
+                  <div class="w-12 h-12 mc-vanilla-slot-enchanted mb-1">${PIXEL_ICONS.book_enchanted}</div>
+                  <span class="text-[11px] font-bold text-[#4c1d95] text-center">Libro Encantado</span>
+                  <span class="text-[10px] text-[#222226] bg-[#d4d4d8] border border-[#71717a] px-2 py-1 mt-1.5 text-center leading-snug">
+                    Con: <strong>${bookBadges}</strong> (compatibles con ${displayName})
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        `);
+      }
+
+      if (cards.length === 0) {
+        container.innerHTML = `
+          <div class="mc-card p-4 text-xs text-[#26262a] font-semibold text-center">
+            ${Object.keys(selectedEnchants).length === 0
+              ? 'Selecciona tus encantamientos en la Etapa 2 para desplegar las interfaces de intercambio correspondientes.'
+              : '✔ Partes de un objeto limpio sin intercambios previos; pasa directamente a la Etapa 4.'}
+          </div>
+        `;
+      } else {
+        container.innerHTML = cards.join('');
+      }
+    }
+
+    let currentEdition = 'java';
+    let selectedEnchants = {};
+    let userManualStrategy = null; // null = sigue automáticamente la ruta recomendada
+    // =========================================================================
+    // EVALUADOR AUTOMÁTICO DE RUTA MÁS CORTA (XP + RE-ROLLS + INCOMPATIBILIDAD)
+    // =========================================================================
+    function evaluateBestStrategy(item, mat, hasVillagerForMat, activeKeys, romanMap) {
+      const candidates = ['clean'];
+      if (hasVillagerForMat) candidates.push('villager');
+      if (item.hasEnchantTable) candidates.push('gold');
+
+      const evaluations = {};
+
+      for (const strat of candidates) {
+        const preApplied = new Set();
+        if (strat === 'villager') {
+          if (selectedEnchants.unbreaking && selectedEnchants.unbreaking <= 3) preApplied.add('unbreaking');
+          if (item.id === 'boots' && selectedEnchants.feather_falling && selectedEnchants.feather_falling <= 4) preApplied.add('feather_falling');
+          if (item.id === 'helmet' && selectedEnchants.aqua_affinity) preApplied.add('aqua_affinity');
+          if ((item.id === 'pickaxe' || item.id === 'shovel' || item.id === 'axe') && selectedEnchants.silk_touch) preApplied.add('silk_touch');
+          if (item.id === 'sword' && selectedEnchants.knockback && selectedEnchants.knockback <= 2) preApplied.add('knockback');
+        } else if (strat === 'gold') {
+          const tableEligible = activeKeys.filter(k => !['mending', 'soul_speed', 'swift_sneak', 'wind_burst', 'frost_walker'].includes(k));
+          if (tableEligible.length > 0) preApplied.add(tableEligible[0]);
+          if (tableEligible.length > 1) preApplied.add(tableEligible[1]);
+        }
+
+        const books = activeKeys.filter(k => !preApplied.has(k));
+        const nodes = [{ isTargetItem: true, bookValue: 0, label: item.name, shortName: item.name }];
+        let totalRerolls = 0;
+
+        books.forEach(k => {
+          const lvl = selectedEnchants[k];
+          nodes.push({ isTargetItem: false, bookValue: lvl * ENCHANTMENTS[k].bookMult, label: k, shortName: k });
+          const st = getEnchantRerollStats(k, lvl);
+          if (st.avgRerolls) totalRerolls += st.avgRerolls;
+        });
+
+        const anvil = solveOptimalAnvilTree(nodes);
+        evaluations[strat] = {
+          strat,
+          preApplied,
+          booksCount: books.length,
+          totalLevels: anvil.totalLevels,
+          maxStepCost: anvil.maxStepCost,
+          totalRerolls,
+          viable: anvil.maxStepCost <= 39
+        };
+      }
+
+      // Elegir la mejor ruta priorizando:
+      // 1) Que sea viable en yunque (<= 39 niveles)
+      // 2) Que ahorre libros/re-rolls y niveles de XP sin exigir re-rolls imposibles de aldeano
+      let recommended = 'clean';
+      let reason = '';
+
+      if (activeKeys.length === 0) {
+        recommended = 'clean';
+        reason = 'Selecciona primero los encantamientos que deseas en la Etapa 2 para calcular automáticamente si te conviene partir de un objeto limpio, comprarlo a un aldeano o encantarlo en Mesa Nv. 30.';
+      } else {
+        const cleanEv = evaluations.clean;
+        const villEv = evaluations.villager;
+        const goldEv = evaluations.gold;
+
+        // Evaluar si la mesa con truco de oro evita un bloqueo >39 o ahorra >= 2 libros / >= 12 niveles
+        const goldSavesBlock = goldEv && !cleanEv.viable && goldEv.viable;
+        const goldBigSavings = goldEv && goldEv.preApplied.size >= 2 && (cleanEv.totalLevels - goldEv.totalLevels >= 10 || activeKeys.length >= 4);
+
+        // Evaluar si el aldeano de equipo aporta al menos 1 encantamiento útil que ahorra libros sin riesgo de conflictos
+        const villUseful = villEv && villEv.preApplied.size >= 1;
+
+        if (goldSavesBlock) {
+          recommended = 'gold';
+          reason = `<strong>Por qué es el camino más corto:</strong> Con tantos encantamientos (${activeKeys.length}), meter todos por libro desde un objeto limpio superaría el límite de 39 niveles en el yunque (${cleanEv.maxStepCost} Niv.). Usando la <strong>Mesa Nv. 30 + Truco de Oro</strong> sacas 2 encantamientos de base (${[...goldEv.preApplied].map(k => ENCHANTMENTS[k].name).join(' y ')}) en un solo paso, bajando el coste del yunque a <strong>${goldEv.totalLevels} Niveles</strong> y ahorrándote buscar esos libros.`;
+        } else if (villUseful && (!goldBigSavings || villEv.preApplied.size >= 2)) {
+          recommended = 'villager';
+          const savedNames = [...villEv.preApplied].map(k => `${ENCHANTMENTS[k].name} ${romanMap[selectedEnchants[k]]}`).join(' + ');
+          reason = `<strong>Por qué es el camino más corto:</strong> El aldeano correspondiente ya te entrega la pieza con <strong>${savedNames}</strong> de fábrica. Así evitas la aleatoriedad e incompatibilidades de la Mesa de Encantamientos, ahorras <strong>${villEv.preApplied.size} ${villEv.preApplied.size === 1 ? 'libro' : 'libros'}</strong> (~${cleanEv.totalRerolls - villEv.totalRerolls} intentos menos de atril) y dejas el yunque en solo <strong>${villEv.totalLevels} Niveles</strong>.`;
+        } else if (goldBigSavings) {
+          recommended = 'gold';
+          const savedNames = [...goldEv.preApplied].map(k => `${ENCHANTMENTS[k].name} ${romanMap[selectedEnchants[k]]}`).join(' + ');
+          reason = `<strong>Por qué es el camino más corto:</strong> Para esta combinación de ${activeKeys.length} encantamientos, usar la <strong>Mesa de Encantamientos Nv. 30 con el Truco de Oro</strong> te permite obtener <strong>${savedNames}</strong> directamente en el objeto por solo 3 niveles, reduciendo el yunque de ${cleanEv.totalLevels} a <strong>${goldEv.totalLevels} Niveles</strong> y ahorrando ~${cleanEv.totalRerolls - goldEv.totalRerolls} re-rolls de bibliotecario.`;
+        } else {
+          recommended = 'clean';
+          const noVillNote = !hasVillagerForMat ? 'este objeto/material no se vende encantado en aldeanos' : 'ninguno de los encantamientos elegidos sale al nivel máximo en aldeanos de equipo';
+          const noTableNote = !item.hasEnchantTable ? ' y no admite mesa de encantamientos' : ' y en la mesa aleatoria podrías sacar encantamientos incompatibles que bloquearían el yunque';
+          reason = `<strong>Por qué es el camino más corto:</strong> Como ${noVillNote}${noTableNote}, partir de un <strong>objeto limpio</strong> y aplicar únicamente los ${cleanEv.booksCount} libros exactos en árbol binario es la ruta más directa (<strong>${cleanEv.totalLevels} Niveles</strong>, sin perder tiempo ni XP limpiando encantamientos basura en la afiladora).`;
+        }
+      }
+
+      return { recommended, reason, evaluations };
+    }
+
+    function onUserSelectStrategy() {
+      const checked = document.querySelector('input[name="base-strategy"]:checked');
+      if (checked) {
+        userManualStrategy = checked.value;
+      }
+      recalculate();
+    }
+
+    function resetToRecommendedRoute() {
+      userManualStrategy = null;
+      recalculate();
+    }
+
+    // =========================================================================
+    // RECÁLCULO COMPLETO DE TODAS LAS ETAPAS
+    // =========================================================================
+    function recalculate() {
+      const item = getCurrentItem();
+      const mat = getCurrentMaterial();
+      const displayName = getDisplayItemName();
+      const hasVillagerForMat = itemHasVillagerForCurrentMat();
+      const romanMap = ['', 'I', 'II', 'III', 'IV', 'V'];
+      const activeKeys = Object.keys(selectedEnchants);
+
+      // 1. Evaluar automáticamente cuál es el camino más corto para la selección actual
+      const { recommended, reason } = evaluateBestStrategy(item, mat, hasVillagerForMat, activeKeys, romanMap);
+
+      // Aplicar la estrategia recomendada automáticamente salvo que el usuario haya elegido otra manualmente
+      const strategy = userManualStrategy || recommended;
+      const targetRadio = document.getElementById(`rad-${strategy === 'clean' ? 'clean-base' : strategy === 'villager' ? 'villager-base' : 'gold-trick'}`);
+      if (targetRadio && !targetRadio.disabled) {
+        targetRadio.checked = true;
+      }
+
+      // Actualizar badges visuales de recomendación y estado de selección manual
+      ['clean', 'villager', 'gold'].forEach(st => {
+        const tag = document.getElementById(`tag-rec-${st}`);
+        const wrap = document.getElementById(`wrap-${st === 'clean' ? 'clean-base' : st === 'villager' ? 'villager-base' : 'gold-trick'}`);
+        if (tag) tag.classList.toggle('hidden', st !== recommended);
+        if (wrap) wrap.classList.toggle('mc-card-selected', st === strategy);
+      });
+
+      const isUsingRecommended = strategy === recommended;
+      const modeBadge = document.getElementById('route-mode-badge');
+      const btnReset = document.getElementById('btn-reset-recommended');
+      if (modeBadge) {
+        modeBadge.textContent = isUsingRecommended ? '★ SIGUIENDO RUTA SUGERIDA' : '⚙ RUTA PERSONALIZADA';
+        modeBadge.className = isUsingRecommended
+          ? 'text-[11px] font-pixel px-2.5 py-1 bg-[#14532d] text-[#86efac] border border-[#15803d]'
+          : 'text-[11px] font-pixel px-2.5 py-1 bg-[#78350f] text-[#fde68a] border border-[#b45309]';
+      }
+      if (btnReset) {
+        btnReset.classList.toggle('hidden', isUsingRecommended);
+      }
+
+      const routeNames = {
+        clean: 'Ruta A · Objeto limpio + Libros exactos en árbol binario',
+        villager: 'Ruta B · Pieza base pre-encantada de Aldeano + Libros restantes',
+        gold: 'Ruta C · Mesa de Encantamientos Nv. 30 (Truco de Oro) + Libros restantes'
+      };
+
+      const recBanner = document.getElementById('recommended-route-banner');
+      if (recBanner) {
+        recBanner.innerHTML = `
+          <div class="flex items-start gap-2.5">
+            <span class="text-lg shrink-0">🏆</span>
+            <div class="text-xs space-y-1.5">
+              <div class="font-pixel text-xs sm:text-sm text-[#14532d]">Sugerencia óptima: ${routeNames[recommended]}</div>
+              <p class="text-[#2d291f] leading-relaxed">${reason}</p>
+            </div>
+          </div>
+        `;
+      }
+
+      // Determinar qué encantamientos ya vienen incluidos en el ítem base según la estrategia activa
+      const preApplied = new Set();
+      let baseSourceTag = 'Limpio';
+
+      if (strategy === 'villager' && hasVillagerForMat) {
+        if (selectedEnchants.unbreaking && selectedEnchants.unbreaking <= 3) preApplied.add('unbreaking');
+        if (item.id === 'boots' && selectedEnchants.feather_falling && selectedEnchants.feather_falling <= 4) preApplied.add('feather_falling');
+        if (item.id === 'helmet' && selectedEnchants.aqua_affinity) preApplied.add('aqua_affinity');
+        if ((item.id === 'pickaxe' || item.id === 'shovel' || item.id === 'axe') && selectedEnchants.silk_touch) preApplied.add('silk_touch');
+        if (item.id === 'sword' && selectedEnchants.knockback && selectedEnchants.knockback <= 2) preApplied.add('knockback');
+
+        const matPrefix = mat && mat.id === 'netherite' ? 'Aldeano (Diamante → Netherita)' : 'Aldeano';
+        baseSourceTag = preApplied.size > 0
+          ? `${matPrefix} con ${[...preApplied].map(k => `${ENCHANTMENTS[k].name} ${romanMap[selectedEnchants[k]]}`).join(' + ')}`
+          : matPrefix;
+      } else if (strategy === 'gold' && item.hasEnchantTable) {
+        const tableEligible = activeKeys.filter(k => !['mending', 'soul_speed', 'swift_sneak', 'wind_burst', 'frost_walker'].includes(k));
+        if (tableEligible.length > 0) preApplied.add(tableEligible[0]);
+        if (tableEligible.length > 1) preApplied.add(tableEligible[1]);
+
+        baseSourceTag = preApplied.size > 0
+          ? `Mesa Nv.30 (Oro) con ${[...preApplied].map(k => `${ENCHANTMENTS[k].name} ${romanMap[selectedEnchants[k]]}`).join(' + ')}`
+          : 'Mesa Nv.30';
+      }
+
+      const booksToFind = activeKeys.filter(k => !preApplied.has(k));
+
+      // 1. Consejo Intermedio 1 (antes de buscar libros)
+      const interlude1 = document.getElementById('interlude-before-reroll');
+      if (activeKeys.length === 0) {
+        interlude1.innerHTML = `
+          <div class="flex items-center gap-2">
+            <span>👆</span>
+            <span class="font-bold text-xs text-[#2b2b2b]">Selecciona al menos un encantamiento arriba para calcular cuántos intentos te tomará conseguirlo.</span>
+          </div>
+        `;
+      } else {
+        const hasTreasure = booksToFind.some(k => ['soul_speed', 'swift_sneak', 'wind_burst'].includes(k));
+        interlude1.innerHTML = `
+          <div class="flex items-start gap-2.5">
+            <span class="text-base shrink-0">🧑‍🌾</span>
+            <div class="text-xs space-y-1">
+              <div class="font-bold text-[#713f12]">Consejo antes de empezar a buscar libros:</div>
+              <p class="text-[#2b2b2b] leading-relaxed">
+                Necesitas conseguir <strong>${booksToFind.length} ${booksToFind.length === 1 ? 'libro encantado' : 'libros encantados'}</strong>${preApplied.size > 0 ? ` (ya te ahorraste ${preApplied.size} gracias a tu pieza base pre-encantada)` : ''}.
+                ${hasTreasure ? ' <span class="text-rose-700 font-semibold">Ojo: elegiste un encantamiento especial de estructura (Sigilo Veloz, Velocidad de Almas o Ráfaga de Viento) que NO sale en aldeanos bibliotecarios.</span>' : booksToFind.length > 0 ? ' Tienes dos formas de buscar: <strong>1) Método clásico (Atril)</strong> rompiendo y poniendo el atril antes de comerciar (revisa solo la 1ª ranura), o <strong>2) Vista previa completa</strong> (si puedes ver sus 4 niveles antes de tradear, multiplicas por ~2.5x tus chances por aldeano).' : ' ¡Todos tus encantamientos seleccionados ya vienen en tu pieza base!'}
+              </p>
+            </div>
+          </div>
+        `;
+      }
+
+      // 2. ETAPA 3 (Probabilidades y Re-rolls necesarios: Atril 1er hueco Y Vista completa 4 niveles)
+      const rerollBanner = document.getElementById('reroll-summary-banner');
+      const rerollContainer = document.getElementById('reroll-cards-container');
+
+      if (booksToFind.length === 0) {
+        rerollBanner.innerHTML = `
+          <div class="text-xs text-[#2b2b2b] font-semibold">
+            ${activeKeys.length === 0
+              ? 'No has seleccionado encantamientos todavía.'
+              : '🎉 ¡No necesitas buscar ningún libro en bibliotecarios con esta configuración!'}
+          </div>
+        `;
+        rerollContainer.innerHTML = '';
+      } else {
+        let totalNoviceRerolls = 0;
+        let totalFullMenuRerolls = 0;
+        let librarianBooksCount = 0;
+
+        rerollContainer.innerHTML = booksToFind.map(k => {
+          const lvl = selectedEnchants[k];
+          const stats = getEnchantRerollStats(k, lvl);
+          if (stats.avgRerolls) {
+            totalNoviceRerolls += stats.avgRerolls;
+            totalFullMenuRerolls += stats.avgFullMenuRerolls;
+            librarianBooksCount++;
+          }
+
+          return `
+            <div class="mc-card p-3.5 space-y-2">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div>
+                  <span class="text-xs sm:text-sm font-bold text-[#1f1f1f]">📘 Libro: ${ENCHANTMENTS[k].name} ${romanMap[lvl]}</span>
+                  <span class="block text-[11px] text-[#15803d] font-bold mt-0.5">${stats.method}</span>
+                </div>
+                <div class="flex flex-wrap items-center gap-1.5 shrink-0">
+                  <span class="px-2 py-1 bg-[#2b2b2b] border-2 border-[#555555] text-[11px] font-pixel text-[#fcee4b]" title="Rompiendo y poniendo el atril (solo 1er nivel)">
+                    ${stats.avgRerolls ? `Atril: ~${stats.avgRerolls} int.` : 'Cofre / Trueque'}
+                  </span>
+                  ${stats.avgFullMenuRerolls ? `
+                    <span class="px-2 py-1 bg-[#1e3a8a] border-2 border-[#3b82f6] text-[11px] font-pixel text-cyan-200" title="Viendo los 4 niveles sin haberle tradeado aún">
+                      4 Niveles: ~${stats.avgFullMenuRerolls} int.
+                    </span>
+                  ` : ''}
+                </div>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] bg-[#b4b4b4] p-2 border border-[#7a7a7a]">
+                <div><span class="text-[#3f3f3f]">Suerte 1er hueco (Atril):</span> <strong class="text-[#1f1f1f] font-mono">${stats.noviceProbText}</strong></div>
+                <div><span class="text-[#3f3f3f]">Viendo 4 niveles sin tradear:</span> <strong class="text-[#1d4ed8] font-mono">${stats.fullMenuProbText}</strong></div>
+              </div>
+              <p class="text-xs text-[#2b2b2b] leading-relaxed">${stats.detail}</p>
+            </div>
+          `;
+        }).join('');
+
+        rerollBanner.innerHTML = `
+          <div class="text-xs space-y-1.5 flex-1">
+            <span class="text-[#4a4a4a] font-bold uppercase block">Estimación total para reunir tus ${booksToFind.length} libros</span>
+            ${librarianBooksCount > 0 ? `
+              <p class="text-[#1f1f1f]">
+                • <strong>Método Atril (solo 1er hueco):</strong> en promedio harás unos <strong class="text-[#713f12]">${totalNoviceRerolls} intentos</strong> rompiendo y poniendo el atril.
+              </p>
+              <p class="text-[#1e3a8a]">
+                • <strong>Viendo todos los niveles sin tradear (4 ranuras):</strong> baja a solo <strong class="text-[#1d4ed8]">~${totalFullMenuRerolls} aldeanos revisados</strong> en total.
+              </p>
+            ` : `
+              <p class="text-[#1f1f1f]">Tus libros elegidos se consiguen explorando estructuras o haciendo trueques.</p>
+            `}
+          </div>
+          <div class="flex sm:flex-col gap-2 shrink-0">
+            <div class="px-3 py-1.5 bg-[#2b2b2b] border-2 border-[#555555] text-center">
+              <span class="text-[9px] font-pixel text-slate-300 block">LIBROS A BUSCAR</span>
+              <span class="text-base font-pixel text-[#fcee4b]">${booksToFind.length}</span>
+            </div>
+          </div>
+        `;
+      }
+
+      // 3. ETAPA 3.5 (Interfaces de Obtención condicionales estrictas)
+      renderMinecraftGuiShowcase(item, displayName, hasVillagerForMat, strategy, baseSourceTag, booksToFind, preApplied, romanMap);
+
+      // 4. ETAPA 4 (Árbol Óptimo del Yunque)
+      const nodes = [
+        {
+          isTargetItem: true,
+          bookValue: 0,
+          label: `${displayName} (${baseSourceTag})`,
+          shortName: displayName
+        }
+      ];
+
+      booksToFind.forEach(k => {
+        const lvl = selectedEnchants[k];
+        const ench = ENCHANTMENTS[k];
+        nodes.push({
+          isTargetItem: false,
+          bookValue: lvl * ench.bookMult,
+          label: `Libro: ${ench.name} ${romanMap[lvl]}`,
+          shortName: `${ench.name} ${romanMap[lvl]}`
+        });
+      });
+
+      const result = solveOptimalAnvilTree(nodes);
+      const naiveResult = solveLinearNaive(nodes);
+      const savings = Math.max(0, naiveResult.totalLevels - result.totalLevels);
+      const finalWork = result.workCount ?? 0;
+
+      document.getElementById('kpi-total-levels').textContent = `${result.totalLevels} Niv.`;
+      document.getElementById('kpi-total-xp').textContent = `~${result.totalXpPoints.toLocaleString()} pts XP`;
+      document.getElementById('kpi-max-step').textContent = `${result.maxStepCost} Niv.`;
+      document.getElementById('kpi-steps-count').textContent = `${result.steps.length} ${result.steps.length === 1 ? 'paso' : 'pasos'}`;
+      document.getElementById('kpi-pwp-final').textContent = `Recargo final: +${pwpCost(finalWork)}`;
+      document.getElementById('kpi-savings').textContent = `${savings > 0 ? '-' : ''}${savings} Niv.`;
+      document.getElementById('kpi-savings-sub').textContent = naiveResult.maxStepCost > 39 ? 'Evita bloqueo >39' : 'vs meter 1 a 1';
+
+      const statusEl = document.getElementById('kpi-anvil-status');
+      const alertBox = document.getElementById('anvil-alert-box');
+
+      if (result.maxStepCost > 39) {
+        statusEl.textContent = '¡PASA DE 39 NIVELES!';
+        statusEl.className = 'text-[11px] font-bold text-rose-700';
+        alertBox.className = 'p-4 border-2 border-rose-600 bg-rose-100 text-rose-950 text-xs space-y-1.5';
+        alertBox.innerHTML = `
+          <div class="font-pixel text-rose-700 text-xs">⚠ ¡CUIDADO! Un paso cuesta ${result.maxStepCost} niveles (el máximo en Minecraft es 39)</div>
+          <p>Para que el yunque no te bloquee con "Demasiado caro", sube a la <strong>Etapa 1</strong> y elige la opción <strong>"3. Mesa de Encantamientos Nv. 30 + Truco de Oro"</strong> o <strong>"2. Comprar pieza pre-encantada a un Aldeano"</strong> para traer 1 o 2 encantamientos ya puestos.</p>
+        `;
+        alertBox.classList.remove('hidden');
+      } else if (result.steps.length > 0) {
+        statusEl.textContent = '100% Posible (≤ 39)';
+        statusEl.className = 'text-[11px] font-bold text-[#15803d]';
+        alertBox.className = 'p-3.5 border-2 border-[#15803d] bg-emerald-100 text-emerald-950 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-2';
+        alertBox.innerHTML = `
+          <div><strong class="text-[#15803d]">✔ Ruta verificada:</strong> Ningún paso supera los 39 niveles permitidos por el juego.</div>
+          <span class="font-pixel text-[11px] bg-[#2b2b2b] text-[#80ff20] px-2.5 py-1 border border-[#555555]">Pico máx: ${result.maxStepCost}/39</span>
+        `;
+        alertBox.classList.remove('hidden');
+      } else {
+        statusEl.textContent = '0 usos necesarios';
+        statusEl.className = 'text-[11px] font-bold text-[#15803d]';
+        alertBox.classList.add('hidden');
+      }
+
+      // Renderizar pasos visuales del Yunque SOLO si hay fusiones necesarias (result.steps.length > 0)
+      const stepsContainer = document.getElementById('steps-container');
+      if (result.steps.length === 0) {
+        stepsContainer.innerHTML = `
+          <div class="mc-card p-5 text-center text-xs text-[#1f1f1f] font-semibold">
+            ${activeKeys.length === 0
+              ? 'Elige los encantamientos en la Etapa 2 para ver aquí el orden exacto del yunque.'
+              : '✔ ¡Tu objeto ya queda listo sin necesidad de usar el Yunque (0 niveles gastados en fusiones)!'}
+          </div>
+        `;
+      } else {
+        stepsContainer.innerHTML = result.steps.map((st, idx) => {
+          const leftIsItem = st.left.startsWith(displayName);
+          const leftIcon = leftIsItem ? (PIXEL_ICONS[item.icon] || PIXEL_ICONS.sword) : PIXEL_ICONS.book_enchanted;
+          const resultIcon = leftIsItem ? (PIXEL_ICONS[item.icon] || PIXEL_ICONS.sword) : PIXEL_ICONS.book_enchanted;
+
+          return `
+            <div class="pt-2">
+              <div class="inline-flex items-center gap-2.5 mc-vanilla-header-tab px-3.5 py-1.5 ml-3 relative z-10">
+                <div class="bg-[#373737] p-1 border-2 border-[#555555]">${LIVE_ACTORS.anvil_32}</div>
+                <span class="font-pixel text-xs text-[#222222]">YUNQUE · PASO ${idx + 1} DE ${result.steps.length}</span>
+              </div>
+              <div class="mc-vanilla-gui p-4 space-y-3 -mt-[2px] ${st.tooExpensive ? 'ring-4 ring-rose-600' : ''}">
+                <div class="flex flex-wrap items-center justify-between gap-2 border-b-2 border-[#8b8b8b] pb-2">
+                  <div class="flex items-center gap-2">
+                    <span class="anim-mc-hammer inline-block">${PIXEL_ICONS.anvil_mini}</span>
+                    <span class="font-pixel text-xs text-[#222222]">REPARAR Y ENCANTAR</span>
+                  </div>
+                  <span class="px-2.5 py-1 bg-[#2b2b2b] border-2 border-[#555555] font-pixel text-xs ${st.tooExpensive ? 'text-rose-400' : 'mc-xp-text'}">
+                    ${st.tooExpensive ? `¡DEMASIADO CARO! (${st.cost} Niv.)` : `Coste de encantamiento: ${st.cost}`}
+                  </span>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-12 items-center gap-2.5 text-xs">
+                  <div class="sm:col-span-4 flex flex-col items-center bg-[#b4b4b4] p-2 border border-[#7a7a7a]">
+                    <span class="text-[9px] font-pixel text-[#1d4ed8] mb-1">1º RANURA IZQUIERDA</span>
+                    <div class="w-12 h-12 mc-vanilla-slot mb-1">${leftIcon}</div>
+                    <span class="font-bold text-[#1f1f1f] text-center leading-tight">${st.left}</span>
+                  </div>
+
+                  <div class="sm:col-span-1 text-center font-pixel text-xl text-[#3f3f3f]">+</div>
+
+                  <div class="sm:col-span-4 flex flex-col items-center bg-[#b4b4b4] p-2 border border-[#7a7a7a]">
+                    <span class="text-[9px] font-pixel text-[#92400e] mb-1">2º RANURA DERECHA</span>
+                    <div class="w-12 h-12 mc-vanilla-slot mb-1">${PIXEL_ICONS.book_enchanted}</div>
+                    <span class="font-bold text-[#1f1f1f] text-center leading-tight">${st.right}</span>
+                  </div>
+
+                  <div class="sm:col-span-1 text-center font-pixel text-xl text-[#3f3f3f]">➔</div>
+
+                  <div class="sm:col-span-2 flex flex-col items-center bg-[#a8a8a8] p-2 border border-[#6e6e6e]">
+                    <span class="text-[9px] font-pixel text-[#15803d] mb-1">RESULTADO</span>
+                    <div class="w-12 h-12 mc-vanilla-slot-enchanted mb-1">${resultIcon}</div>
+                    <span class="font-bold text-[#4c1d95] text-center text-[11px] leading-tight">${st.result}</span>
+                  </div>
+                </div>
+
+                <div class="bg-[#b5b5b5] border border-[#808080] px-3 py-1.5 text-[11px] text-[#2b2b2b] flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                  <span><strong>Cálculo exacto:</strong> ${st.enchValue} niveles por encantamiento + ${st.pwpTotal} niveles de penalización acumulada.</span>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // Renderizar comparativa con números concretos
+      renderOrderComparisonPanel(result, naiveResult, displayName);
+    }
+
+    // =========================================================================
+    // PANEL DE COMPARATIVA CON NÚMEROS CONCRETOS (ÓPTIMO VS MAL ORDEN)
+    // =========================================================================
+    function renderOrderComparisonPanel(optimalResult, naiveResult, displayName) {
+      const panel = document.getElementById('order-comparison-panel');
+      if (optimalResult.steps.length <= 1) {
+        panel.innerHTML = '';
+        return;
+      }
+
+      const diffLevels = Math.max(0, naiveResult.totalLevels - optimalResult.totalLevels);
+      const blockedCount = naiveResult.steps.filter(s => s.tooExpensive).length;
+
+      const naiveStepsRows = naiveResult.steps.map((s, i) => `
+        <div class="flex items-center justify-between text-[11px] py-1.5 px-3 border-b border-[#3a3d47] ${s.tooExpensive ? 'bg-rose-950/80 text-rose-200' : 'text-slate-200'}">
+          <span>Paso ${i + 1}: Meter <strong>${s.bookName}</strong> directo al ${displayName}</span>
+          <span class="font-mono font-bold ${s.tooExpensive ? 'text-rose-400' : 'text-[#fcee4b]'}">
+            ${s.bookValue} + ${s.penalty} recargo = ${s.stepCost} Niv. ${s.tooExpensive ? '🚫 BLOQUEADO (>39)' : ''}
+          </span>
+        </div>
+      `).join('');
+
+      panel.innerHTML = `
+        <div class="mc-card p-4 space-y-3">
+          <div class="flex items-center gap-2 border-b-2 border-[#8c8c8c] pb-2">
+            <span class="text-base">📊</span>
+            <h3 class="font-pixel text-xs sm:text-sm text-[#78350f]">¿Qué pasaría si NO los pusieras en este orden? (Con números reales)</h3>
+          </div>
+
+          <p class="text-xs text-[#2b2b30] leading-relaxed">
+            Si en lugar de emparejar los libros en árbol (2 en 2) metieras los <strong>${naiveResult.steps.length} libros uno por uno</strong> directamente sobre tu <strong>${displayName}</strong>, el recargo por trabajos previos subiría exponencialmente (<code class="bg-[#262830] text-[#80ff20] px-1">+0, +1, +3, +7, +15, +31</code>):
+          </p>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+            <div class="bg-[#dcfce7] border-2 border-[#15803d] p-3 space-y-1 text-[#14532d]">
+              <span class="font-pixel text-[11px] block">✔ CON EL ORDEN ÓPTIMO DE ARRIBA</span>
+              <div class="text-lg font-pixel text-[#052e16]">${optimalResult.totalLevels} Niveles totales</div>
+              <p class="text-[11px] font-medium">Paso más caro: <strong>${optimalResult.maxStepCost} niveles</strong> (Dentro del límite de 39).</p>
+            </div>
+
+            <div class="bg-[#fee2e2] border-2 border-[#991b1b] p-3 space-y-1 text-[#7f1d1d]">
+              <span class="font-pixel text-[11px] block">✖ SI LOS METES UNO POR UNO (SIN ORDEN)</span>
+              <div class="text-lg font-pixel text-[#450a0a]">${naiveResult.totalLevels} Niveles totales (+${diffLevels} extra)</div>
+              <p class="text-[11px] font-medium">
+                Paso más caro: <strong>${naiveResult.maxStepCost} niveles</strong>
+                ${blockedCount > 0 ? ` — <strong>¡${blockedCount} ${blockedCount === 1 ? 'paso se bloquea' : 'pasos se bloquean'} con "¡Demasiado caro!"!</strong>` : ' (Gastas mucha más experiencia innecesaria).'}
+              </p>
+            </div>
+          </div>
+
+          <div class="mc-recessed-dark overflow-hidden">
+            <div class="px-3 py-1.5 bg-[#1b1d22] text-[10px] font-pixel text-slate-300 border-b border-[#3a3d47]">
+              DESGLOSE DE LO QUE OCURRIRÍA SI METIERAS LOS LIBROS UNO A UNO:
+            </div>
+            ${naiveStepsRows}
+          </div>
+        </div>
+      `;
+    }
+
+    // =========================================================================
+    // RENDERIZADO PESTAÑA 2 (ALDEANOS EN TARJETAS GUI PIEDRA)
+    // =========================================================================
+    function renderVillagerTable() {
+      const search = document.getElementById('villager-search').value.toLowerCase().trim();
+      const profFilter = document.getElementById('villager-filter-prof').value;
+      const list = document.getElementById('villager-cards-list');
+
+      const filtered = VILLAGER_DB.filter(row => {
+        if (profFilter !== 'ALL' && row.prof !== profFilter) return false;
+        if (!search) return true;
+        return `${row.prof} ${row.station} ${row.item} ${row.cap} ${row.impossible}`.toLowerCase().includes(search);
+      });
+
+      list.innerHTML = filtered.map(row => `
+        <div class="mc-card p-4 space-y-2.5">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1 border-b border-[#8c8c8c] pb-2">
+            <div>
+              <span class="font-pixel text-sm text-[#18181c]">${row.prof}</span>
+              <span class="text-xs text-[#78350f] font-bold ml-2">· Mesa: ${row.station}</span>
+            </div>
+            <span class="text-[11px] font-mono px-2 py-0.5 bg-[#262830] text-[#80ff20] self-start sm:self-auto">
+              ${row.lvl} · Prob: ${currentEdition === 'java' ? row.probJava : row.probBedrock}
+            </span>
+          </div>
+          <div class="text-xs space-y-1.5 text-[#2b2b30]">
+            <div><span class="font-bold text-[#18181c]">Qué vende:</span> <span class="font-semibold">${row.item}</span></div>
+            <div><span class="text-[#14532d] font-bold">✔ Máximo que puede dar:</span> <span>${row.cap}</span></div>
+            <div><span class="text-[#991b1b] font-bold">✖ Imposible aquí (0%):</span> <span>${row.impossible}</span></div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function copyRustCode() {
+      const text = document.getElementById('rust-code-block').textContent;
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+
+      const btn = document.getElementById('btn-copy-rust');
+      btn.textContent = '✔ ¡Copiado!';
+      setTimeout(() => { btn.textContent = 'Copiar Código'; }, 2000);
+    }
+
+    // =========================================================================
+    // FUNCIONES DE CONTROL, INTERACCIÓN Y CÁLCULO DE PROBABILIDADES / YUNQUE
+    // =========================================================================
+    function getCurrentItem() {
+      const sel = document.getElementById('item-select');
+      const id = sel ? sel.value : ITEMS[0].id;
+      return ITEMS.find(it => it.id === id) || ITEMS[0];
+    }
+
+    function getCurrentMaterial() {
+      const item = getCurrentItem();
+      if (!item.materials || item.materials.length === 0) return null;
+      const matSel = document.getElementById('material-select');
+      const matId = matSel && item.materials.includes(matSel.value) ? matSel.value : item.materials[0];
+      return { id: matId, ...MATERIALS[matId] };
+    }
+
+    function getDisplayItemName() {
+      const item = getCurrentItem();
+      const mat = getCurrentMaterial();
+      if (!mat) return item.name;
+      return `${item.name} de ${mat.name}`;
+    }
+
+    function itemHasVillagerForCurrentMat() {
+      const item = getCurrentItem();
+      if (!item.villagerMaterials || item.villagerMaterials.length === 0) return false;
+      const mat = getCurrentMaterial();
+      if (!mat) return item.villagerMaterials.includes('default');
+      return item.villagerMaterials.includes(mat.id);
+    }
+
+    function setEdition(ed) {
+      currentEdition = ed;
+      const btnJava = document.getElementById('btn-ed-java');
+      const btnBed = document.getElementById('btn-ed-bedrock');
+      const badge = document.getElementById('reroll-ed-badge');
+
+      if (ed === 'java') {
+        btnJava.classList.add('mc-tab-active');
+        btnBed.classList.remove('mc-tab-active');
+        if (badge) badge.textContent = 'JAVA EDITION';
+      } else {
+        btnBed.classList.add('mc-tab-active');
+        btnJava.classList.remove('mc-tab-active');
+        if (badge) badge.textContent = 'BEDROCK EDITION';
+      }
+      renderEnchantsList();
+      renderVillagerTable();
+      recalculate();
+    }
+
+    function switchTab(tabId) {
+      ['calc', 'villagers', 'theory', 'rust'].forEach(t => {
+        const panel = document.getElementById(`tab-${t}`);
+        const btn = document.getElementById(`tab-btn-${t}`);
+        if (panel) panel.classList.toggle('hidden', t !== tabId);
+        if (btn) btn.classList.toggle('mc-tab-active', t === tabId);
+      });
+    }
+
+    function updateMaterialDependentUI() {
+      const item = getCurrentItem();
+      const mat = getCurrentMaterial();
+      const hasVillagerForMat = itemHasVillagerForCurrentMat();
+      const enchVal = mat ? (item.isArmor ? mat.enchArmor : mat.enchTool) : (item.enchantability || 0);
+
+      document.getElementById('item-origin-box').innerHTML = `
+        <div class="flex items-start gap-2.5">
+          <span class="text-base shrink-0">🧭</span>
+          <div class="text-xs space-y-1">
+            <div class="font-bold text-[#78350f]">${item.originTitle}${mat ? ` (${mat.name})` : ''}</div>
+            <p class="text-[#2d291f] leading-relaxed">${item.originDesc}${mat ? ` <strong>Nota del material (${mat.name}):</strong> ${mat.villagerNote}` : ''}</p>
+          </div>
+        </div>
+      `;
+
+      // Habilitar o deshabilitar estrategia de aldeano de equipamiento según el material elegido
+      const radVill = document.getElementById('rad-villager-base');
+      const wrapVill = document.getElementById('wrap-villager-base');
+      const descVill = document.getElementById('desc-villager-base');
+      radVill.disabled = !hasVillagerForMat;
+      wrapVill.classList.toggle('opacity-50', !hasVillagerForMat);
+      wrapVill.classList.toggle('cursor-not-allowed', !hasVillagerForMat);
+      descVill.textContent = hasVillagerForMat
+        ? item.villagerLabel
+        : `No disponible: ningún aldeano vende ${getDisplayItemName()} encantado directamente.`;
+
+      // Habilitar o deshabilitar estrategia de Mesa de Encantamientos + Truco de Oro
+      const radGold = document.getElementById('rad-gold-trick');
+      const wrapGold = document.getElementById('wrap-gold-trick');
+      const descGold = document.getElementById('desc-gold-trick');
+      radGold.disabled = !item.hasEnchantTable;
+      wrapGold.classList.toggle('opacity-50', !item.hasEnchantTable);
+      wrapGold.classList.toggle('cursor-not-allowed', !item.hasEnchantTable);
+      descGold.textContent = item.hasEnchantTable
+        ? (mat && mat.id === 'gold'
+            ? `El Oro ya tiene encantabilidad máxima (${enchVal}): en Mesa Nv. 30 saca encantamientos altos a la primera sin necesidad de sacrificio.`
+            : `Usas herramientas de oro para refrescar la mesa (encantabilidad de ${mat ? mat.name : 'este objeto'}: ${enchVal}) antes de usar el yunque.`)
+        : 'No disponible: este objeto no se puede meter en la Mesa de Encantamientos.';
+
+      if ((userManualStrategy === 'villager' && !hasVillagerForMat) || (userManualStrategy === 'gold' && !item.hasEnchantTable)) {
+        userManualStrategy = null;
+      }
+    }
+
+    function onMaterialChange() {
+      userManualStrategy = null;
+      updateMaterialDependentUI();
+      recalculate();
+    }
+
+    function onItemChange() {
+      userManualStrategy = null;
+      const item = getCurrentItem();
+      document.getElementById('item-category-badge').textContent = item.category;
+      document.getElementById('selected-item-icon').innerHTML = PIXEL_ICONS[item.icon] || PIXEL_ICONS.sword;
+
+      // Mostrar u ocultar el recuadro de selección de material según el ítem
+      const matWrap = document.getElementById('material-select-wrap');
+      const matSelect = document.getElementById('material-select');
+      if (item.materials && item.materials.length > 0) {
+        const prevMat = matSelect.value;
+        matSelect.innerHTML = item.materials.map(mKey => `<option value="${mKey}">${MATERIALS[mKey].name}</option>`).join('');
+        matSelect.value = item.materials.includes(prevMat) ? prevMat : 'diamond';
+        matWrap.classList.remove('hidden');
+      } else {
+        matWrap.classList.add('hidden');
+        matSelect.innerHTML = '';
+      }
+
+      updateMaterialDependentUI();
+
+      // Cargar configuración recomendada por defecto al cambiar de ítem
+      selectedEnchants = { ...item.godRoll };
+      if (currentEdition === 'bedrock' && selectedEnchants.sweeping_edge) {
+        delete selectedEnchants.sweeping_edge;
+      }
+
+      renderEnchantsList();
+      recalculate();
+    }
+
+    function selectGodRoll() {
+      const item = getCurrentItem();
+      selectedEnchants = { ...item.godRoll };
+      if (currentEdition === 'bedrock' && selectedEnchants.sweeping_edge) {
+        delete selectedEnchants.sweeping_edge;
+      }
+      renderEnchantsList();
+      recalculate();
+    }
+
+    function clearEnchants() {
+      selectedEnchants = {};
+      renderEnchantsList();
+      recalculate();
+    }
+
+    function isEnchantBlocked(key) {
+      if (key === 'sweeping_edge' && currentEdition === 'bedrock') {
+        return 'Exclusivo de Java Edition';
+      }
+      const item = getCurrentItem();
+      const target = ENCHANTMENTS[key];
+      if (!target) return null;
+
+      for (const activeKey of Object.keys(selectedEnchants)) {
+        if (activeKey === key) continue;
+        const activeEnch = ENCHANTMENTS[activeKey];
+        if (target.group && activeEnch.group && target.group === activeEnch.group) {
+          return `Incompatible con ${activeEnch.name}`;
+        }
+        // Regla especial de Arco: Infinidad vs Reparación
+        if (item.id === 'bow') {
+          if ((key === 'infinity' && activeKey === 'mending') || (key === 'mending' && activeKey === 'infinity')) {
+            return `Incompatible con ${activeEnch.name} en Arcos`;
+          }
+        }
+      }
+      return null;
+    }
+
+    function toggleEnchant(key) {
+      if (selectedEnchants[key]) {
+        delete selectedEnchants[key];
+      } else {
+        if (isEnchantBlocked(key)) return;
+        selectedEnchants[key] = ENCHANTMENTS[key].maxLvl;
+      }
+      renderEnchantsList();
+      recalculate();
+    }
+
+    function changeEnchantLevel(key, delta) {
+      if (!selectedEnchants[key]) return;
+      const max = ENCHANTMENTS[key].maxLvl;
+      const next = Math.min(max, Math.max(1, selectedEnchants[key] + delta));
+      selectedEnchants[key] = next;
+      renderEnchantsList();
+      recalculate();
+    }
+
+    function renderEnchantsList() {
+      const item = getCurrentItem();
+      const romanMap = ['', 'I', 'II', 'III', 'IV', 'V'];
+      const container = document.getElementById('enchants-list');
+
+      container.innerHTML = item.allowed.map(key => {
+        const ench = ENCHANTMENTS[key];
+        const isSelected = Boolean(selectedEnchants[key]);
+        const currentLvl = selectedEnchants[key] || ench.maxLvl;
+        const conflictReason = !isSelected ? isEnchantBlocked(key) : null;
+
+        return `
+          <div class="mc-card p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 ${isSelected ? 'mc-card-selected' : ''} ${conflictReason ? 'opacity-55' : ''}">
+            <label class="flex items-start gap-3 cursor-pointer flex-1">
+              <input type="checkbox" ${isSelected ? 'checked' : ''} ${conflictReason ? 'disabled' : ''} onchange="toggleEnchant('${key}')" class="mt-1 w-4 h-4 accent-[#15803d] cursor-pointer" />
+              <div class="text-xs">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <span class="font-bold text-[#18181c] text-sm">${ench.name}</span>
+                  <span class="text-[10px] font-mono px-1.5 py-0.5 bg-[#2b2b2b] text-[#fcee4b]">Coste base: x${ench.bookMult}</span>
+                  ${conflictReason ? `<span class="text-[10px] font-bold text-rose-700 bg-rose-200 px-1.5 py-0.5 border border-rose-400">✖ ${conflictReason}</span>` : ''}
+                </div>
+                <p class="text-[#3b3b42] mt-0.5 leading-relaxed">${ench.plainDesc}</p>
+              </div>
+            </label>
+
+            ${isSelected ? `
+              <div class="flex items-center gap-1.5 self-end sm:self-center shrink-0 bg-[#8b8b8b] p-1 border-2 border-[#373737]">
+                <button type="button" onclick="changeEnchantLevel('${key}', -1)" ${currentLvl <= 1 ? 'disabled' : ''} class="mc-btn w-7 h-7 font-pixel text-xs disabled:opacity-40">-</button>
+                <span class="px-2.5 font-pixel text-xs text-[#1f1f24]">Nv. ${romanMap[currentLvl]}</span>
+                <button type="button" onclick="changeEnchantLevel('${key}', 1)" ${currentLvl >= ench.maxLvl ? 'disabled' : ''} class="mc-btn w-7 h-7 font-pixel text-xs disabled:opacity-40">+</button>
+              </div>
+            ` : ''}
+          </div>
+        `;
+      }).join('');
+    }
+
+    function getEnchantRerollStats(key, lvl) {
+      const ench = ENCHANTMENTS[key];
+      if (key === 'soul_speed') {
+        return {
+          method: 'Trueque con Piglins / Cofres de Bastión',
+          avgRerolls: null,
+          noviceProbText: '0% (No sale en aldeanos)',
+          fullMenuProbText: '~1.1% por lingote de oro a Piglins',
+          detail: 'Dales lingotes de oro a los Piglins en el Nether para conseguir el libro o botas encantadas.'
+        };
+      }
+      if (key === 'swift_sneak') {
+        return {
+          method: 'Cofres de Ciudades Antiguas (Deep Dark)',
+          avgRerolls: null,
+          noviceProbText: '0% (No sale en aldeanos)',
+          fullMenuProbText: '~23.2% por cofre de Ciudad Antigua',
+          detail: 'Explora los cofres alrededor del portal central de una Ciudad Antigua.'
+        };
+      }
+      if (key === 'wind_burst') {
+        return {
+          method: 'Bóvedas Ominosas (Cámaras de Prueba)',
+          avgRerolls: null,
+          noviceProbText: '0% (No sale en aldeanos)',
+          fullMenuProbText: '~5.5% por Llave de Prueba Ominosa',
+          detail: 'Usa una Llave de Prueba Ominosa en las bóvedas oscuras de las Trial Chambers.'
+        };
+      }
+
+      // Cálculo exacto para Bibliotecarios (Java: 37 encantamientos equiprobables; Bedrock: ~30)
+      const totalPool = currentEdition === 'java' ? 37 : 30;
+      const slotHasBookProb = 2 / 3; // 66.7% en Novato
+      const pSingle = slotHasBookProb * (1 / totalPool) * (1 / ench.maxLvl);
+      const avgRerolls = Math.max(1, Math.round(1 / pSingle));
+      // Probabilidad acumulada viendo los 4 niveles sin tradear (0.667, 0.667, 0.667, 0.50)
+      const pPerBook = (1 / totalPool) * (1 / ench.maxLvl);
+      const pFull = 1 - Math.pow(1 - (2 / 3) * pPerBook, 3) * (1 - 0.5 * pPerBook);
+      const avgFullMenuRerolls = Math.max(1, Math.round(1 / pFull));
+
+      return {
+        method: 'Aldeano Bibliotecario (Atril)',
+        avgRerolls,
+        avgFullMenuRerolls,
+        noviceProbText: `${(pSingle * 100).toFixed(2)}% (1 cada ~${avgRerolls} intentos)`,
+        fullMenuProbText: `${(pFull * 100).toFixed(2)}% (1 cada ~${avgFullMenuRerolls} aldeanos)`,
+        detail: ench.maxLvl === 5 && lvl === 5
+          ? `Consejo: Si te sale ${ench.name} IV (misma probabilidad: ~${avgRerolls} int. en atril o ~${avgFullMenuRerolls} aldeanos viendo 4 niveles), puedes juntar 2 libros de Nv. IV.`
+          : `Rompiendo y poniendo el Atril tomará ~${avgRerolls} intentos en promedio; si puedes ver los 4 niveles sin tradear, baja a ~${avgFullMenuRerolls} aldeanos.`
+      };
+    }
+
+    function pwpCost(workCount) {
+      return (1 << workCount) - 1;
+    }
+
+    function xpForLevel(L) {
+      if (L <= 16) return L * L + 6 * L;
+      if (L <= 31) return Math.floor(2.5 * L * L - 40.5 * L + 360);
+      return Math.floor(4.5 * L * L - 162.5 * L + 2220);
+    }
+
+    // Programación Dinámica Exacta por Máscara de Bits (Bitmask DP)
+    function solveOptimalAnvilTree(nodes) {
+      const n = nodes.length;
+      if (n <= 1) {
+        return { totalLevels: 0, totalXpPoints: 0, maxStepCost: 0, workCount: 0, steps: [] };
+      }
+
+      const fullMask = (1 << n) - 1;
+      const dp = Array.from({ length: 1 << n }, () => new Map());
+
+      for (let i = 0; i < n; i++) {
+        dp[1 << i].set(0, {
+          workCount: 0,
+          bookValue: nodes[i].bookValue,
+          isTargetItem: nodes[i].isTargetItem,
+          label: nodes[i].label,
+          totalLevels: 0,
+          totalXpPoints: 0,
+          maxStepCost: 0,
+          steps: []
+        });
+      }
+
+      for (let size = 2; size <= n; size++) {
+        for (let mask = 1; mask <= fullMask; mask++) {
+          let bits = 0;
+          for (let b = 0; b < n; b++) if (mask & (1 << b)) bits++;
+          if (bits !== size) continue;
+
+          for (let sub1 = (mask - 1) & mask; sub1 > 0; sub1 = (sub1 - 1) & mask) {
+            const sub2 = mask ^ sub1;
+            for (const s1 of dp[sub1].values()) {
+              for (const s2 of dp[sub2].values()) {
+                // El ítem objetivo nunca puede ir a la derecha como sacrificio
+                if (s2.isTargetItem) continue;
+
+                const pwp1 = pwpCost(s1.workCount);
+                const pwp2 = pwpCost(s2.workCount);
+                const stepCost = s2.bookValue + pwp1 + pwp2;
+                const newWork = Math.max(s1.workCount, s2.workCount) + 1;
+                const newTotal = s1.totalLevels + s2.totalLevels + stepCost;
+                const newXp = s1.totalXpPoints + s2.totalXpPoints + xpForLevel(stepCost);
+                const newMax = Math.max(s1.maxStepCost, s2.maxStepCost, stepCost);
+
+                const curr = dp[mask].get(newWork);
+                const isBetter = !curr ||
+                  (newMax <= 39 && curr.maxStepCost > 39) ||
+                  ((newMax <= 39) === (curr.maxStepCost <= 39) &&
+                    (newTotal < curr.totalLevels || (newTotal === curr.totalLevels && newMax < curr.maxStepCost)));
+
+                if (isBetter) {
+                  const resLabel = s1.isTargetItem
+                    ? `${nodes[0].shortName} (+${newWork} usos)`
+                    : `Libro Combinado (${newWork} uso${newWork > 1 ? 's' : ''})`;
+
+                  dp[mask].set(newWork, {
+                    workCount: newWork,
+                    bookValue: s1.bookValue + s2.bookValue,
+                    isTargetItem: s1.isTargetItem,
+                    label: resLabel,
+                    totalLevels: newTotal,
+                    totalXpPoints: newXp,
+                    maxStepCost: newMax,
+                    steps: [
+                      ...s1.steps,
+                      ...s2.steps,
+                      {
+                        left: s1.label,
+                        right: s2.label,
+                        result: resLabel,
+                        cost: stepCost,
+                        enchValue: s2.bookValue,
+                        pwpTotal: pwp1 + pwp2,
+                        tooExpensive: stepCost > 39
+                      }
+                    ]
+                  });
+                }
+              }
+            }
+          }
+        }
+      }
+
+      let best = null;
+      for (const state of dp[fullMask].values()) {
+        if (!best) {
+          best = state;
+        } else {
+          const bestOk = best.maxStepCost <= 39;
+          const stOk = state.maxStepCost <= 39;
+          if ((stOk && !bestOk) || (stOk === bestOk && (state.totalLevels < best.totalLevels || (state.totalLevels === best.totalLevels && state.maxStepCost < best.maxStepCost)))) {
+            best = state;
+          }
+        }
+      }
+      return best;
+    }
+
+    // Simulación lineal ingenua (meter libros 1 a 1 directamente al objeto)
+    function solveLinearNaive(nodes) {
+      if (nodes.length <= 1) {
+        return { totalLevels: 0, maxStepCost: 0, steps: [] };
+      }
+      const books = nodes.slice(1).sort((a, b) => a.bookValue - b.bookValue);
+      let itemWork = 0;
+      let totalLevels = 0;
+      let maxStepCost = 0;
+      const steps = [];
+
+      for (const b of books) {
+        const penalty = pwpCost(itemWork);
+        const stepCost = b.bookValue + penalty;
+        totalLevels += stepCost;
+        maxStepCost = Math.max(maxStepCost, stepCost);
+        steps.push({
+          bookName: b.shortName,
+          bookValue: b.bookValue,
+          penalty,
+          stepCost,
+          tooExpensive: stepCost > 39
+        });
+        itemWork++;
+      }
+      return { totalLevels, maxStepCost, steps };
+    }
+
+    // =========================================================================
+    // CÓDIGO FUENTE NATIVO EN RUST (PESTAÑA 4)
+    // =========================================================================
+    const RUST_SOURCE_CODE = `// anvil_dp_optimizer.rs
+// Motor nativo en Rust de Programación Dinámica (Bitmask DP) para encontrar
+// el árbol binario óptimo de fusión en el Yunque de Minecraft.
+// Compilar: rustc -O anvil_dp_optimizer.rs
+
+use std::collections::HashMap;
+
+#[derive(Clone, Debug)]
+pub struct AnvilNode {
+    pub label: String,
+    pub book_value: u32,
+    pub is_target_item: bool,
+}
+
+#[derive(Clone, Debug)]
+pub struct MergeStep {
+    pub left: String,
+    pub right: String,
+    pub step_cost: u32,
+    pub result_work_count: u32,
+}
+
+#[derive(Clone, Debug)]
+pub struct DpState {
+    pub work_count: u32,
+    pub book_value: u32,
+    pub is_target_item: bool,
+    pub label: String,
+    pub total_levels: u32,
+    pub max_step_cost: u32,
+    pub steps: Vec<MergeStep>,
+}
+
+#[inline(always)]
+pub fn prior_work_penalty(work_count: u32) -> u32 {
+    (1u32 << work_count) - 1
+}
+
+pub fn solve_optimal_anvil(nodes: &[AnvilNode]) -> Option<DpState> {
+    let n = nodes.len();
+    assert!(n > 0 && n <= 16);
+
+    let full_mask: usize = (1 << n) - 1;
+    let mut dp: Vec<HashMap<u32, DpState>> = vec![HashMap::new(); 1 << n];
+
+    for (i, node) in nodes.iter().enumerate() {
+        dp[1 << i].insert(0, DpState {
+            work_count: 0,
+            book_value: node.book_value,
+            is_target_item: node.is_target_item,
+            label: node.label.clone(),
+            total_levels: 0,
+            max_step_cost: 0,
+            steps: Vec::new(),
+        });
+    }
+
+    for size in 2..=n {
+        for mask in 1..=full_mask {
+            if mask.count_ones() as usize != size { continue; }
+            let mut sub1 = (mask - 1) & mask;
+            while sub1 > 0 {
+                let sub2 = mask ^ sub1;
+                let left_states: Vec<DpState> = dp[sub1].values().cloned().collect();
+                let right_states: Vec<DpState> = dp[sub2].values().cloned().collect();
+
+                for s1 in &left_states {
+                    for s2 in &right_states {
+                        if s2.is_target_item { continue; }
+                        let step_cost = s2.book_value
+                            + prior_work_penalty(s1.work_count)
+                            + prior_work_penalty(s2.work_count);
+                        let new_work = s1.work_count.max(s2.work_count) + 1;
+                        let new_total = s1.total_levels + s2.total_levels + step_cost;
+                        let new_max = s1.max_step_cost.max(s2.max_step_cost).max(step_cost);
+
+                        let is_better = match dp[mask].get(&new_work) {
+                            None => true,
+                            Some(curr) => (new_max <= 39 && curr.max_step_cost > 39)
+                                || ((new_max <= 39) == (curr.max_step_cost <= 39)
+                                    && (new_total < curr.total_levels
+                                        || (new_total == curr.total_levels && new_max < curr.max_step_cost))),
+                        };
+
+                        if is_better {
+                            let new_label = if s1.is_target_item {
+                                s1.label.clone()
+                            } else {
+                                format!("[{} + {}]", s1.label, s2.label)
+                            };
+                            let mut new_steps = s1.steps.clone();
+                            new_steps.extend(s2.steps.iter().cloned());
+                            new_steps.push(MergeStep {
+                                left: s1.label.clone(),
+                                right: s2.label.clone(),
+                                step_cost,
+                                result_work_count: new_work,
+                            });
+                            dp[mask].insert(new_work, DpState {
+                                work_count: new_work,
+                                book_value: s1.book_value + s2.book_value,
+                                is_target_item: s1.is_target_item,
+                                label: new_label,
+                                total_levels: new_total,
+                                max_step_cost: new_max,
+                                steps: new_steps,
+                            });
+                        }
+                    }
+                }
+                sub1 = (sub1 - 1) & mask;
+            }
+        }
+    }
+
+    dp[full_mask].values().cloned().min_by(|a, b| {
+        (b.max_step_cost <= 39).cmp(&(a.max_step_cost <= 39))
+            .then_with(|| a.total_levels.cmp(&b.total_levels))
+            .then_with(|| a.max_step_cost.cmp(&b.max_step_cost))
+    })
+}
+
+fn main() {
+    let nodes = vec![
+        AnvilNode { label: "Élitros".into(), book_value: 0, is_target_item: true },
+        AnvilNode { label: "Irrompibilidad III".into(), book_value: 3, is_target_item: false },
+        AnvilNode { label: "Reparación I".into(), book_value: 2, is_target_item: false },
+    ];
+    if let Some(best) = solve_optimal_anvil(&nodes) {
+        println!("Coste total: {} niveles", best.total_levels);
+    }
+}`;
+
+    function init() {
+      const headerIcon = document.getElementById('header-anvil-icon');
+      if (headerIcon) headerIcon.innerHTML = PIXEL_ICONS.anvil_mini;
+
+      const select = document.getElementById('item-select');
+      if (select) {
+        select.innerHTML = ITEMS.map(it => `<option value="${it.id}">${it.name}</option>`).join('');
+      }
+
+      const rustBlock = document.getElementById('rust-code-block');
+      if (rustBlock) rustBlock.textContent = RUST_SOURCE_CODE;
+
+      renderVillagerTable();
+      onItemChange();
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+  </script>
+</body>
+</html>
