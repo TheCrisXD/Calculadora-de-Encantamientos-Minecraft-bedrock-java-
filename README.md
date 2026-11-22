@@ -1,8 +1,10 @@
 # ⚒️ Minecraft Enchant & Anvil DP Optimizer (1.21+ Java & Bedrock)
 
-[![Abrir Calculadora en Vivo](https://img.shields.io/badge/🚀_ABRIR_CALCULADORA_EN_VIVO-PC_y_Celular-15803d?style=for-the-badge)](https://TU-USUARIO.github.io/TU-REPOSITORIO/)
+[![Abrir Calculadora en Vivo](https://img.shields.io/badge/🚀_ABRIR_CALCULADORA_EN_VIVO-PC_y_Celular-15803d?style=for-the-badge)](https://thecrisxd.github.io/Calculadora-de-Encantamientos-Minecraft-bedrock-java-/)
 
-> 👉 **[Haz clic aquí para entrar a la calculadora desde tu navegador o celular](https://TU-USUARIO.github.io/TU-REPOSITORIO/)**
+> 👉 **[Haz clic aquí para entrar a la calculadora desde tu navegador o celular](https://thecrisxd.github.io/Calculadora-de-Encantamientos-Minecraft-bedrock-java-/)**
+
+https://thecrisxd.github.io/Calculadora-de-Encantamientos-Minecraft-bedrock-java-/
 
 Una calculadora interactiva y guía visual paso a paso con estética clásica de interfaz de **Minecraft** que encuentra el **camino más corto, barato en experiencia (XP) y con menos intentos (re-rolls)** para encantar cualquier objeto del juego sin alcanzar jamás el bloqueo de *"¡Demasiado caro!"* ($>39$ niveles) en el yunque.
 
