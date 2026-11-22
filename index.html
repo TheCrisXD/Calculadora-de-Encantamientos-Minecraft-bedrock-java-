@@ -308,6 +308,11 @@
         <div id="item-origin-box" class="mc-tip-box p-4 space-y-2">
           <!-- Poblado dinámicamente -->
         </div>
+
+        <!-- VISTA RÁPIDA: RE-ROLLS ESTIMADOS CON TRUCO DEL ORO EN MESA NV. 30 (ANTES DE ETAPA 2) -->
+        <div id="stage1-enchant-table-box" class="hidden mc-card p-4 space-y-2.5 border-2 border-[#b45309]">
+          <!-- Poblado dinámicamente con el motor exacto de Mesa de Encantamientos -->
+        </div>
       </section>
 
       <!-- =================================================================== -->
@@ -415,9 +420,14 @@
                 <span class="font-bold text-[#78350f]">Ruta C · Mesa de Encantamientos Nv. 30 + Truco de Oro</span>
                 <span id="tag-rec-gold" class="hidden px-2 py-0.5 bg-[#15803d] text-white font-pixel text-[10px]">★ SUGERIDA</span>
               </div>
-              <span id="desc-gold-trick" class="text-[#3b3b42] block mt-0.5">Usas herramientas de oro para refrescar la mesa hasta que tu objeto salga con 2 encantamientos gratis antes del yunque.</span>
+              <span id="desc-gold-trick" class="text-[#3b3b42] block mt-0.5">Usas herramientas de oro para refrescar la mesa hasta que tu objeto salga con encantamientos altos antes del yunque.</span>
             </div>
           </label>
+        </div>
+
+        <!-- ANÁLISIS PROFUNDO DE LA MESA DE ENCANTAMIENTOS NV. 30 + RE-ROLLS CON TRUCO DEL ORO -->
+        <div id="gold-trick-deep-analysis" class="hidden mc-card p-4 space-y-3.5 border-2 border-[#b45309]">
+          <!-- Poblado dinámicamente cuando la Ruta C es recomendada o seleccionada -->
         </div>
       </section>
 
@@ -602,6 +612,20 @@
             <li>Si no te gusta lo que ofrece, quita el diamante, pon una <strong>pala o espada de oro</strong> y encántala gastando solo <strong>1 nivel de XP y 1 lapislázuli</strong>.</li>
             <li>Esa acción refresca la semilla aleatoria de tu jugador. Pasa el objeto de oro por la <strong>Afiladora</strong> para recuperar XP y vuelve a revisar tu pieza de diamante hasta que salga con 2 o 3 encantamientos gratis.</li>
           </ol>
+          <div class="mc-recessed-dark p-3 space-y-2 text-[11px]">
+            <div class="font-pixel text-[#fcee4b]">Techos exactos de Nivel Modificado en Mesa Nv. 30 (15 librerías):</div>
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 font-mono text-slate-200">
+              <div class="bg-[#1b1d22] p-2 border border-[#3a3d47]"><strong>Arco/Tridente (E=1)</strong><span class="block text-slate-400">Rango: 26–36 (Sin Poder V)</span></div>
+              <div class="bg-[#1b1d22] p-2 border border-[#3a3d47]"><strong>Diamante (E=10)</strong><span class="block text-cyan-300">Rango: 26–40 (Eficiencia máx. IV)</span></div>
+              <div class="bg-[#1b1d22] p-2 border border-[#3a3d47]"><strong>Hierro Herr. (E=14)</strong><span class="block text-slate-300">Rango: 26–42 (Eficiencia V rara)</span></div>
+              <div class="bg-[#1b1d22] p-2 border border-[#3a3d47]"><strong>Netherita (E=15)</strong><span class="block text-emerald-300">Rango: 26–43 (Eficiencia V ~2%)</span></div>
+              <div class="bg-[#1b1d22] p-2 border border-[#3a3d47]"><strong>Oro Herr. (E=22)</strong><span class="block text-[#fcee4b]">Rango: 26–47 (Filo V / Efic. V)</span></div>
+              <div class="bg-[#1b1d22] p-2 border border-[#3a3d47]"><strong>Oro Armad. (E=25)</strong><span class="block text-[#fcee4b]">Rango: 26–49 (Máx. del juego)</span></div>
+            </div>
+            <p class="text-slate-300 leading-relaxed">
+              <strong>Dato clave:</strong> Como <strong>Eficiencia V</strong> exige nivel modificado ≥ 41 y el <strong>Pico de Diamante</strong> tiene un techo máximo de 40 en Mesa Nv. 30, <strong>Eficiencia V tiene 0% en Diamante</strong>. El combo óptimo en mesa para un Pico de Diamante es <strong>Eficiencia IV + Irrompibilidad III + Fortuna III</strong> (~11 re-rolls con pala de oro) y luego sumar 1 solo libro de Eficiencia IV en el yunque.
+            </p>
+          </div>
         </div>
       </section>
     </div>
@@ -1128,9 +1152,511 @@
     ];
 
     // =========================================================================
+    // MOTOR MATEMÁTICO EXACTO DE LA MESA DE ENCANTAMIENTOS NV. 30 (VANILLA 1.21+)
+    // Calcula la distribución exacta del nivel modificado, pesos, conflictos,
+    // bucle de encantamientos extra (modLevel+1)/50 y re-rolls con Truco del Oro.
+    // =========================================================================
+    const TABLE_PRIMARY_ENCHANTS = {
+      pickaxe: ['efficiency', 'unbreaking', 'fortune', 'silk_touch'],
+      shovel: ['efficiency', 'unbreaking', 'fortune', 'silk_touch'],
+      hoe: ['efficiency', 'unbreaking', 'fortune', 'silk_touch'],
+      axe: ['efficiency', 'unbreaking', 'fortune', 'silk_touch'], // Filo/Castigo/Artrópodos son solo por Yunque en Hachas
+      sword: ['sharpness', 'smite', 'bane_arthropods', 'knockback', 'fire_aspect', 'looting', 'sweeping_edge', 'unbreaking'],
+      helmet: ['protection', 'fire_protection', 'blast_protection', 'proj_protection', 'respiration', 'aqua_affinity', 'unbreaking'],
+      chestplate: ['protection', 'fire_protection', 'blast_protection', 'proj_protection', 'thorns', 'unbreaking'],
+      leggings: ['protection', 'fire_protection', 'blast_protection', 'proj_protection', 'unbreaking'],
+      boots: ['protection', 'fire_protection', 'blast_protection', 'proj_protection', 'feather_falling', 'depth_strider', 'unbreaking'],
+      bow: ['power', 'punch', 'flame', 'infinity', 'unbreaking'],
+      crossbow: ['quick_charge', 'multishot', 'piercing', 'unbreaking'],
+      trident: ['loyalty', 'riptide', 'impaling', 'channeling', 'unbreaking'],
+      mace: ['density', 'breach', 'smite', 'bane_arthropods', 'fire_aspect', 'unbreaking'],
+      fishing_rod: ['luck_of_the_sea', 'lure', 'unbreaking']
+    };
+
+    const TABLE_ENCHANT_RULES = {
+      protection:       { weight: 10, min: l => 1 + (l - 1) * 11,  max: l => 12 + (l - 1) * 11 },
+      fire_protection:  { weight: 5,  min: l => 10 + (l - 1) * 8,  max: l => 18 + (l - 1) * 8 },
+      feather_falling:  { weight: 5,  min: l => 5 + (l - 1) * 6,   max: l => 11 + (l - 1) * 6 },
+      blast_protection: { weight: 2,  min: l => 5 + (l - 1) * 8,   max: l => 13 + (l - 1) * 8 },
+      proj_protection:  { weight: 5,  min: l => 3 + (l - 1) * 6,   max: l => 9 + (l - 1) * 6 },
+      respiration:      { weight: 2,  min: l => 10 * l,            max: l => 10 * l + 30 },
+      aqua_affinity:    { weight: 2,  min: () => 1,                max: () => 41 },
+      thorns:           { weight: 1,  min: l => 10 + (l - 1) * 20, max: l => 60 + (l - 1) * 20 },
+      depth_strider:    { weight: 2,  min: l => 10 * l,            max: l => 10 * l + 15 },
+      sharpness:        { weight: 10, min: l => 1 + (l - 1) * 11,  max: l => 21 + (l - 1) * 11 },
+      smite:            { weight: 5,  min: l => 5 + (l - 1) * 8,   max: l => 25 + (l - 1) * 8 },
+      bane_arthropods:  { weight: 5,  min: l => 5 + (l - 1) * 8,   max: l => 25 + (l - 1) * 8 },
+      knockback:        { weight: 5,  min: l => 5 + (l - 1) * 20,  max: l => 55 + (l - 1) * 20 },
+      fire_aspect:      { weight: 2,  min: l => 10 + (l - 1) * 20, max: l => 60 + (l - 1) * 20 },
+      looting:          { weight: 2,  min: l => 15 + (l - 1) * 9,  max: l => 65 + (l - 1) * 9 },
+      sweeping_edge:    { weight: 2,  min: l => 5 + (l - 1) * 9,   max: l => 20 + (l - 1) * 9 },
+      efficiency:       { weight: 10, min: l => 1 + (l - 1) * 10,  max: l => 51 + (l - 1) * 10 },
+      silk_touch:       { weight: 1,  min: () => 15,               max: () => 65 },
+      unbreaking:       { weight: 5,  min: l => 5 + (l - 1) * 8,   max: l => 55 + (l - 1) * 8 },
+      fortune:          { weight: 2,  min: l => 15 + (l - 1) * 9,  max: l => 65 + (l - 1) * 9 },
+      power:            { weight: 10, min: l => 1 + (l - 1) * 10,  max: l => 16 + (l - 1) * 10 },
+      punch:            { weight: 2,  min: l => 12 + (l - 1) * 20, max: l => 37 + (l - 1) * 20 },
+      flame:            { weight: 2,  min: () => 20,               max: () => 50 },
+      infinity:         { weight: 1,  min: () => 20,               max: () => 50 },
+      luck_of_the_sea:  { weight: 2,  min: l => 15 + (l - 1) * 9,  max: l => 65 + (l - 1) * 9 },
+      lure:             { weight: 2,  min: l => 15 + (l - 1) * 9,  max: l => 65 + (l - 1) * 9 },
+      loyalty:          { weight: 5,  min: l => 12 + (l - 1) * 7,  max: () => 50 },
+      impaling:         { weight: 2,  min: l => 1 + (l - 1) * 8,   max: l => 21 + (l - 1) * 8 },
+      riptide:          { weight: 2,  min: l => 17 + (l - 1) * 7,  max: () => 50 },
+      channeling:       { weight: 1,  min: () => 25,               max: () => 50 },
+      multishot:        { weight: 2,  min: () => 20,               max: () => 50 },
+      quick_charge:     { weight: 5,  min: l => 12 + (l - 1) * 20, max: () => 50 },
+      piercing:         { weight: 10, min: l => 1 + (l - 1) * 10,  max: () => 50 },
+      density:          { weight: 5,  min: l => 5 + (l - 1) * 8,   max: l => 25 + (l - 1) * 8 },
+      breach:           { weight: 2,  min: l => 15 + (l - 1) * 9,  max: l => 65 + (l - 1) * 9 }
+    };
+
+    const enchantTableCache = new Map();
+
+    // CDF exacta de Z = U1 + U2 - 1 en [-1, 1] (distribución triangular del bono ±15%)
+    function triangularCdf(z) {
+      if (z <= -1) return 0;
+      if (z >= 1) return 1;
+      if (z <= 0) return 0.5 * (z + 1) * (z + 1);
+      return 1 - 0.5 * (1 - z) * (1 - z);
+    }
+
+    // Genera y cachea todas las salidas exactas posibles en Mesa Nv. 30 para (item, E, edition)
+    function getRawTableOutcomes(item, enchantability, edition) {
+      const cacheKey = `${item.id}_${enchantability}_${edition}`;
+      if (enchantTableCache.has(cacheKey)) return enchantTableCache.get(cacheKey);
+
+      const primaryKeys = (TABLE_PRIMARY_ENCHANTS[item.id] || []).filter(k =>
+        !(k === 'sweeping_edge' && edition === 'bedrock')
+      );
+
+      // Paso 1: Distribución exacta del nivel modificado para base = 30
+      const baseLvl = 30;
+      const halfE = Math.floor(enchantability / 4);
+      const countR = halfE + 1;
+      const modDist = new Map();
+
+      for (let r1 = 0; r1 <= halfE; r1++) {
+        for (let r2 = 0; r2 <= halfE; r2++) {
+          const k = baseLvl + 1 + r1 + r2;
+          const pairProb = 1 / (countR * countR);
+          const mMin = Math.max(1, Math.floor(k * 0.85));
+          const mMax = Math.ceil(k * 1.15);
+
+          for (let m = mMin; m <= mMax; m++) {
+            const zLow = ((m - 0.5) / k - 1) / 0.15;
+            const zHigh = ((m + 0.5) / k - 1) / 0.15;
+            const p = pairProb * Math.max(0, triangularCdf(zHigh) - triangularCdf(zLow));
+            if (p > 1e-9) {
+              modDist.set(m, (modDist.get(m) || 0) + p);
+            }
+          }
+        }
+      }
+
+      let minMod = 999;
+      let maxMod = 0;
+      for (const m of modDist.keys()) {
+        if (m < minMod) minMod = m;
+        if (m > maxMod) maxMod = m;
+      }
+
+      // Paso 2 y 3: Recursión exacta de selección ponderada y bucle de extras (curM+1)/50
+      const outcomeMap = new Map();
+      const maxReachableByKey = {};
+
+      function recordLeaf(drawn, prob) {
+        const sorted = [...drawn].sort((a, b) => a.key.localeCompare(b.key));
+        const sig = sorted.map(e => `${e.key}:${e.level}`).join('|');
+        let entry = outcomeMap.get(sig);
+        if (!entry) {
+          const enchants = {};
+          const keys = [];
+          for (const e of sorted) {
+            enchants[e.key] = e.level;
+            keys.push(e.key);
+            if (!maxReachableByKey[e.key] || e.level > maxReachableByKey[e.key]) {
+              maxReachableByKey[e.key] = e.level;
+            }
+          }
+          entry = { enchants, keys, prob: 0 };
+          outcomeMap.set(sig, entry);
+        }
+        entry.prob += prob;
+      }
+
+      function explore(remPool, drawn, curM, prob) {
+        if (prob < 1e-9) return;
+        const pCont = (remPool.length > 0 && drawn.length < 5) ? Math.min(1, (curM + 1) / 50) : 0;
+        const stopProb = prob * (1 - pCont);
+        if (stopProb > 0) recordLeaf(drawn, stopProb);
+
+        if (pCont > 0) {
+          let totalW = 0;
+          for (const e of remPool) totalW += e.weight;
+          const nextM = Math.floor(curM / 2);
+
+          for (const e of remPool) {
+            const nextRem = remPool.filter(x => x.key !== e.key && !(e.group && x.group === e.group));
+            explore(nextRem, [...drawn, e], nextM, prob * pCont * (e.weight / totalW));
+          }
+        }
+      }
+
+      for (const [m, mProb] of modDist.entries()) {
+        const pool = [];
+        for (const key of primaryKeys) {
+          const rule = TABLE_ENCHANT_RULES[key];
+          const ench = ENCHANTMENTS[key];
+          if (!rule || !ench) continue;
+          for (let l = ench.maxLvl; l >= 1; l--) {
+            if (m >= rule.min(l) && m <= rule.max(l)) {
+              pool.push({ key, level: l, weight: rule.weight, group: ench.group });
+              break;
+            }
+          }
+        }
+        if (pool.length === 0) continue;
+
+        let totalW = 0;
+        for (const e of pool) totalW += e.weight;
+        for (const e of pool) {
+          const nextRem = pool.filter(x => x.key !== e.key && !(e.group && x.group === e.group));
+          explore(nextRem, [e], m, mProb * (e.weight / totalW));
+        }
+      }
+
+      const result = {
+        enchantability,
+        minMod,
+        maxMod,
+        primaryKeys,
+        maxReachableByKey,
+        outcomes: [...outcomeMap.values()]
+      };
+      enchantTableCache.set(cacheKey, result);
+      return result;
+    }
+
+    // Analiza la Mesa Nv. 30 + Truco del Oro para un objeto, material y mapa de encantamientos objetivo
+    function analyzeEnchantingTable(item, mat, targetMap) {
+      const E = mat ? (item.isArmor ? mat.enchArmor : mat.enchTool) : (item.enchantability || 0);
+      if (!item.hasEnchantTable || E <= 0) {
+        return { supported: false, enchantability: E };
+      }
+
+      const raw = getRawTableOutcomes(item, E, currentEdition);
+      const targetKeys = Object.keys(targetMap || {});
+      const targetGroups = new Set(targetKeys.map(k => ENCHANTMENTS[k]?.group).filter(Boolean));
+      const perEnchant = [];
+      const reachableTargets = [];
+
+      for (const key of targetKeys) {
+        const desiredLvl = targetMap[key];
+        const ench = ENCHANTMENTS[key];
+        const isPrimary = raw.primaryKeys.includes(key);
+        const maxReachable = raw.maxReachableByKey[key] || 0;
+
+        if (!isPrimary || maxReachable === 0) {
+          const isTreasure = ['mending', 'soul_speed', 'swift_sneak', 'wind_burst', 'frost_walker', 'vanishing_curse', 'binding_curse'].includes(key);
+          const isMaterialCap = isPrimary && maxReachable === 0;
+          perEnchant.push({
+            key, desiredLvl, maxReachable: 0, tableTargetLvl: 0,
+            status: 'impossible',
+            reason: isTreasure
+              ? 'Tesoro / Maldición (0% en Mesa)'
+              : isMaterialCap
+                ? `Requiere Nv. mod. > ${raw.maxMod} (0% en este material)`
+                : 'Secundario (Solo por libro en Yunque)',
+            probExact: 0, probTableTarget: 0, probClue: 0, avgRerolls: null
+          });
+          continue;
+        }
+
+        const tableTargetLvl = Math.min(desiredLvl, maxReachable);
+        let probExact = 0;
+        let probTableTarget = 0;
+        let probClue = 0;
+
+        for (const o of raw.outcomes) {
+          const rolled = o.enchants[key] || 0;
+          if (rolled >= desiredLvl) probExact += o.prob;
+          if (rolled >= tableTargetLvl) {
+            probTableTarget += o.prob;
+            probClue += o.prob / o.keys.length;
+          }
+        }
+
+        // Si el nivel exacto deseado es alcanzable pero extremadamente raro (< 2.5%, ej. Eficiencia V en Netherita),
+        // guardamos también el nivel práctico (desiredLvl - 1) para ofrecer un camino realista
+        let practicalLvl = tableTargetLvl;
+        let probPractical = probTableTarget;
+        if (desiredLvl === maxReachable && probExact < 0.025 && desiredLvl > 1) {
+          practicalLvl = desiredLvl - 1;
+          probPractical = 0;
+          for (const o of raw.outcomes) {
+            if ((o.enchants[key] || 0) >= practicalLvl) probPractical += o.prob;
+          }
+        }
+
+        const status = maxReachable >= desiredLvl ? 'full' : 'partial';
+        const info = {
+          key, desiredLvl, maxReachable, tableTargetLvl, practicalLvl,
+          status,
+          reason: status === 'full'
+            ? (probExact < 0.025
+                ? `Alcanzable en techo (${raw.maxMod}), pero muy raro (${(probExact * 100).toFixed(1)}%). Acepta Nv. ${practicalLvl} + libro.`
+                : `Alcanzable al máximo en Mesa Nv. 30`)
+            : `Techo del material (${raw.maxMod}): máx. Nv. ${maxReachable} en mesa (+1 libro Nv. ${maxReachable} → Nv. ${desiredLvl})`,
+          probExact, probTableTarget, probPractical, probClue,
+          avgRerolls: probTableTarget > 0 ? Math.max(1, Math.round(1 / probTableTarget)) : null
+        };
+        perEnchant.push(info);
+        reachableTargets.push(info);
+      }
+
+      // Elegir los hasta 3 encantamientos objetivo más útiles para buscar en la Mesa Nv. 30
+      // (usando practicalLvl para que los combos de Netherita no inflen falsamente a 200+ intentos por 2% de Eficiencia V)
+      const comboTargets = [...reachableTargets]
+        .sort((a, b) => (b.probPractical - a.probPractical))
+        .slice(0, 3);
+
+      let probComboFull = 0;
+      let probComboAtLeast2 = 0;
+      let probAnyTargetClue = 0;
+
+      if (comboTargets.length > 0) {
+        for (const o of raw.outcomes) {
+          // Descartar tiradas que introduzcan un encantamiento incompatible con alguno de los objetivos del usuario
+          let hasConflict = false;
+          for (const rolledKey of o.keys) {
+            if (targetMap[rolledKey]) continue;
+            const g = ENCHANTMENTS[rolledKey]?.group;
+            if (g && targetGroups.has(g)) {
+              hasConflict = true;
+              break;
+            }
+          }
+          if (hasConflict) continue;
+
+          let matchedCount = 0;
+          let matchedClues = 0;
+          for (const t of comboTargets) {
+            if ((o.enchants[t.key] || 0) >= t.practicalLvl) {
+              matchedCount++;
+              matchedClues++;
+            }
+          }
+
+          if (matchedCount === comboTargets.length) probComboFull += o.prob;
+          if (matchedCount >= Math.min(2, comboTargets.length)) probComboAtLeast2 += o.prob;
+          if (matchedClues > 0) probAnyTargetClue += o.prob * (matchedClues / o.keys.length);
+        }
+      }
+
+      const goldRerollsFull = probComboFull > 0 ? Math.max(1, Math.round(1 / probComboFull)) : null;
+      const goldRerolls2 = probComboAtLeast2 > 0 ? Math.max(1, Math.round(1 / probComboAtLeast2)) : null;
+      const lapisFull = goldRerollsFull ? (goldRerollsFull - 1) + 3 : null;
+      const netXpFull = goldRerollsFull ? Math.max(3, Math.round((goldRerollsFull - 1) * 0.65) + 3) : null;
+
+      // Encantamientos que la mesa cubre totalmente vs parcialmente (ej. Eficiencia IV cuando buscas V)
+      const fullCoveredKeys = comboTargets.filter(t => t.practicalLvl >= t.desiredLvl).map(t => t.key);
+      const partialCoveredMap = {};
+      comboTargets.filter(t => t.practicalLvl < t.desiredLvl).forEach(t => {
+        partialCoveredMap[t.key] = t.practicalLvl;
+      });
+
+      return {
+        supported: true,
+        enchantability: E,
+        minMod: raw.minMod,
+        maxMod: raw.maxMod,
+        perEnchant,
+        reachableTargets,
+        comboTargets,
+        fullCoveredKeys,
+        partialCoveredMap,
+        probComboFull,
+        probComboAtLeast2,
+        probAnyTargetClue,
+        goldRerollsFull,
+        goldRerolls2,
+        lapisFull,
+        netXpFull
+      };
+    }
+
+    // =========================================================================
+    // RENDERIZADO PREVIO EN ETAPA 1 (ANTES DE ETAPA 2): RE-ROLLS TRUCO DEL ORO
+    // =========================================================================
+    function renderStage1GoldPreview(item, mat, displayName, romanMap) {
+      const box = document.getElementById('stage1-enchant-table-box');
+      if (!box) return;
+
+      const recommendedMap = { ...item.godRoll };
+      if (currentEdition === 'bedrock' && recommendedMap.sweeping_edge) delete recommendedMap.sweeping_edge;
+
+      const tableStats = analyzeEnchantingTable(item, mat, recommendedMap);
+      if (!tableStats.supported || tableStats.comboTargets.length === 0) {
+        box.classList.add('hidden');
+        return;
+      }
+
+      const comboLabel = tableStats.comboTargets
+        .map(t => `${ENCHANTMENTS[t.key].name} ${romanMap[t.practicalLvl]}${t.practicalLvl < t.desiredLvl ? ` (→${romanMap[t.desiredLvl]} con 1 libro)` : ''}`)
+        .join(' + ');
+
+      const cappedItems = tableStats.perEnchant.filter(e => e.status === 'partial');
+      const capWarning = cappedItems.length > 0
+        ? `<p class="text-[11px] text-[#78350f] bg-[#fef3c7] border border-[#d97706] px-2.5 py-1.5 leading-snug">
+            <strong>⚠ Techo de Mesa Nv. 30 (${mat ? mat.name : item.name}, Nv. mod. máx. ${tableStats.maxMod}):</strong>
+            ${cappedItems.map(c => `<strong>${ENCHANTMENTS[c.key].name} ${romanMap[c.desiredLvl]}</strong> tiene <strong>0%</strong> directo en mesa para este material (máx. <strong>${romanMap[c.maxReachable]}</strong>); por eso con el Truco del Oro buscas <strong>${ENCHANTMENTS[c.key].name} ${romanMap[c.maxReachable]}</strong> y lo subes a ${romanMap[c.desiredLvl]} con 1 libro.`).join(' ')}
+           </p>`
+        : '';
+
+      box.innerHTML = `
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#8c8c8c] pb-2">
+          <div class="flex items-center gap-2">
+            <span class="text-base">🪙</span>
+            <h3 class="font-pixel text-xs text-[#78350f]">Estimación Truco del Oro (Mesa Nv. 30) para ${displayName} recomendado</h3>
+          </div>
+          <span class="text-[10px] font-mono font-bold px-2 py-0.5 bg-[#262830] text-[#fcee4b] self-start sm:self-auto">
+            Encantabilidad: ${tableStats.enchantability} · Nv. Mod.: ${tableStats.minMod}–${tableStats.maxMod}
+          </span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs">
+          <div class="mc-recessed-dark p-2.5">
+            <span class="text-[10px] font-bold text-slate-300 block">COMBO ÓPTIMO EN MESA</span>
+            <div class="text-base font-pixel text-[#fcee4b] mt-0.5">~${tableStats.goldRerollsFull} re-rolls oro</div>
+            <span class="text-[10px] font-mono text-slate-400">Prob: ${(tableStats.probComboFull * 100).toFixed(1)}% por semilla</span>
+          </div>
+          ${tableStats.comboTargets.length >= 2 ? `
+            <div class="mc-recessed-dark p-2.5">
+              <span class="text-[10px] font-bold text-slate-300 block">AL MENOS 2 OBJETIVOS</span>
+              <div class="text-base font-pixel mc-xp-text mt-0.5">~${tableStats.goldRerolls2} re-rolls oro</div>
+              <span class="text-[10px] font-mono text-slate-400">Prob: ${(tableStats.probComboAtLeast2 * 100).toFixed(1)}% por semilla</span>
+            </div>
+          ` : ''}
+          <div class="mc-recessed-dark p-2.5">
+            <span class="text-[10px] font-bold text-slate-300 block">COSTE APROX. RE-ROLLS</span>
+            <div class="text-base font-pixel text-cyan-300 mt-0.5">~${tableStats.lapisFull} Lapislázuli</div>
+            <span class="text-[10px] font-mono text-slate-400">~${tableStats.netXpFull} Niv. netos (con Afiladora)</span>
+          </div>
+        </div>
+
+        <p class="text-[11px] text-[#2b2b30] leading-relaxed">
+          <strong>Objetivo sugerido en la Mesa Nv. 30 (antes de pasar a la Etapa 2):</strong> busca que tu <strong>${displayName}</strong> salga con <strong>${comboLabel}</strong> reseteando la semilla con una <strong>Pala de Oro en la 1ª ranura (1 nivel + 1 lapislázuli)</strong>.
+        </p>
+        ${capWarning}
+      `;
+      box.classList.remove('hidden');
+    }
+
+    // =========================================================================
+    // ANÁLISIS PROFUNDO DE MESA NV. 30 + TRUCO DEL ORO (JUSTO DESPUÉS DE RUTA C)
+    // =========================================================================
+    function renderGoldTrickDeepAnalysis(item, mat, displayName, goldStats, strategy, recommended, romanMap) {
+      const panel = document.getElementById('gold-trick-deep-analysis');
+      if (!panel) return;
+
+      if (!goldStats || !goldStats.supported || goldStats.perEnchant.length === 0 || (strategy !== 'gold' && recommended !== 'gold')) {
+        panel.classList.add('hidden');
+        return;
+      }
+
+      const comboNames = goldStats.comboTargets
+        .map(t => `${ENCHANTMENTS[t.key].name} ${romanMap[t.practicalLvl]}`)
+        .join(' + ');
+
+      const rowsHtml = goldStats.perEnchant.map(e => {
+        const enchName = `${ENCHANTMENTS[e.key].name} ${romanMap[e.desiredLvl]}`;
+        let badge = '';
+        let statsText = '';
+
+        if (e.status === 'impossible') {
+          badge = `<span class="px-1.5 py-0.5 bg-rose-900/90 text-rose-200 font-pixel text-[9px]">0% MESA</span>`;
+          statsText = `<span class="text-rose-300">${e.reason}</span>`;
+        } else if (e.status === 'partial') {
+          const rPart = Math.max(1, Math.round(1 / e.probTableTarget));
+          badge = `<span class="px-1.5 py-0.5 bg-amber-700 text-amber-100 font-pixel text-[9px]">MÁX. ${romanMap[e.maxReachable]} EN MESA</span>`;
+          statsText = `<span class="text-[#fcee4b]">Nv. ${romanMap[e.maxReachable]}: ${(e.probTableTarget * 100).toFixed(1)}% (~${rPart} int.) · Pista visible: ${(e.probClue * 100).toFixed(1)}%</span>`;
+        } else {
+          const rExact = Math.max(1, Math.round(1 / e.probExact));
+          badge = `<span class="px-1.5 py-0.5 bg-emerald-800 text-emerald-200 font-pixel text-[9px]">POSIBLE NV. ${romanMap[e.desiredLvl]}</span>`;
+          statsText = `<span class="text-emerald-300">Prob: ${(e.probExact * 100).toFixed(1)}% (~${rExact} int.) · Pista visible: ${(e.probClue * 100).toFixed(1)}%</span>`;
+        }
+
+        return `
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 py-2 px-3 border-b border-[#3a3d47] text-[11px]">
+            <div class="flex items-center gap-2 flex-wrap">
+              <strong class="text-white">${enchName}</strong>
+              ${badge}
+            </div>
+            <div class="font-mono">${statsText}</div>
+          </div>
+        `;
+      }).join('');
+
+      panel.innerHTML = `
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b-2 border-[#8c8c8c] pb-2">
+          <div class="flex items-center gap-2">
+            <span class="text-base">🔬</span>
+            <h3 class="font-pixel text-xs sm:text-sm text-[#78350f]">Probabilidades exactas en Mesa Nv. 30 + Re-rolls con Truco del Oro</h3>
+          </div>
+          <span class="text-[10px] font-pixel px-2 py-0.5 bg-[#78350f] text-[#fde68a]">
+            ${displayName} (E=${goldStats.enchantability} · Nv. Mod. ${goldStats.minMod}–${goldStats.maxMod})
+          </span>
+        </div>
+
+        ${goldStats.comboTargets.length > 0 ? `
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+            <div class="mc-recessed-dark p-2.5">
+              <span class="text-[10px] text-slate-300 font-bold block">COMBO COMPLETO MESA</span>
+              <div class="text-lg font-pixel text-[#fcee4b] mt-0.5">~${goldStats.goldRerollsFull} re-rolls</div>
+              <span class="text-[10px] font-mono text-slate-400">${(goldStats.probComboFull * 100).toFixed(1)}% / tirada</span>
+            </div>
+            <div class="mc-recessed-dark p-2.5">
+              <span class="text-[10px] text-slate-300 font-bold block">MÍNIMO 2 OBJETIVOS</span>
+              <div class="text-lg font-pixel mc-xp-text mt-0.5">~${goldStats.goldRerolls2} re-rolls</div>
+              <span class="text-[10px] font-mono text-slate-400">${(goldStats.probComboAtLeast2 * 100).toFixed(1)}% / tirada</span>
+            </div>
+            <div class="mc-recessed-dark p-2.5">
+              <span class="text-[10px] text-slate-300 font-bold block">LAPISLÁZULI APROX.</span>
+              <div class="text-lg font-pixel text-cyan-300 mt-0.5">~${goldStats.lapisFull} Lapis</div>
+              <span class="text-[10px] font-mono text-slate-400">1/reset + 3 final</span>
+            </div>
+            <div class="mc-recessed-dark p-2.5">
+              <span class="text-[10px] text-slate-300 font-bold block">PISTA ÚTIL EN RANURA 3</span>
+              <div class="text-lg font-pixel text-purple-300 mt-0.5">${(goldStats.probAnyTargetClue * 100).toFixed(1)}%</div>
+              <span class="text-[10px] font-mono text-slate-400">Ves pista antes de pagar</span>
+            </div>
+          </div>
+
+          <div class="bg-[#e5dec9] border-2 border-[#c98a18] p-3 text-xs text-[#2c281e] space-y-1">
+            <div><strong>🎯 Qué buscar en la Mesa Nv. 30:</strong> <span class="text-[#14532d] font-bold">${comboNames}</span></div>
+            <p class="leading-relaxed">
+              <strong>Cómo ejecutar los ~${goldStats.goldRerollsFull} re-rolls con Truco del Oro:</strong> Pon tu <strong>${displayName}</strong> en la mesa y mira la vista previa de Nivel 30. Si la pista <strong>NO</strong> muestra uno de tus objetivos (${comboNames}), retíralo, pon una <strong>pala de oro</strong> en la <strong>1ª ranura (1 nivel + 1 lapislázuli)</strong> para cambiar la semilla, pásala por la <strong>Afiladora</strong> para recuperar XP y vuelve a revisar tu ${displayName}.
+            </p>
+          </div>
+        ` : `
+          <p class="text-xs text-rose-800 font-semibold">Ninguno de los encantamientos elegidos puede salir en la Mesa de Encantamientos para este objeto/material.</p>
+        `}
+
+        <div class="mc-recessed-dark overflow-hidden">
+          <div class="px-3 py-1.5 bg-[#1b1d22] text-[10px] font-pixel text-slate-300 border-b border-[#3a3d47]">
+            DESGLOSE EXACTO POR ENCANTAMIENTO EN MESA NV. 30 (15 LIBRERÍAS):
+          </div>
+          ${rowsHtml}
+        </div>
+      `;
+      panel.classList.remove('hidden');
+    }
+
+    // =========================================================================
     // RENDERIZADO CONDICIONAL DE INTERFACES DE OBTENCIÓN ESTILO MINECRAFT
     // =========================================================================
-    function renderMinecraftGuiShowcase(item, displayName, hasVillagerForMat, strategy, baseSourceTag, booksToFind, preApplied, romanMap) {
+    function renderMinecraftGuiShowcase(item, displayName, hasVillagerForMat, strategy, baseSourceTag, bookEntries, preApplied, romanMap, goldStats) {
       const container = document.getElementById('minecraft-live-gui-showcase');
       if (!container) return;
 
@@ -1166,15 +1692,13 @@
             : `Posibles útiles según tu selección: ${finalPool.join(', ')}`;
         }
         if (sourceType === 'gold') {
-          const tableEligible = activeKeys
-            .filter(k => !['mending', 'soul_speed', 'swift_sneak', 'wind_burst', 'frost_walker'].includes(k))
-            .map(k => `${ENCHANTMENTS[k].name} ${romanMap[selectedEnchants[k]]}`);
-          if (preList.length > 0) {
-            return `Objetivo en mesa: ${preList.join(' + ')}${tableEligible.length > preList.length ? ` (también pueden salir: ${tableEligible.slice(preList.length).join(', ')})` : ''}`;
+          if (goldStats && goldStats.supported && goldStats.comboTargets.length > 0) {
+            const exactCombo = goldStats.comboTargets
+              .map(t => `${ENCHANTMENTS[t.key].name} ${romanMap[t.practicalLvl]}`)
+              .join(' + ');
+            return `Objetivo real en Mesa Nv. 30: ${exactCombo} (~${goldStats.goldRerollsFull} re-rolls con pala de oro)`;
           }
-          return tableEligible.length > 0
-            ? `Posibles de tu selección en Nv. 30: ${tableEligible.join(', ')}`
-            : `Encantamientos base aleatorios de nivel 30`;
+          return `Encantamientos base aleatorios de nivel 30`;
         }
         return '';
       };
@@ -1222,6 +1746,9 @@
         `);
       } else if (strategy === 'gold' && item.hasEnchantTable) {
         const pertinentDesc = buildPertinentEnchantText('gold');
+        const rerollBadgeText = goldStats && goldStats.goldRerollsFull
+          ? `~${goldStats.goldRerollsFull} re-rolls oro · ~${goldStats.lapisFull} Lapis`
+          : 'Coste: 3 Niv. + 3 Lapis';
         cards.push(`
           <div class="pt-2">
             <div class="inline-flex items-center gap-2.5 mc-vanilla-header-tab px-3.5 py-1.5 ml-3 relative z-10">
@@ -1231,7 +1758,7 @@
             <div class="mc-panel p-4 space-y-3 -mt-[2px]">
               <div class="flex flex-wrap items-center justify-between gap-2 border-b-2 border-[#8b8b8b] pb-2">
                 <span class="font-pixel text-xs text-[#222222]">ENCANTAMIENTO DIRECTO CON ROTACIÓN DE SEMILLA</span>
-                <span class="text-[11px] font-mono font-bold px-2 py-0.5 bg-[#2b2b2b] text-[#fcee4b]">Coste: 3 Niv. + 3 Lapis</span>
+                <span class="text-[11px] font-mono font-bold px-2 py-0.5 bg-[#2b2b2b] text-[#fcee4b]">${rerollBadgeText}</span>
               </div>
               <div class="flex items-stretch justify-center sm:justify-start gap-3 flex-wrap">
                 <div class="flex flex-col items-center justify-center bg-[#b4b4b4] p-2.5 border border-[#7a7a7a]">
@@ -1282,9 +1809,11 @@
       }
 
       // 2. Interfaz del Bibliotecario SOLO si hay libros que buscar en bibliotecario
-      const librarianBooks = booksToFind.filter(k => !['soul_speed', 'swift_sneak', 'wind_burst'].includes(k));
+      const librarianBooks = bookEntries.filter(b => !['soul_speed', 'swift_sneak', 'wind_burst'].includes(b.key));
       if (librarianBooks.length > 0) {
-        const bookBadges = librarianBooks.map(k => `${ENCHANTMENTS[k].name} ${romanMap[selectedEnchants[k]]}`).join(', ');
+        const bookBadges = librarianBooks.map(b =>
+          `${ENCHANTMENTS[b.key].name} ${romanMap[b.bookLvl]}${b.isUpgradeFromTable ? ` (sube ${romanMap[b.bookLvl]}→${romanMap[b.finalLvl]})` : ''}`
+        ).join(', ');
         cards.push(`
           <div class="pt-2">
             <div class="inline-flex items-center gap-2.5 mc-vanilla-header-tab px-3.5 py-1.5 ml-3 relative z-10">
@@ -1340,9 +1869,9 @@
     let selectedEnchants = {};
     let userManualStrategy = null; // null = sigue automáticamente la ruta recomendada
     // =========================================================================
-    // EVALUADOR AUTOMÁTICO DE RUTA MÁS CORTA (XP + RE-ROLLS + INCOMPATIBILIDAD)
+    // EVALUADOR AUTOMÁTICO DE RUTA MÁS CORTA (XP + RE-ROLLS + MESA NV. 30 REAL)
     // =========================================================================
-    function evaluateBestStrategy(item, mat, hasVillagerForMat, activeKeys, romanMap) {
+    function evaluateBestStrategy(item, mat, hasVillagerForMat, activeKeys, romanMap, goldStats) {
       const candidates = ['clean'];
       if (hasVillagerForMat) candidates.push('villager');
       if (item.hasEnchantTable) candidates.push('gold');
@@ -1351,16 +1880,17 @@
 
       for (const strat of candidates) {
         const preApplied = new Set();
+        const partialFromTable = {};
+
         if (strat === 'villager') {
           if (selectedEnchants.unbreaking && selectedEnchants.unbreaking <= 3) preApplied.add('unbreaking');
           if (item.id === 'boots' && selectedEnchants.feather_falling && selectedEnchants.feather_falling <= 4) preApplied.add('feather_falling');
           if (item.id === 'helmet' && selectedEnchants.aqua_affinity) preApplied.add('aqua_affinity');
           if ((item.id === 'pickaxe' || item.id === 'shovel' || item.id === 'axe') && selectedEnchants.silk_touch) preApplied.add('silk_touch');
           if (item.id === 'sword' && selectedEnchants.knockback && selectedEnchants.knockback <= 2) preApplied.add('knockback');
-        } else if (strat === 'gold') {
-          const tableEligible = activeKeys.filter(k => !['mending', 'soul_speed', 'swift_sneak', 'wind_burst', 'frost_walker'].includes(k));
-          if (tableEligible.length > 0) preApplied.add(tableEligible[0]);
-          if (tableEligible.length > 1) preApplied.add(tableEligible[1]);
+        } else if (strat === 'gold' && goldStats && goldStats.supported) {
+          goldStats.fullCoveredKeys.forEach(k => preApplied.add(k));
+          Object.assign(partialFromTable, goldStats.partialCoveredMap);
         }
 
         const books = activeKeys.filter(k => !preApplied.has(k));
@@ -1368,9 +1898,11 @@
         let totalRerolls = 0;
 
         books.forEach(k => {
-          const lvl = selectedEnchants[k];
-          nodes.push({ isTargetItem: false, bookValue: lvl * ENCHANTMENTS[k].bookMult, label: k, shortName: k });
-          const st = getEnchantRerollStats(k, lvl);
+          const finalLvl = selectedEnchants[k];
+          const bookLvl = partialFromTable[k] ? partialFromTable[k] : finalLvl;
+          // En el yunque de Minecraft, combinar IV + IV -> V cobra finalLvl * bookMult
+          nodes.push({ isTargetItem: false, bookValue: finalLvl * ENCHANTMENTS[k].bookMult, label: k, shortName: k });
+          const st = getEnchantRerollStats(k, bookLvl);
           if (st.avgRerolls) totalRerolls += st.avgRerolls;
         });
 
@@ -1378,6 +1910,7 @@
         evaluations[strat] = {
           strat,
           preApplied,
+          partialFromTable,
           booksCount: books.length,
           totalLevels: anvil.totalLevels,
           maxStepCost: anvil.maxStepCost,
@@ -1386,9 +1919,7 @@
         };
       }
 
-      // Elegir la mejor ruta priorizando:
-      // 1) Que sea viable en yunque (<= 39 niveles)
-      // 2) Que ahorre libros/re-rolls y niveles de XP sin exigir re-rolls imposibles de aldeano
+      // Elegir la mejor ruta priorizando viabilidad en yunque (<= 39), ahorro de libros y re-rolls reales
       let recommended = 'clean';
       let reason = '';
 
@@ -1399,29 +1930,33 @@
         const cleanEv = evaluations.clean;
         const villEv = evaluations.villager;
         const goldEv = evaluations.gold;
+        const goldCoveredTotal = goldEv ? (goldEv.preApplied.size + Object.keys(goldEv.partialFromTable).length) : 0;
 
-        // Evaluar si la mesa con truco de oro evita un bloqueo >39 o ahorra >= 2 libros / >= 12 niveles
         const goldSavesBlock = goldEv && !cleanEv.viable && goldEv.viable;
-        const goldBigSavings = goldEv && goldEv.preApplied.size >= 2 && (cleanEv.totalLevels - goldEv.totalLevels >= 10 || activeKeys.length >= 4);
-
-        // Evaluar si el aldeano de equipo aporta al menos 1 encantamiento útil que ahorra libros sin riesgo de conflictos
+        const goldPractical = goldStats && goldStats.supported && goldStats.goldRerollsFull && goldStats.goldRerollsFull <= 45;
+        const goldBigSavings = goldEv && goldPractical && (
+          goldEv.preApplied.size >= 2 ||
+          (goldCoveredTotal >= 2 && (cleanEv.totalLevels - goldEv.totalLevels >= 6 || activeKeys.length >= 4))
+        );
         const villUseful = villEv && villEv.preApplied.size >= 1;
 
         if (goldSavesBlock) {
           recommended = 'gold';
-          reason = `<strong>Por qué es el camino más corto:</strong> Con tantos encantamientos (${activeKeys.length}), meter todos por libro desde un objeto limpio superaría el límite de 39 niveles en el yunque (${cleanEv.maxStepCost} Niv.). Usando la <strong>Mesa Nv. 30 + Truco de Oro</strong> sacas 2 encantamientos de base (${[...goldEv.preApplied].map(k => ENCHANTMENTS[k].name).join(' y ')}) en un solo paso, bajando el coste del yunque a <strong>${goldEv.totalLevels} Niveles</strong> y ahorrándote buscar esos libros.`;
+          const comboDesc = goldStats.comboTargets.map(t => `${ENCHANTMENTS[t.key].name} ${romanMap[t.practicalLvl]}`).join(' + ');
+          reason = `<strong>Por qué es el camino más corto:</strong> Con ${activeKeys.length} encantamientos, meter todos por libro desde limpio superaría los 39 niveles en yunque (${cleanEv.maxStepCost} Niv.). Usando la <strong>Mesa Nv. 30 + Truco del Oro</strong> (<strong>~${goldStats.goldRerollsFull} re-rolls con pala de oro</strong>) sacas <strong>${comboDesc}</strong> directamente, bajando el yunque a <strong>${goldEv.totalLevels} Niveles</strong>.`;
         } else if (villUseful && (!goldBigSavings || villEv.preApplied.size >= 2)) {
           recommended = 'villager';
           const savedNames = [...villEv.preApplied].map(k => `${ENCHANTMENTS[k].name} ${romanMap[selectedEnchants[k]]}`).join(' + ');
           reason = `<strong>Por qué es el camino más corto:</strong> El aldeano correspondiente ya te entrega la pieza con <strong>${savedNames}</strong> de fábrica. Así evitas la aleatoriedad e incompatibilidades de la Mesa de Encantamientos, ahorras <strong>${villEv.preApplied.size} ${villEv.preApplied.size === 1 ? 'libro' : 'libros'}</strong> (~${cleanEv.totalRerolls - villEv.totalRerolls} intentos menos de atril) y dejas el yunque en solo <strong>${villEv.totalLevels} Niveles</strong>.`;
         } else if (goldBigSavings) {
           recommended = 'gold';
-          const savedNames = [...goldEv.preApplied].map(k => `${ENCHANTMENTS[k].name} ${romanMap[selectedEnchants[k]]}`).join(' + ');
-          reason = `<strong>Por qué es el camino más corto:</strong> Para esta combinación de ${activeKeys.length} encantamientos, usar la <strong>Mesa de Encantamientos Nv. 30 con el Truco de Oro</strong> te permite obtener <strong>${savedNames}</strong> directamente en el objeto por solo 3 niveles, reduciendo el yunque de ${cleanEv.totalLevels} a <strong>${goldEv.totalLevels} Niveles</strong> y ahorrando ~${cleanEv.totalRerolls - goldEv.totalRerolls} re-rolls de bibliotecario.`;
+          const comboDesc = goldStats.comboTargets.map(t => `${ENCHANTMENTS[t.key].name} ${romanMap[t.practicalLvl]}`).join(' + ');
+          const partialCount = Object.keys(goldEv.partialFromTable).length;
+          reason = `<strong>Por qué es el camino más corto:</strong> Usando la <strong>Mesa de Encantamientos Nv. 30 con el Truco del Oro</strong> necesitarás aproximadamente <strong>~${goldStats.goldRerollsFull} re-rolls con pala de oro</strong> (~${goldStats.lapisFull} lapislázuli) para conseguir <strong>${comboDesc}</strong> en una sola tirada${partialCount > 0 ? ' (y solo sumas 1 libro de nivel IV para subir a V)' : ''}. Esto reduce el yunque de ${cleanEv.totalLevels} a <strong>${goldEv.totalLevels} Niveles</strong> y te ahorra ~${Math.max(0, cleanEv.totalRerolls - goldEv.totalRerolls)} intentos de atril en bibliotecarios.`;
         } else {
           recommended = 'clean';
           const noVillNote = !hasVillagerForMat ? 'este objeto/material no se vende encantado en aldeanos' : 'ninguno de los encantamientos elegidos sale al nivel máximo en aldeanos de equipo';
-          const noTableNote = !item.hasEnchantTable ? ' y no admite mesa de encantamientos' : ' y en la mesa aleatoria podrías sacar encantamientos incompatibles que bloquearían el yunque';
+          const noTableNote = !item.hasEnchantTable ? ' y no admite mesa de encantamientos' : ' y en la mesa aleatoria podrías sacar encantamientos incompatibles o requerir demasiados re-rolls';
           reason = `<strong>Por qué es el camino más corto:</strong> Como ${noVillNote}${noTableNote}, partir de un <strong>objeto limpio</strong> y aplicar únicamente los ${cleanEv.booksCount} libros exactos en árbol binario es la ruta más directa (<strong>${cleanEv.totalLevels} Niveles</strong>, sin perder tiempo ni XP limpiando encantamientos basura en la afiladora).`;
         }
       }
@@ -1453,8 +1988,19 @@
       const romanMap = ['', 'I', 'II', 'III', 'IV', 'V'];
       const activeKeys = Object.keys(selectedEnchants);
 
+      // 0. Calcular probabilidades exactas de Mesa Nv. 30 + Truco del Oro
+      const goldStats = analyzeEnchantingTable(item, mat, selectedEnchants);
+      renderStage1GoldPreview(item, mat, displayName, romanMap);
+
+      // Actualizar descripción dinámica de Ruta C con el estimado real de re-rolls con oro
+      const descGoldEl = document.getElementById('desc-gold-trick');
+      if (descGoldEl && item.hasEnchantTable && goldStats.supported && goldStats.comboTargets.length > 0) {
+        const comboPreview = goldStats.comboTargets.map(t => `${ENCHANTMENTS[t.key].name} ${romanMap[t.practicalLvl]}`).join(' + ');
+        descGoldEl.textContent = `Aprox. ~${goldStats.goldRerollsFull} re-rolls con pala de oro (~${goldStats.lapisFull} Lapis) para sacar ${comboPreview} antes del yunque (o ~${goldStats.goldRerolls2} si aceptas 2 objetivos).`;
+      }
+
       // 1. Evaluar automáticamente cuál es el camino más corto para la selección actual
-      const { recommended, reason } = evaluateBestStrategy(item, mat, hasVillagerForMat, activeKeys, romanMap);
+      const { recommended, reason } = evaluateBestStrategy(item, mat, hasVillagerForMat, activeKeys, romanMap, goldStats);
 
       // Aplicar la estrategia recomendada automáticamente salvo que el usuario haya elegido otra manualmente
       const strategy = userManualStrategy || recommended;
@@ -1503,8 +2049,12 @@
         `;
       }
 
+      // Renderizar el desglose profundo de Mesa Nv. 30 + Truco del Oro justo después de Ruta C
+      renderGoldTrickDeepAnalysis(item, mat, displayName, goldStats, strategy, recommended, romanMap);
+
       // Determinar qué encantamientos ya vienen incluidos en el ítem base según la estrategia activa
       const preApplied = new Set();
+      const partialFromTable = {};
       let baseSourceTag = 'Limpio';
 
       if (strategy === 'villager' && hasVillagerForMat) {
@@ -1518,17 +2068,24 @@
         baseSourceTag = preApplied.size > 0
           ? `${matPrefix} con ${[...preApplied].map(k => `${ENCHANTMENTS[k].name} ${romanMap[selectedEnchants[k]]}`).join(' + ')}`
           : matPrefix;
-      } else if (strategy === 'gold' && item.hasEnchantTable) {
-        const tableEligible = activeKeys.filter(k => !['mending', 'soul_speed', 'swift_sneak', 'wind_burst', 'frost_walker'].includes(k));
-        if (tableEligible.length > 0) preApplied.add(tableEligible[0]);
-        if (tableEligible.length > 1) preApplied.add(tableEligible[1]);
+      } else if (strategy === 'gold' && item.hasEnchantTable && goldStats.supported) {
+        goldStats.fullCoveredKeys.forEach(k => preApplied.add(k));
+        Object.assign(partialFromTable, goldStats.partialCoveredMap);
 
-        baseSourceTag = preApplied.size > 0
-          ? `Mesa Nv.30 (Oro) con ${[...preApplied].map(k => `${ENCHANTMENTS[k].name} ${romanMap[selectedEnchants[k]]}`).join(' + ')}`
+        const comboLabels = goldStats.comboTargets.map(t => `${ENCHANTMENTS[t.key].name} ${romanMap[t.practicalLvl]}`);
+        baseSourceTag = comboLabels.length > 0
+          ? `Mesa Nv.30 (Oro) con ${comboLabels.join(' + ')}`
           : 'Mesa Nv.30';
       }
 
-      const booksToFind = activeKeys.filter(k => !preApplied.has(k));
+      const bookEntries = activeKeys
+        .filter(k => !preApplied.has(k))
+        .map(k => {
+          const finalLvl = selectedEnchants[k];
+          const isUpgradeFromTable = Boolean(partialFromTable[k]);
+          const bookLvl = isUpgradeFromTable ? partialFromTable[k] : finalLvl;
+          return { key: k, bookLvl, finalLvl, isUpgradeFromTable };
+        });
 
       // 1. Consejo Intermedio 1 (antes de buscar libros)
       const interlude1 = document.getElementById('interlude-before-reroll');
@@ -1540,31 +2097,33 @@
           </div>
         `;
       } else {
-        const hasTreasure = booksToFind.some(k => ['soul_speed', 'swift_sneak', 'wind_burst'].includes(k));
+        const hasTreasure = bookEntries.some(b => ['soul_speed', 'swift_sneak', 'wind_burst'].includes(b.key));
         interlude1.innerHTML = `
           <div class="flex items-start gap-2.5">
             <span class="text-base shrink-0">🧑‍🌾</span>
             <div class="text-xs space-y-1">
               <div class="font-bold text-[#713f12]">Consejo antes de empezar a buscar libros:</div>
               <p class="text-[#2b2b2b] leading-relaxed">
-                Necesitas conseguir <strong>${booksToFind.length} ${booksToFind.length === 1 ? 'libro encantado' : 'libros encantados'}</strong>${preApplied.size > 0 ? ` (ya te ahorraste ${preApplied.size} gracias a tu pieza base pre-encantada)` : ''}.
-                ${hasTreasure ? ' <span class="text-rose-700 font-semibold">Ojo: elegiste un encantamiento especial de estructura (Sigilo Veloz, Velocidad de Almas o Ráfaga de Viento) que NO sale en aldeanos bibliotecarios.</span>' : booksToFind.length > 0 ? ' Tienes dos formas de buscar: <strong>1) Método clásico (Atril)</strong> rompiendo y poniendo el atril antes de comerciar (revisa solo la 1ª ranura), o <strong>2) Vista previa completa</strong> (si puedes ver sus 4 niveles antes de tradear, multiplicas por ~2.5x tus chances por aldeano).' : ' ¡Todos tus encantamientos seleccionados ya vienen en tu pieza base!'}
+                Necesitas conseguir <strong>${bookEntries.length} ${bookEntries.length === 1 ? 'libro encantado' : 'libros encantados'}</strong>${preApplied.size > 0 ? ` (ya te ahorraste ${preApplied.size} gracias a tu pieza base pre-encantada)` : ''}.
+                ${hasTreasure ? ' <span class="text-rose-700 font-semibold">Ojo: elegiste un encantamiento especial de estructura (Sigilo Veloz, Velocidad de Almas o Ráfaga de Viento) que NO sale en aldeanos bibliotecarios.</span>' : bookEntries.length > 0 ? ' Tienes dos formas de buscar: <strong>1) Método clásico (Atril)</strong> rompiendo y poniendo el atril antes de comerciar (revisa solo la 1ª ranura), o <strong>2) Vista previa completa</strong> (si puedes ver sus 4 niveles antes de tradear, multiplicas por ~2.5x tus chances por aldeano).' : ' ¡Todos tus encantamientos seleccionados ya vienen en tu pieza base!'}
               </p>
             </div>
           </div>
         `;
       }
 
-      // 2. ETAPA 3 (Probabilidades y Re-rolls necesarios: Atril 1er hueco Y Vista completa 4 niveles)
+      // 2. ETAPA 3 (Probabilidades y Re-rolls necesarios: Mesa Oro + Atril 1er hueco + Vista completa 4 niveles)
       const rerollBanner = document.getElementById('reroll-summary-banner');
       const rerollContainer = document.getElementById('reroll-cards-container');
 
-      if (booksToFind.length === 0) {
+      if (bookEntries.length === 0) {
         rerollBanner.innerHTML = `
           <div class="text-xs text-[#2b2b2b] font-semibold">
             ${activeKeys.length === 0
               ? 'No has seleccionado encantamientos todavía.'
-              : '🎉 ¡No necesitas buscar ningún libro en bibliotecarios con esta configuración!'}
+              : (strategy === 'gold' && goldStats.goldRerollsFull
+                  ? `🎉 ¡Solo necesitas ~${goldStats.goldRerollsFull} re-rolls con Truco del Oro en Mesa Nv. 30 y 0 libros de bibliotecarios!`
+                  : '🎉 ¡No necesitas buscar ningún libro en bibliotecarios con esta configuración!')}
           </div>
         `;
         rerollContainer.innerHTML = '';
@@ -1573,9 +2132,8 @@
         let totalFullMenuRerolls = 0;
         let librarianBooksCount = 0;
 
-        rerollContainer.innerHTML = booksToFind.map(k => {
-          const lvl = selectedEnchants[k];
-          const stats = getEnchantRerollStats(k, lvl);
+        rerollContainer.innerHTML = bookEntries.map(b => {
+          const stats = getEnchantRerollStats(b.key, b.bookLvl);
           if (stats.avgRerolls) {
             totalNoviceRerolls += stats.avgRerolls;
             totalFullMenuRerolls += stats.avgFullMenuRerolls;
@@ -1586,7 +2144,7 @@
             <div class="mc-card p-3.5 space-y-2">
               <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <div>
-                  <span class="text-xs sm:text-sm font-bold text-[#1f1f1f]">📘 Libro: ${ENCHANTMENTS[k].name} ${romanMap[lvl]}</span>
+                  <span class="text-xs sm:text-sm font-bold text-[#1f1f1f]">📘 Libro: ${ENCHANTMENTS[b.key].name} ${romanMap[b.bookLvl]}${b.isUpgradeFromTable ? ` <span class="text-[#78350f]">(sube tu Nv. ${romanMap[b.bookLvl]} de mesa → ${romanMap[b.finalLvl]})</span>` : ''}</span>
                   <span class="block text-[11px] text-[#15803d] font-bold mt-0.5">${stats.method}</span>
                 </div>
                 <div class="flex flex-wrap items-center gap-1.5 shrink-0">
@@ -1611,7 +2169,12 @@
 
         rerollBanner.innerHTML = `
           <div class="text-xs space-y-1.5 flex-1">
-            <span class="text-[#4a4a4a] font-bold uppercase block">Estimación total para reunir tus ${booksToFind.length} libros</span>
+            <span class="text-[#4a4a4a] font-bold uppercase block">Estimación total para tu ruta (${bookEntries.length} libros${strategy === 'gold' && goldStats.goldRerollsFull ? ' + Mesa Nv. 30' : ''})</span>
+            ${strategy === 'gold' && goldStats.goldRerollsFull ? `
+              <p class="text-[#78350f]">
+                • <strong>Mesa Nv. 30 + Truco del Oro (pieza base):</strong> aprox. <strong>~${goldStats.goldRerollsFull} re-rolls con pala de oro</strong> (~${goldStats.lapisFull} lapislázuli) para el combo completo en mesa.
+              </p>
+            ` : ''}
             ${librarianBooksCount > 0 ? `
               <p class="text-[#1f1f1f]">
                 • <strong>Método Atril (solo 1er hueco):</strong> en promedio harás unos <strong class="text-[#713f12]">${totalNoviceRerolls} intentos</strong> rompiendo y poniendo el atril.
@@ -1626,14 +2189,14 @@
           <div class="flex sm:flex-col gap-2 shrink-0">
             <div class="px-3 py-1.5 bg-[#2b2b2b] border-2 border-[#555555] text-center">
               <span class="text-[9px] font-pixel text-slate-300 block">LIBROS A BUSCAR</span>
-              <span class="text-base font-pixel text-[#fcee4b]">${booksToFind.length}</span>
+              <span class="text-base font-pixel text-[#fcee4b]">${bookEntries.length}</span>
             </div>
           </div>
         `;
       }
 
       // 3. ETAPA 3.5 (Interfaces de Obtención condicionales estrictas)
-      renderMinecraftGuiShowcase(item, displayName, hasVillagerForMat, strategy, baseSourceTag, booksToFind, preApplied, romanMap);
+      renderMinecraftGuiShowcase(item, displayName, hasVillagerForMat, strategy, baseSourceTag, bookEntries, preApplied, romanMap, goldStats);
 
       // 4. ETAPA 4 (Árbol Óptimo del Yunque)
       const nodes = [
@@ -1645,14 +2208,13 @@
         }
       ];
 
-      booksToFind.forEach(k => {
-        const lvl = selectedEnchants[k];
-        const ench = ENCHANTMENTS[k];
+      bookEntries.forEach(b => {
+        const ench = ENCHANTMENTS[b.key];
         nodes.push({
           isTargetItem: false,
-          bookValue: lvl * ench.bookMult,
-          label: `Libro: ${ench.name} ${romanMap[lvl]}`,
-          shortName: `${ench.name} ${romanMap[lvl]}`
+          bookValue: b.finalLvl * ench.bookMult,
+          label: `Libro: ${ench.name} ${romanMap[b.bookLvl]}${b.isUpgradeFromTable ? ` (→${romanMap[b.finalLvl]})` : ''}`,
+          shortName: `${ench.name} ${romanMap[b.bookLvl]}`
         });
       });
 
