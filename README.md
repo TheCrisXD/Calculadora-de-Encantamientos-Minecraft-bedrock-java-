@@ -4,8 +4,6 @@
 
 > 👉 **[Haz clic aquí para entrar a la calculadora desde tu navegador o celular](https://thecrisxd.github.io/Calculadora-de-Encantamientos-Minecraft-bedrock-java-/)**
 
-https://thecrisxd.github.io/Calculadora-de-Encantamientos-Minecraft-bedrock-java-/
-
 Una calculadora interactiva y guía visual paso a paso con estética clásica de interfaz de **Minecraft** que encuentra el **camino más corto, barato en experiencia (XP) y con menos intentos (re-rolls)** para encantar cualquier objeto del juego sin alcanzar jamás el bloqueo de *"¡Demasiado caro!"* ($>39$ niveles) en el yunque.
 
 ## 🎯 ¿Qué hace este proyecto?
