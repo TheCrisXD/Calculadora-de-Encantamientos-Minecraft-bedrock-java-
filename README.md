@@ -2,9 +2,9 @@
 
 [![Abrir Calculadora en Vivo](https://img.shields.io/badge/🚀_ABRIR_CALCULADORA_EN_VIVO-PC_y_Celular-15803d?style=for-the-badge)](https://thecrisxd.github.io/Calculadora-de-Encantamientos-Minecraft-bedrock-java-/)
 
-> 👉 **[Haz clic aquí para entrar a la calculadora desde tu navegador o celular](https://thecrisxd.github.io/Calculadora-de-Encantamientos-Minecraft-bedrock-java-/)**
+> 👉 **Enlace directo a la calculadora en vivo:** **[https://thecrisxd.github.io/Calculadora-de-Encantamientos-Minecraft-bedrock-java-/](https://thecrisxd.github.io/Calculadora-de-Encantamientos-Minecraft-bedrock-java-/)**
 
-Una calculadora interactiva y guía visual paso a paso con estética clásica de interfaz de **Minecraft** que encuentra el **camino más corto, barato en experiencia (XP) y con menos intentos (re-rolls)** para encantar cualquier objeto del juego sin alcanzar jamás el bloqueo de *"¡Demasiado caro!"* ($>39$ niveles) en el yunque.
+Una calculadora interactiva y guía visual paso a paso con estética **Minecraft Vanilla / Minecraft Live** y sprites pixel-art animados que encuentra el **camino más corto, barato en experiencia (XP) y con menos intentos (re-rolls)** para encantar cualquier objeto del juego sin alcanzar jamás el bloqueo de *"¡Demasiado caro!"* ($>39$ niveles) en el yunque.
 
 ## 🎯 ¿Qué hace este proyecto?
 
@@ -12,47 +12,45 @@ Encantar equipamiento al máximo en Minecraft suele provocar pérdida de niveles
 
 1. **Catálogo Completo y Validación Estricta (20 Ítems y 9 Materiales):**
    * Incluye herramientas, armas, armaduras, **Élitros, Tridente, Maza, Arco, Ballesta, Caña de Pescar, Escudo, Tijeras, Mechero, Pincel y Calabaza Tallada**.
-   * Selector dinámico de material (**Netherita, Diamante, Hierro, Oro, Cota de Malla, Cuero, Caparazón de Tortuga, Piedra y Madera**) que ajusta automáticamente la encantabilidad y los aldeanos disponibles.
-   * Bloqueo automático de encantamientos incompatibles (por ejemplo, *Filo* vs. *Castigo*, *Fortuna* vs. *Toque de Seda*, *Infinidad* vs. *Reparación*).
+   * Selector dinámico de material (**Netherita, Diamante, Hierro, Oro, Cota de Malla, Cuero, Caparazón de Tortuga, Piedra y Madera**) con **sprites pixel-art `16×16` fieles a Minecraft** que cambian realmente de color según el material elegido y aplican brillo encantado animado.
+   * Bloqueo automático de encantamientos incompatibles (incluyendo reglas exactas 1.21+ en **Arco**, **Tridente**, **Maza** y exclusividad de *Filo Arrasador* en Java) e **inspectores desplegables (`ℹ Detalles`)** por encantamiento.
 
-2. **Evaluador Automático de Ruta Más Corta:**
-   * Compara en tiempo real si conviene partir de un **objeto limpio**, comprarlo **pre-encantado a un aldeano de equipamiento** o usar la **Mesa de Encantamientos Nv. 30 con el Truco de Herramientas de Oro**, explicando el porqué y permitiendo cambiar de ruta manualmente.
+2. **Evaluador Automático de Ruta Más Corta + Panel Dinámico Conciso:**
+   * Compara en tiempo real si conviene partir de un **objeto limpio (Ruta A)**, comprarlo **pre-encantado a un aldeano de equipamiento (Ruta B)** o usar la **Mesa de Encantamientos Nv. 30 con el Truco del Oro (Ruta C)**.
+   * Al cambiar de ruta, el panel inferior se actualiza al instante mostrando solo los datos clave: **porcentajes, re-rolls y niveles de XP**.
 
-3. **Cálculo de Probabilidades y Re-rolls de Aldeanos (Java y Bedrock):**
-   * Calcula los intentos promedio tanto para el **método clásico de romper/colocar el Atril** (1ª ranura) como para **vista previa completa** (viendo los 4 niveles del bibliotecario antes de comerciar).
+3. **Etapa 3 Unificada — Interfaz Animada de Obtención + Probabilidades y Re-rolls (Java y Bedrock):**
+   * Fusiona la interfaz visual estilo Minecraft (con actores `32×32` animados que reaccionan al clic con diálogos contextuales y partículas pixeladas) con los **porcentajes, niveles y re-rolls debajo de cada ítem y libro correlacionado**.
+   * Incluye los cálculos detallados de **Aldeanos de equipamiento**, **Mesa Nv. 30 (Truco del Oro)**, **Bibliotecarios** y estructuras, mostrando siempre **Vista Nivel 1 (sin pack)** y **Pack Vista Completa** (viendo todos los tradeos del aldeano sin tradear).
 
-4. **Interfaces Visuales Estilo Minecraft Vanilla:**
-   * Genera dinámicamente tarjetas con retratos ortogonales $32 \times 32$ del aldeano o estación correspondiente y texturas $16 \times 16$ de qué debes entregar y qué recibirás encantado.
+4. **Motor Exacto de Yunque (Árbol Binario Óptimo) + Inspector PWP + Comparativa Real:**
+   * Muestra el orden exacto de fusiones en el yunque con etiquetas explícitas de cada libro combinado, panel desplegable **`🔍 Ver por qué`** con el desglose matemático de PWP e inversión de ranuras, y tabla comparativa real contra meter los libros 1 a 1.
 
-5. **Motor Exacto de Yunque (Árbol Binario Óptimo) + Comparativa Real:**
-   * Muestra el orden exacto de fusiones en el yunque y una tabla comparativa con números concretos de cuántos niveles extra gastarías (o en qué paso se bloquearía) si metieras los libros uno por uno.
-
-6. **Base de Datos Filtrable y Código Nativo en Rust:**
-   * Incluye pestañas dedicadas con la tabla filtrable de profesiones/mesas de trabajo, la explicación del **Truco del Oro** y la implementación de referencia en **Rust** (`anvil_dp_optimizer.rs`).
+5. **Guía de Aldeanos, Teoría Reactiva y Código Nativo en Rust Sincronizado:**
+   * Pestaña de Aldeanos con tarjetas interactivas (incluyendo **Clérigo** de soporte XP/Lapis) destacadas según tu ítem actual, pestaña de **Truco del Oro y PWP** adaptada a tu equipo, y pestaña **4. Código Rust** cuyo `main()` se sincroniza automáticamente con tu selección actual.
 
 ## 🚀 Cómo usar la calculadora o activarla en GitHub Pages
 
 ### Opción 1: Entrar directo desde el navegador o celular
-Solo haz clic en el botón verde **Abrir Calculadora en Vivo** al inicio de este documento (compatible con escritorio y pantallas móviles).
+Accede directamente desde cualquier PC o celular aquí:
+
+- 🌐 **Calculadora en vivo:** [https://thecrisxd.github.io/Calculadora-de-Encantamientos-Minecraft-bedrock-java-/](https://thecrisxd.github.io/Calculadora-de-Encantamientos-Minecraft-bedrock-java-/)
 
 ### Opción 2: Activar tu propia versión gratis con GitHub Pages
-No necesitas servidores, bases de datos ni instalar nada:
+No necesitas servidores, bases de datos ni pasos de build:
 
-1. Asegúrate de que tu repositorio en GitHub sea **Público** (*Public*) y tenga el archivo llamado exactamente **`index.html`** (en minúsculas) en la carpeta raíz junto a este `README.md`.
-2. En tu repositorio, entra a la pestaña superior **Settings** (Configuración).
-3. En el menú lateral izquierdo, haz clic en **Pages** (dentro de la sección *Code and automation*).
-4. En **Build and deployment** $\rightarrow$ **Source**, selecciona **Deploy from a branch**.
-5. En **Branch**, elige la rama `main` (o `master`), deja la carpeta en `/ (root)` y haz clic en **Save**.
-6. Espera entre **1 y 2 minutos** y recarga esa misma página. Aparecerá un recuadro arriba indicando:
-   > *"Your site is live at `https://tu-usuario.github.io/tu-repositorio/`"*
-7. Edita el enlace al inicio de este `README.md` reemplazando `TU-USUARIO` y `TU-REPOSITORIO` por los tuyos, y (opcionalmente) activa la casilla **"Use your GitHub Pages website"** en el engranaje (`⚙️`) del panel **About** en la portada del repositorio.
+1. Asegúrate de que tu repositorio en GitHub sea **Público** (*Public*) y mantenga `index.html`, `css/` y `js/` en la raíz de la rama `main`.
+2. En tu repositorio, entra a **Settings** $\rightarrow$ **Pages** (*Code and automation*).
+3. En **Build and deployment** $\rightarrow$ **Source**, selecciona **Deploy from a branch**.
+4. En **Branch**, elige `main`, deja la carpeta en `/ (root)` y haz clic en **Save**.
+5. En **1 a 2 minutos** tu copia quedará en línea en `https://tu-usuario.github.io/tu-repositorio/`.
 
 ## 🧠 Arquitectura Técnica (Para Desarrolladores y Contribuidores)
 
 El proyecto está construido con **Módulos ES nativos + CSS Vanilla sin bundler ni CDN de Tailwind**, manteniendo cero pasos de compilación para desplegarse directamente en GitHub Pages desde la rama `main`:
 
 ```text
-├── index.html                   # Shell semántico HTML5 + barra de resumen vivo sticky
+├── index.html                   # Shell semántico HTML5 + barra sticky de resumen vivo
 ├── css/
 │   ├── tokens.css               # Paleta HSL de piedra Minecraft, esmeralda, oro, lapis y XP
 │   ├── components.css           # Componentes biselados Vanilla GUI e inspectores desplegables
@@ -61,20 +59,20 @@ El proyecto está construido con **Módulos ES nativos + CSS Vanilla sin bundler
 │   ├── app.js                   # Estado reactivo central y delegación de eventos
 │   ├── data/
 │   │   ├── catalog.js           # MATERIALS, ENCHANTMENTS, ITEMS (20 ítems) y VILLAGER_DB
-│   │   └── tableRules.js        # Reglas exactas de Mesa Nv. 30 y techos de aldeanos
+│   │   └── tableRules.js        # Reglas exactas de Mesa Nv. 30 y probabilidades de aldeanos
 │   ├── engine/
 │   │   ├── anvilDp.js           # Motor Bitmask DP y simulador lineal ingenuo
 │   │   ├── enchantingTable.js   # Distribución exacta de nivel modificado y Truco del Oro
 │   │   ├── strategy.js          # Conflictos (Arco/Tridente/Maza/Bedrock), re-rolls y rutas
 │   │   └── rustGenerator.js     # Generador dinámico de anvil_dp_optimizer.rs sincronizado
 │   ├── pixelart/
-│   │   ├── palettes.js          # Paletas de 9 materiales para recoloreo real de SVG
-│   │   ├── icons.js             # Iconos pixel-art 16×16 dinámicos con brillo encantado
+│   │   ├── palettes.js          # Paletas de 5 tonos para los 9 materiales de Minecraft
+│   │   ├── icons.js             # Sprites pixel-art 16×16 fieles a Minecraft con brillo
 │   │   └── actors.js            # Actores 32×32 animados (aldeanos, mesa, yunque) + ráfagas
 │   └── ui/
-│       ├── reactiveBoxes.js     # Consejos 100% dinámicos, resumen vivo y teoría contextual
+│       ├── reactiveBoxes.js     # Resumen vivo sticky, origen, diagnóstico y teoría contextual
 │       ├── inspectors.js        # Paneles desplegables de encantamientos, pasos PWP y aldeanos
-│       └── renderer.js          # Renderizador modular de las 4 pestañas
+│       └── renderer.js          # Panel dinámico de rutas A/B/C y Etapa 3 unificada
 └── tests/
     ├── engine.test.mjs          # Pruebas unitarias con Node (`node:test`) + paridad con Rust
     └── ui_smoke.py              # Prueba E2E en Chromium headless con Playwright
