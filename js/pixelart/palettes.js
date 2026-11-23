@@ -1,70 +1,70 @@
 // =============================================================================
-// PALETAS AUTÉNTICAS DE MATERIALES MINECRAFT PARA PIXEL-ART DINÁMICO
+// PALETAS AUTÉNTICAS MINECRAFT VANILLA / MINECRAFT LIVE (5 TONOS + CONTORNO)
 // =============================================================================
 
 export const MATERIAL_PALETTES = {
   netherite: {
-    hi: '#8f848a',
-    light: '#6a6066',
-    mid: '#4d454a',
-    dark: '#332d31',
-    outline: '#1d191c'
+    hi: '#93878d',
+    light: '#70656b',
+    mid: '#52494f',
+    dark: '#3a3237',
+    outline: '#1e191c'
   },
   diamond: {
-    hi: '#a5f3fc',
-    light: '#4ae4f7',
-    mid: '#1ec4dc',
-    dark: '#0f8fa6',
-    outline: '#095c6b'
+    hi: '#c4fbff',
+    light: '#62ede8',
+    mid: '#2cc7be',
+    dark: '#188f96',
+    outline: '#0c474d'
   },
   iron: {
     hi: '#ffffff',
-    light: '#e5e7eb',
-    mid: '#b8bec7',
+    light: '#e6e8ec',
+    mid: '#bcc2cc',
     dark: '#858d99',
-    outline: '#505660'
+    outline: '#3e434c'
   },
   gold: {
-    hi: '#fef9c3',
-    light: '#fde047',
-    mid: '#eab308',
-    dark: '#b87d06',
-    outline: '#784e04'
+    hi: '#fff9b8',
+    light: '#fcee4b',
+    mid: '#e3b219',
+    dark: '#a87408',
+    outline: '#573604'
   },
   chainmail: {
     hi: '#e2e8f0',
-    light: '#a3b1c2',
-    mid: '#6c7989',
-    dark: '#475261',
-    outline: '#232933'
+    light: '#a8b4c4',
+    mid: '#707d8e',
+    dark: '#465161',
+    outline: '#1e242e'
   },
   leather: {
-    hi: '#dca474',
-    light: '#b87646',
-    mid: '#8f552b',
-    dark: '#663a1b',
-    outline: '#40220e'
+    hi: '#d99e6c',
+    light: '#b87644',
+    mid: '#8f5228',
+    dark: '#633517',
+    outline: '#361a0a'
   },
   turtle: {
-    hi: '#bbf7d0',
-    light: '#4ade80',
-    mid: '#22a352',
-    dark: '#157338',
-    outline: '#0d4a23'
+    hi: '#b8f7b0',
+    light: '#52d656',
+    mid: '#2da63a',
+    dark: '#1d7328',
+    outline: '#0d3d14'
   },
   stone: {
-    hi: '#d1d5db',
-    light: '#9ca3af',
-    mid: '#737b86',
-    dark: '#525861',
-    outline: '#363a42'
+    hi: '#d2d6dc',
+    light: '#a4aab3',
+    mid: '#7a818c',
+    dark: '#555b66',
+    outline: '#2c3038'
   },
   wood: {
-    hi: '#e0bc82',
-    light: '#bd9053',
-    mid: '#946a37',
-    dark: '#6b4922',
-    outline: '#452e14'
+    hi: '#dfba7c',
+    light: '#ba8e50',
+    mid: '#8f6632',
+    dark: '#66451e',
+    outline: '#38220d'
   }
 };
 

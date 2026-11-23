@@ -86,3 +86,95 @@ export const VILLAGER_CAPS_BY_ITEM = {
   crossbow: ['Perforación III', 'Carga Rápida II', 'Irrompibilidad II'],
   fishing_rod: ['Suerte Marina I', 'Atracción I', 'Irrompibilidad II']
 };
+
+export const VILLAGER_EQUIPMENT_STATS = {
+  helmet: {
+    prof: 'Armero',
+    station: 'Alto Horno',
+    tier: 'Nivel 5 (Maestro)',
+    slotProbJava: 1.0,
+    slotProbBedrock: 0.5,
+    enchantOdds: { unbreaking: 0.035, aqua_affinity: 0.12, protection: 0.18, respiration: 0.04 }
+  },
+  chestplate: {
+    prof: 'Armero',
+    station: 'Alto Horno',
+    tier: 'Nivel 5 (Maestro)',
+    slotProbJava: 1.0,
+    slotProbBedrock: 0.5,
+    enchantOdds: { unbreaking: 0.035, protection: 0.18, fire_protection: 0.06 }
+  },
+  leggings: {
+    prof: 'Armero',
+    station: 'Alto Horno',
+    tier: 'Nivel 4 (Experto)',
+    slotProbJava: 1.0,
+    slotProbBedrock: 0.5,
+    enchantOdds: { unbreaking: 0.035, protection: 0.18, blast_protection: 0.04, proj_protection: 0.04 }
+  },
+  boots: {
+    prof: 'Armero',
+    station: 'Alto Horno',
+    tier: 'Nivel 4 (Experto)',
+    slotProbJava: 1.0,
+    slotProbBedrock: 0.5,
+    enchantOdds: { feather_falling: 0.028, unbreaking: 0.035, protection: 0.18 }
+  },
+  sword: {
+    prof: 'Herrero de Armas',
+    station: 'Afiladora',
+    tier: 'Nivel 5 (Maestro)',
+    slotProbJava: 1.0,
+    slotProbBedrock: 0.5,
+    enchantOdds: { unbreaking: 0.035, sharpness: 0.022, knockback: 0.04, sweeping_edge: 0.05 }
+  },
+  pickaxe: {
+    prof: 'Herrero de Herramientas',
+    station: 'Mesa de Herrería',
+    tier: 'Nivel 5 (Maestro)',
+    slotProbJava: 1.0,
+    slotProbBedrock: 0.5,
+    enchantOdds: { silk_touch: 0.038, unbreaking: 0.042, efficiency: 0.085, fortune: 0.021 }
+  },
+  axe: {
+    prof: 'Herrero de Armas / Herramientas',
+    station: 'Afiladora / Mesa de Herrería',
+    tier: 'Nivel 4 (Experto)',
+    slotProbJava: 1.0,
+    slotProbBedrock: 0.5,
+    enchantOdds: { silk_touch: 0.038, unbreaking: 0.042, efficiency: 0.085 }
+  },
+  shovel: {
+    prof: 'Herrero de Herramientas',
+    station: 'Mesa de Herrería',
+    tier: 'Nivel 4 (Experto)',
+    slotProbJava: 0.667,
+    slotProbBedrock: 0.5,
+    enchantOdds: { silk_touch: 0.038, unbreaking: 0.042, efficiency: 0.085 }
+  },
+  bow: {
+    prof: 'Flechero',
+    station: 'Mesa de Flechas',
+    tier: 'Nivel 4 (Experto)',
+    slotProbJava: 1.0,
+    slotProbBedrock: 0.5,
+    enchantOdds: { power: 0.04, unbreaking: 0.055, punch: 0.06 }
+  },
+  crossbow: {
+    prof: 'Flechero',
+    station: 'Mesa de Flechas',
+    tier: 'Nivel 5 (Maestro)',
+    slotProbJava: 1.0,
+    slotProbBedrock: 0.5,
+    enchantOdds: { piercing: 0.06, quick_charge: 0.04, unbreaking: 0.05 }
+  },
+  fishing_rod: {
+    prof: 'Pescador',
+    station: 'Barril',
+    tier: 'Nivel 2 (Aprendiz)',
+    slotProbJava: 1.0,
+    slotProbBedrock: 0.5,
+    enchantOdds: { luck_of_the_sea: 0.05, lure: 0.05, unbreaking: 0.04 }
+  }
+};
+
