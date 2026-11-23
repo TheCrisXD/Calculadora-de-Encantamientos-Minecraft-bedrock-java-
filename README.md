@@ -49,11 +49,36 @@ No necesitas servidores, bases de datos ni instalar nada:
 
 ## 🧠 Arquitectura Técnica (Para Desarrolladores y Contribuidores)
 
-El proyecto está construido intencionalmente bajo una **arquitectura Single-File (`index.html`)** sin dependencias de backend ni bundlers para garantizar portabilidad absoluta y cero latencia en GitHub Pages:
+El proyecto está construido con **Módulos ES nativos + CSS Vanilla sin bundler ni CDN de Tailwind**, manteniendo cero pasos de compilación para desplegarse directamente en GitHub Pages desde la rama `main`:
 
-* **UI & Estilos:** Tailwind CSS (vía CDN) combinado con clases personalizadas `.mc-panel`, `.mc-card`, `.mc-slot` y `.mc-vanilla-gui` que emulan los biseles de luz/sombra de `3px` de la GUI de Minecraft.
-* **Gráficos Vectoriales Pixel-Art:** Diccionarios `PIXEL_ICONS` ($16 \times 16$) y `LIVE_ACTORS` ($32 \times 32$) renderizados mediante `<svg shape-rendering="crispEdges">` con coordenadas enteras puras (sin recursos externos ni riesgo de enlaces rotos).
-* **Motor Algorítmico (`solveOptimalAnvilTree`):** Implementación en JavaScript ES6+ de programación dinámica por máscara de bits (*Bitmask DP*), acompañada de su equivalente nativo en Rust en la pestaña 4.
+```text
+├── index.html                   # Shell semántico HTML5 + barra de resumen vivo sticky
+├── css/
+│   ├── tokens.css               # Paleta HSL de piedra Minecraft, esmeralda, oro, lapis y XP
+│   ├── components.css           # Componentes biselados Vanilla GUI e inspectores desplegables
+│   └── animations.css           # Brillo encantado, parpadeo de aldeanos, forja y partículas
+├── js/
+│   ├── app.js                   # Estado reactivo central y delegación de eventos
+│   ├── data/
+│   │   ├── catalog.js           # MATERIALS, ENCHANTMENTS, ITEMS (20 ítems) y VILLAGER_DB
+│   │   └── tableRules.js        # Reglas exactas de Mesa Nv. 30 y techos de aldeanos
+│   ├── engine/
+│   │   ├── anvilDp.js           # Motor Bitmask DP y simulador lineal ingenuo
+│   │   ├── enchantingTable.js   # Distribución exacta de nivel modificado y Truco del Oro
+│   │   ├── strategy.js          # Conflictos (Arco/Tridente/Maza/Bedrock), re-rolls y rutas
+│   │   └── rustGenerator.js     # Generador dinámico de anvil_dp_optimizer.rs sincronizado
+│   ├── pixelart/
+│   │   ├── palettes.js          # Paletas de 9 materiales para recoloreo real de SVG
+│   │   ├── icons.js             # Iconos pixel-art 16×16 dinámicos con brillo encantado
+│   │   └── actors.js            # Actores 32×32 animados (aldeanos, mesa, yunque) + ráfagas
+│   └── ui/
+│       ├── reactiveBoxes.js     # Consejos 100% dinámicos, resumen vivo y teoría contextual
+│       ├── inspectors.js        # Paneles desplegables de encantamientos, pasos PWP y aldeanos
+│       └── renderer.js          # Renderizador modular de las 4 pestañas
+└── tests/
+    ├── engine.test.mjs          # Pruebas unitarias con Node (`node:test`) + paridad con Rust
+    └── ui_smoke.py              # Prueba E2E en Chromium headless con Playwright
+```
 
 ### 1. Modelo Matemático del Yunque (Bitmask DP)
 
@@ -89,9 +114,22 @@ $$
 \text{XP}(L) = \begin{cases} L^2 + 6L & \text{si } 0 \le L \le 16 \\ 2.5L^2 - 40.5L + 360 & \text{si } 17 \le L \le 31 \\ 4.5L^2 - 162.5L + 2220 & \text{si } L \ge 32 \end{cases}
 $$
 
-### 3. Ejecución del Motor Nativo en Rust
+### 3. Pruebas Locales y Ejecución del Motor Nativo en Rust
 
-Si deseas compilar o integrar el optimizador en un proyecto externo o compilarlo a WebAssembly (`wasm32-unknown-unknown`), extrae el código de la pestaña **4. Código Rust** a un archivo `anvil_dp_optimizer.rs` y compílalo con optimizaciones máximas:
+Para levantar la web localmente (necesario para módulos ES) y correr la suite de pruebas:
+
+```bash
+# Servidor local de desarrollo
+python3 -m http.server 8000
+
+# Pruebas unitarias del motor DP, probabilidades, conflictos y compilación Rust
+node --test tests/engine.test.mjs
+
+# Pruebas E2E de interfaz, pixel-art dinámico y responsive (requiere Playwright + Chrome)
+python3 tests/ui_smoke.py
+```
+
+Si deseas compilar el motor nativo en Rust con tu configuración actual, copia el código desde la pestaña **4. Código Rust** a `anvil_dp_optimizer.rs` y ejecuta:
 
 ```bash
 rustc -O anvil_dp_optimizer.rs -o anvil_dp_optimizer
@@ -104,11 +142,11 @@ rustc -O anvil_dp_optimizer.rs -o anvil_dp_optimizer
 
 1. Haz un **Fork** de este repositorio.
 2. Crea una rama para tu mejora (`git checkout -b feature/nueva-actualizacion`).
-3. **Estructura de datos clave dentro de `index.html`:**
-   * `MATERIALS`: Define encantabilidad de armadura (`enchArmor`) y herramienta (`enchTool`) por material.
-   * `ENCHANTMENTS`: Define `maxLvl`, `bookMult` (multiplicador de libro en yunque) y `group` (grupo de exclusión mutua).
-   * `ITEMS`: Define los ítems encantables, materiales permitidos, disponibilidad en aldeanos (`villagerMaterials`), `allowed` y `godRoll`.
-4. Prueba tus cambios abriendo `index.html` en escritorio y móvil verificando que no existan errores en la consola del navegador.
+3. **Estructura de datos clave en `js/data/`:**
+   * `js/data/catalog.js`: `MATERIALS`, `ENCHANTMENTS`, `ITEMS` y `VILLAGER_DB`.
+   * `js/data/tableRules.js`: `TABLE_PRIMARY_ENCHANTS`, `TABLE_ENCHANT_RULES` y `VILLAGER_CAPS_BY_ITEM`.
+   * `js/pixelart/`: Paletas de materiales, iconos `16×16` dinámicos y actores `32×32` animados.
+4. Ejecuta `node --test tests/engine.test.mjs` y `python3 tests/ui_smoke.py` verificando cero errores en consola.
 5. Abre un **Pull Request** describiendo claramente qué mecánica o encantamiento añadiste o corregiste.
 
 ### Ideas abiertas para futuras contribuciones

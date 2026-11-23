@@ -1,0 +1,73 @@
+/* ============================================================================
+   DESIGN TOKENS — MINECRAFT VANILLA ELEVATED GUI (HSL CURATED PALETTE)
+   ============================================================================ */
+
+:root {
+  /* Base dark stone / deepslate canvas */
+  --mc-canvas: hsl(222, 18%, 10%);
+  --mc-canvas-elevated: hsl(222, 16%, 14%);
+  --mc-recessed-top: hsl(224, 12%, 20%);
+  --mc-recessed-bottom: hsl(224, 13%, 15%);
+  --mc-recessed-border-dark: hsl(224, 16%, 9%);
+  --mc-recessed-border-light: hsl(224, 10%, 42%);
+
+  /* Classic Minecraft Stone GUI surfaces */
+  --mc-stone-hi: hsl(0, 0%, 86%);
+  --mc-stone-mid: hsl(0, 0%, 78%);
+  --mc-stone-lo: hsl(0, 0%, 71%);
+  --mc-stone-card-hi: hsl(0, 0%, 83%);
+  --mc-stone-card-lo: hsl(0, 0%, 75%);
+  --mc-slot-hi: hsl(0, 0%, 58%);
+  --mc-slot-lo: hsl(0, 0%, 49%);
+
+  /* Bevel borders */
+  --mc-bevel-light: hsl(0, 0%, 98%);
+  --mc-bevel-soft-light: hsl(0, 0%, 93%);
+  --mc-bevel-dark: hsl(0, 0%, 34%);
+  --mc-bevel-soft-dark: hsl(0, 0%, 42%);
+  --mc-outline-ink: hsl(228, 14%, 11%);
+
+  /* Text colors */
+  --mc-ink: hsl(230, 12%, 14%);
+  --mc-ink-muted: hsl(230, 8%, 27%);
+  --mc-ink-light: hsl(214, 32%, 94%);
+  --mc-ink-light-muted: hsl(215, 16%, 72%);
+
+  /* Semantic Minecraft Material Accents */
+  --mc-emerald-hi: hsl(142, 69%, 52%);
+  --mc-emerald: hsl(142, 72%, 34%);
+  --mc-emerald-dark: hsl(144, 72%, 20%);
+  --mc-emerald-bg: hsl(142, 42%, 86%);
+
+  --mc-xp: hsl(94, 96%, 56%);
+  --mc-xp-shadow: hsl(95, 76%, 12%);
+
+  --mc-gold-hi: hsl(48, 96%, 64%);
+  --mc-gold: hsl(38, 86%, 40%);
+  --mc-gold-dark: hsl(30, 80%, 24%);
+  --mc-gold-bg: hsl(44, 65%, 90%);
+
+  --mc-lapis-hi: hsl(217, 84%, 64%);
+  --mc-lapis: hsl(217, 74%, 44%);
+  --mc-lapis-dark: hsl(221, 70%, 26%);
+
+  --mc-crimson-hi: hsl(352, 82%, 64%);
+  --mc-crimson: hsl(352, 74%, 44%);
+  --mc-crimson-dark: hsl(352, 74%, 26%);
+  --mc-crimson-bg: hsl(352, 75%, 92%);
+
+  --mc-parchment-hi: hsl(44, 36%, 87%);
+  --mc-parchment-lo: hsl(43, 30%, 79%);
+  --mc-parchment-border: hsl(38, 76%, 44%);
+
+  /* Typography */
+  --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+  --font-pixel: 'Silkscreen', 'JetBrains Mono', monospace;
+
+  /* Spacing & Layout */
+  --container-max: 960px;
+  --radius-px: 2px;
+  --shadow-panel: 0 0 0 2px var(--mc-outline-ink), 6px 6px 0 rgba(0, 0, 0, 0.68);
+  --shadow-card: 0 0 0 1px var(--mc-outline-ink), 3px 3px 0 rgba(0, 0, 0, 0.4);
+}
