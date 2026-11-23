@@ -1,0 +1,249 @@
+/* ============================================================================
+   ANIMACIONES PIXEL-ART INTERACTIVAS (BRILLO, ALDEANOS, MESA, YUNQUE, ORBES)
+   ============================================================================ */
+
+.px-svg,
+.px-actor-svg {
+  display: block;
+  image-rendering: pixelated;
+  shape-rendering: crispEdges;
+}
+
+.px-icon-xs { width: 20px; height: 20px; }
+.px-icon-sm { width: 28px; height: 28px; }
+.px-icon-md { width: 36px; height: 36px; }
+.px-icon-lg { width: 52px; height: 52px; }
+
+.px-actor-sm { width: 28px; height: 28px; }
+.px-actor-md { width: 36px; height: 36px; }
+.px-actor-lg { width: 46px; height: 46px; }
+
+/* Enchanted slot diagonal light sweep (authentic glint without neon clutter) */
+.mc-slot-enchanted {
+  position: relative;
+  overflow: hidden;
+  background: radial-gradient(circle at 40% 35%, hsl(256, 34%, 52%) 0%, hsl(254, 28%, 38%) 58%, var(--mc-slot-lo) 100%);
+  border-top: 3px solid #373737;
+  border-left: 3px solid #373737;
+  border-right: 3px solid #ffffff;
+  border-bottom: 3px solid #ffffff;
+  box-shadow: inset 0 0 8px rgba(216, 180, 254, 0.35);
+}
+
+.mc-slot-enchanted::after {
+  content: '';
+  position: absolute;
+  inset: -60%;
+  background: linear-gradient(
+    118deg,
+    transparent 38%,
+    rgba(233, 213, 255, 0.32) 48%,
+    rgba(255, 255, 255, 0.42) 51%,
+    rgba(196, 181, 253, 0.22) 55%,
+    transparent 65%
+  );
+  transform: translateX(-85%);
+  animation: mc-glint-sweep 3.6s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes mc-glint-sweep {
+  0%, 15% { transform: translateX(-85%); }
+  55%, 100% { transform: translateX(85%); }
+}
+
+/* Subtle enchanted float on SVG inside enchanted slots */
+.px-svg--enchanted {
+  filter: drop-shadow(0 0 2px rgba(224, 204, 255, 0.55));
+}
+
+.px-svg--shimmer {
+  animation: px-emerald-pulse 2.8s ease-in-out infinite;
+}
+
+@keyframes px-emerald-pulse {
+  0%, 100% { filter: brightness(1); }
+  50% { filter: brightness(1.16); }
+}
+
+.px-svg--xp-pulse {
+  animation: px-xp-bob 1.8s ease-in-out infinite;
+}
+
+@keyframes px-xp-bob {
+  0%, 100% { transform: translateY(0); filter: brightness(1); }
+  50% { transform: translateY(-2px); filter: brightness(1.2); }
+}
+
+/* Interactive slot click bounce */
+.mc-slot-interactive {
+  cursor: pointer;
+  transition: transform 0.14s steps(2), filter 0.14s ease;
+}
+
+.mc-slot-interactive:hover {
+  transform: translateY(-2px) scale(1.04);
+  filter: brightness(1.06);
+}
+
+.mc-slot-interactive.is-popping {
+  animation: px-slot-pop 0.36s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes px-slot-pop {
+  0% { transform: scale(1); }
+  35% { transform: scale(1.14) translateY(-3px); }
+  70% { transform: scale(0.95); }
+  100% { transform: scale(1); }
+}
+
+/* Villager periodic eye blink & gentle idle */
+.px-actor-svg .px-eye {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: px-blink 4.8s steps(1) infinite;
+}
+
+@keyframes px-blink {
+  0%, 92%, 100% { transform: scaleY(1); }
+  95% { transform: scaleY(0.1); }
+}
+
+.px-actor-svg .px-villager-head {
+  transform-box: fill-box;
+  transform-origin: bottom center;
+  transition: transform 0.18s steps(3);
+}
+
+.px-actor-btn:hover .px-villager-head,
+.is-reacting .px-villager-head {
+  animation: px-villager-nod 0.45s steps(4);
+}
+
+@keyframes px-villager-nod {
+  0% { transform: translateY(0); }
+  30% { transform: translateY(2px); }
+  65% { transform: translateY(-1px); }
+  100% { transform: translateY(0); }
+}
+
+/* Enchanting table floating book & rising runes */
+.px-actor-svg .px-table-book {
+  animation: px-book-float 2.6s ease-in-out infinite;
+}
+
+@keyframes px-book-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2.2px); }
+}
+
+.px-actor-svg .px-rune {
+  animation: px-rune-drift 2.4s steps(5) infinite;
+}
+.px-actor-svg .px-rune-2 { animation-delay: 0.7s; }
+.px-actor-svg .px-rune-3 { animation-delay: 1.4s; }
+
+@keyframes px-rune-drift {
+  0% { opacity: 0; transform: translateY(3px); }
+  35% { opacity: 1; }
+  80% { opacity: 0.9; transform: translateY(-3px); }
+  100% { opacity: 0; transform: translateY(-4px); }
+}
+
+/* Gentle underwater / End float */
+.px-actor-svg .px-float-gentle {
+  animation: px-book-float 3s ease-in-out infinite;
+}
+
+/* Anvil hammer strike & forging sparks */
+.px-anvil-svg .px-hammer {
+  transform-box: fill-box;
+  transform-origin: bottom left;
+  transition: transform 0.16s ease;
+}
+
+.anvil-step-card:hover .px-anvil-svg .px-hammer,
+.anvil-step-card.is-striking .px-anvil-svg .px-hammer,
+.px-actor-btn:hover .px-anvil-svg .px-hammer,
+.is-reacting .px-anvil-svg .px-hammer {
+  animation: px-hammer-strike 0.42s steps(3);
+}
+
+@keyframes px-hammer-strike {
+  0% { transform: rotate(0deg); }
+  30% { transform: rotate(-28deg) translateY(-1px); }
+  65% { transform: rotate(16deg) translateY(2px); }
+  100% { transform: rotate(0deg); }
+}
+
+.px-anvil-svg .px-spark {
+  opacity: 0;
+}
+
+.anvil-step-card:hover .px-anvil-svg .px-spark,
+.anvil-step-card.is-striking .px-anvil-svg .px-spark,
+.is-reacting .px-anvil-svg .px-spark {
+  animation: px-spark-pop 0.45s steps(3);
+}
+
+.px-anvil-svg .px-spark-2 { animation-delay: 0.08s; }
+
+@keyframes px-spark-pop {
+  0% { opacity: 0; transform: translateY(2px) scale(0.6); }
+  45% { opacity: 1; transform: translateY(-2px) scale(1.1); }
+  100% { opacity: 0; transform: translateY(-4px) scale(0.8); }
+}
+
+/* Pixel particle burst emitted on click */
+.px-particle {
+  position: fixed;
+  width: 6px;
+  height: 6px;
+  pointer-events: none;
+  z-index: 9999;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.55);
+  animation: px-particle-fly 0.62s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes px-particle-fly {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(calc(-50% + var(--px-tx)), calc(-50% + var(--px-ty))) scale(0.3);
+  }
+}
+
+/* Smooth reactive panel update pulse */
+.mc-reactive-flash {
+  animation: mc-flash-border 0.36s ease;
+}
+
+@keyframes mc-flash-border {
+  0% { filter: brightness(1.09); }
+  100% { filter: brightness(1); }
+}
+
+/* Contextual inspector smooth expand */
+.mc-inspector-body {
+  animation: mc-drawer-in 0.2s ease-out;
+}
+
+@keyframes mc-drawer-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Accessibility: respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
