@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Minecraft Enchant &amp; Anvil DP Optimizer (1.21+ Java &amp; Bedrock)</title>
-  <meta name="description" content="Calculadora interactiva con pixel-art animado y motor Bitmask DP que encuentra el camino más corto y barato en XP para encantar cualquier equipamiento de Minecraft 1.21+ Java y Bedrock sin llegar a ¡Demasiado caro!" />
+  <meta name="description" content="Calculadora interactiva con pixel-art animado fiel a Minecraft y motor Bitmask DP que encuentra el camino más corto y barato en XP para encantar cualquier equipamiento de Minecraft 1.21+ Java y Bedrock sin llegar a ¡Demasiado caro!" />
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Crect width='16' height='16' fill='%23181a22'/%3E%3Crect x='2' y='3' width='12' height='3' fill='%236b7280'/%3E%3Crect x='3' y='2' width='10' height='1' fill='%23d1d5db'/%3E%3Crect x='5' y='6' width='6' height='2' fill='%234b5563'/%3E%3Crect x='6' y='8' width='4' height='3' fill='%23374151'/%3E%3Crect x='3' y='11' width='10' height='3' fill='%234b5563'/%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -86,7 +86,7 @@
     <div class="mc-container">
 
       <!-- =================================================================== -->
-      <!-- PESTAÑA 1: RECORRIDO LINEAL COMPLETO (ETAPAS 1 -> 2 -> RUTA -> 3 -> 4) -->
+      <!-- PESTAÑA 1: RECORRIDO LINEAL LIMPIO (ETAPAS 1 -> 2 -> RUTA -> 3 -> 4) -->
       <!-- =================================================================== -->
       <div id="tab-calc" class="mc-stack" role="tabpanel" aria-labelledby="tab-btn-calc">
 
@@ -97,7 +97,7 @@
               <span class="mc-stage-tag mc-stage-tag--emerald">ETAPA 1</span>
               <div>
                 <h2 class="mc-panel-title">Elige el objeto y material que quieres mejorar</h2>
-                <p class="mc-panel-subtitle">El icono pixel-art, las probabilidades y los aldeanos cambian al instante.</p>
+                <p class="mc-panel-subtitle">El pixel-art, las probabilidades y los aldeanos cambian al instante.</p>
               </div>
             </div>
             <span id="item-category-badge" class="mc-badge mc-badge--xp">Herramienta</span>
@@ -117,15 +117,9 @@
             </div>
           </div>
 
-          <!-- Consejo contextual 1: Origen del ítem y material -->
+          <!-- Origen del ítem y material -->
           <div id="item-origin-box" class="mc-tip-box"></div>
-
-          <!-- Vista rápida Truco del Oro en Mesa Nv. 30 -->
-          <div id="stage1-enchant-table-box" class="hidden mc-card mc-stack-sm"></div>
         </section>
-
-        <!-- CONSEJO INTERMEDIO 0 (100% REACTIVO AL ÍTEM, MATERIAL Y EDICIÓN) -->
-        <div id="interlude-before-enchants" class="mc-tip-box"></div>
 
         <!-- ETAPA 2: SELECCIONA ENCANTAMIENTOS Y NIVELES VÁLIDOS -->
         <section id="stage-2" class="mc-panel mc-stack-sm">
@@ -146,17 +140,14 @@
           <div id="enchants-list" class="mc-stack-xs"></div>
         </section>
 
-        <!-- CONSEJO INTERMEDIO 1 (100% REACTIVO A TUS ENCANTAMIENTOS Y RUTA) -->
-        <div id="interlude-before-reroll" class="mc-tip-box"></div>
-
-        <!-- RUTA SUGERIDA Y SELECTOR DE ALTERNATIVAS -->
+        <!-- RUTA SUGERIDA Y PANEL CONCISO DINÁMICO SEGÚN OPCIÓN SELECCIONADA -->
         <section id="route-recommendation-section" class="mc-panel mc-stack-sm">
           <div class="mc-panel-header">
             <div class="mc-panel-title-group">
               <span class="mc-stage-tag mc-stage-tag--emerald">RUTA SUGERIDA</span>
               <div>
                 <h2 class="mc-panel-title">Camino más corto recomendado para tu selección</h2>
-                <p class="mc-panel-subtitle">Comparamos en vivo coste de XP, re-rolls reales y conflictos de mesa.</p>
+                <p class="mc-panel-subtitle">Cambia entre rutas para comparar porcentajes, re-rolls y niveles de XP.</p>
               </div>
             </div>
             <span id="route-mode-badge" class="mc-badge mc-badge--emerald font-pixel">★ SIGUIENDO RUTA SUGERIDA</span>
@@ -166,7 +157,7 @@
 
           <div class="mc-stack-xs">
             <div class="flex-between">
-              <p class="text-xs" style="font-weight:700;">¿Quieres comparar o cambiar la ruta? Selecciona una alternativa:</p>
+              <p class="text-xs" style="font-weight:700;">Elige la ruta que prefieres:</p>
               <button type="button" id="btn-reset-recommended" class="hidden mc-btn mc-btn--emerald mc-btn--sm font-pixel">
                 Volver a la sugerida
               </button>
@@ -176,13 +167,13 @@
               <input type="radio" name="base-strategy" id="rad-clean-base" value="clean" checked />
               <div class="text-xs" style="flex:1;">
                 <div class="flex-between">
-                  <span style="font-weight:800;">Ruta A · Objeto limpio (100% controlado con libros en yunque)</span>
+                  <span style="font-weight:800;">Ruta A · Objeto limpio (libros exactos en yunque)</span>
                   <div class="flex-row">
                     <span id="cost-tag-clean" class="hidden mc-badge mc-badge--dark"></span>
                     <span id="tag-rec-clean" class="hidden mc-badge mc-badge--emerald font-pixel">★ SUGERIDA</span>
                   </div>
                 </div>
-                <span class="text-muted" style="display:block; margin-top:0.2rem;">Cero riesgo de encantamientos no deseados; ideal para combinaciones exactas.</span>
+                <span class="text-muted" style="display:block; margin-top:0.2rem;">Cero riesgo de encantamientos no deseados; solo libros exactos.</span>
               </div>
             </label>
 
@@ -190,7 +181,7 @@
               <input type="radio" name="base-strategy" id="rad-villager-base" value="villager" />
               <div class="text-xs" style="flex:1;">
                 <div class="flex-between">
-                  <span style="font-weight:800;" class="text-emerald">Ruta B · Pieza base pre-encantada de Aldeano (Ahorra libros y XP)</span>
+                  <span style="font-weight:800;" class="text-emerald">Ruta B · Pieza base pre-encantada de Aldeano</span>
                   <div class="flex-row">
                     <span id="cost-tag-villager" class="hidden mc-badge mc-badge--dark"></span>
                     <span id="tag-rec-villager" class="hidden mc-badge mc-badge--emerald font-pixel">★ SUGERIDA</span>
@@ -215,42 +206,28 @@
             </label>
           </div>
 
-          <div id="gold-trick-deep-analysis" class="hidden mc-card mc-stack-sm"></div>
+          <!-- Panel conciso que cambia dinámicamente según Ruta A / B / C seleccionada -->
+          <div id="route-detail-panel" class="hidden mc-card mc-stack-sm"></div>
         </section>
 
-        <!-- ETAPA 3: PROBABILIDADES Y RE-ROLLS -->
+        <!-- ETAPA 3 FUSIONADA: OBTENCIÓN VISUAL + PROBABILIDADES, NIVELES Y RE-ROLLS DE CADA ALDEANO/MESA Y LIBRO -->
         <section id="stage-3" class="mc-panel mc-stack-sm">
           <div class="mc-panel-header">
             <div class="mc-panel-title-group">
               <span class="mc-stage-tag mc-stage-tag--gold">ETAPA 3</span>
               <div>
-                <h2 class="mc-panel-title">¿Cuántos intentos (Re-rolls) te tomará conseguirlos?</h2>
-                <p class="mc-panel-subtitle">Probabilidades reales de Bibliotecario (Atril vs 4 ranuras) y estructuras.</p>
+                <h2 class="mc-panel-title">Obtención, Probabilidades y Re-rolls por Aldeano / Mesa</h2>
+                <p class="mc-panel-subtitle">Interfaz animada con probabilidades, niveles y re-rolls debajo de cada ítem (Vista Nv. 1 y Pack Vista Completa).</p>
               </div>
             </div>
             <span id="reroll-ed-badge" class="mc-badge mc-badge--dark font-pixel">JAVA EDITION</span>
           </div>
 
           <div id="reroll-summary-banner" class="mc-card"></div>
-          <div id="reroll-cards-container" class="mc-stack-xs"></div>
+          <div id="stage3-unified-showcase" class="mc-stack-sm"></div>
         </section>
 
-        <!-- ETAPA 3.5: INTERFACES PIXEL-ART ANIMADAS DE OBTENCIÓN -->
-        <section id="stage-3-5" class="mc-panel mc-stack-sm">
-          <div class="mc-panel-header">
-            <div class="mc-panel-title-group">
-              <span class="mc-stage-tag mc-stage-tag--emerald">INTERFAZ DE OBTENCIÓN</span>
-              <div>
-                <h2 class="mc-panel-title">Qué entregar y qué recibir en el juego</h2>
-                <p class="mc-panel-subtitle">Haz clic en los aldeanos, la mesa o las ranuras para interactuar y ver consejos en vivo.</p>
-              </div>
-            </div>
-          </div>
-
-          <div id="minecraft-live-gui-showcase" class="mc-stack-sm"></div>
-        </section>
-
-        <!-- CONSEJO INTERMEDIO 2 (100% REACTIVO AL YUNQUE ACTUAL) -->
+        <!-- DIAGNÓSTICO DE YUNQUE -->
         <div id="interlude-before-anvil" class="mc-tip-box"></div>
 
         <!-- ETAPA 4: ORDEN EXACTO EN EL YUNQUE + INSPECTOR PWP -->

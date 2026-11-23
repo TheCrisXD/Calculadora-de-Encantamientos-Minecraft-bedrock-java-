@@ -3,6 +3,7 @@
 // =============================================================================
 
 import { ENCHANTMENTS, ITEMS, MATERIALS, ROMAN } from '../data/catalog.js';
+import { VILLAGER_EQUIPMENT_STATS } from '../data/tableRules.js';
 import { solveOptimalAnvilTree, solveLinearNaive } from './anvilDp.js';
 import { analyzeEnchantingTable, areEnchantsIncompatible } from './enchantingTable.js';
 
@@ -327,6 +328,40 @@ export function computeFullPlan({ itemId, materialId, edition, selectedEnchants,
   const naiveResult = solveLinearNaive(nodes);
   const savings = Math.max(0, naiveResult.totalLevels - optimalResult.totalLevels);
 
+  // Estadísticas detalladas de Aldeano de Equipamiento (para panel Ruta B y Etapa 3)
+  let villagerEquipStats = null;
+  if (hasVillagerForMat && VILLAGER_EQUIPMENT_STATS[item.id]) {
+    const vInfo = VILLAGER_EQUIPMENT_STATS[item.id];
+    const slotProb = edition === 'java' ? vInfo.slotProbJava : vInfo.slotProbBedrock;
+    const villPre = [...getVillagerPreApplied(item, selectedEnchants)];
+    const targetOdds = villPre.map(k => {
+      const baseProb = vInfo.enchantOdds[k] || 0.035;
+      const effectiveProb = slotProb * baseProb;
+      return {
+        key: k,
+        name: `${ENCHANTMENTS[k].name} ${ROMAN[selectedEnchants[k]]}`,
+        enchantProb: baseProb,
+        effectiveProb,
+        avgVillagers: Math.max(1, Math.round(1 / effectiveProb))
+      };
+    });
+
+    // Probabilidad de obtener al menos 1 de los encantamientos objetivo en el aldeano
+    const anyTargetProb =
+      targetOdds.length > 0
+        ? slotProb * (1 - targetOdds.reduce((acc, o) => acc * (1 - o.enchantProb), 1))
+        : slotProb;
+    const avgVillagersAny = Math.max(1, Math.round(1 / anyTargetProb));
+
+    villagerEquipStats = {
+      ...vInfo,
+      slotProb,
+      targetOdds,
+      anyTargetProb,
+      avgVillagersAny
+    };
+  }
+
   return {
     item,
     mat,
@@ -336,6 +371,7 @@ export function computeFullPlan({ itemId, materialId, edition, selectedEnchants,
     activeKeys,
     goldStats,
     stage1GoldStats,
+    villagerEquipStats,
     recommended: evaluation.recommended,
     reason: evaluation.reason,
     evaluations: evaluation.evaluations,
